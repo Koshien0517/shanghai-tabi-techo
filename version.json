@@ -1,5 +1,5 @@
 {
-  "version": "1.4.1",
+  "version": "1.4.2",
   "releasedAt": "2026-11-19",
   "features": [
     "update-check",
@@ -11,7 +11,6 @@
     "persistent-update-button",
     "refined-scrollable-navigation",
     "chinese-themed-tab-icons",
-    "chinese-inspired-overall-ui",
-    "photo-feature-cards"
+    "chinese-inspired-overall-ui"
   ]
 }
