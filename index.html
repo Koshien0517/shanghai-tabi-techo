@@ -300,17 +300,17 @@ function tripById(id){return allTrips().find(t=>t.id===id)}
 function currentTrip(){return selectedTrip()===MAIN_TRIP?{id:MAIN_TRIP,title:'上海旅行 2026–27',start:MAIN_START,end:MAIN_END,currency:'CNY',days:[]}:tripById(selectedTrip())}
 function activeDays(){const t=currentTrip();return t.id===MAIN_TRIP?days:(Array.isArray(t.days)?t.days:[])}
 function tripExpenses(){const v=get('expenses-'+selectedTrip());return Array.isArray(v)?v:[]}
-function validYmd(d){return /^\d{4}-\d{2}-\d{2}$/.test(d)&&!Number.isNaN(Date.parse(d+'T00:00:00Z'))}
+function validYmd(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;const x=new Date(d+'T00:00:00Z');return !Number.isNaN(x.getTime())&&x.toISOString().slice(0,10)===d}
 function localTripDate(t){try{const zone=t.id===MAIN_TRIP?'Asia/Shanghai':undefined;const fmtOpts={year:'numeric',month:'2-digit',day:'2-digit',...(zone?{timeZone:zone}:{})};const x=new Intl.DateTimeFormat('en-CA',fmtOpts).formatToParts(new Date());const parts=Object.fromEntries(x.filter(p=>['year','month','day'].includes(p.type)).map(p=>[p.type,p.value]));return parts.year+'-'+parts.month+'-'+parts.day}catch{return new Date().toISOString().slice(0,10)}}
 function localTripTime(t){try{return new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false,...(t.id===MAIN_TRIP?{timeZone:'Asia/Shanghai'}:{})}).format(new Date())}catch{return '00:00'}}
 function itineraryDates(t){if(t.id===MAIN_TRIP)return [MAIN_START,'2026-12-31','2027-01-01',MAIN_END];return (t.days||[]).map(d=>d.date)}
 function eventTime(time){const m=String(time||'').match(/^(\d{1,2}):(\d{2})/);return m?+m[1]*60+(+m[2]):null}
 function todayPanel(){
  const t=currentTrip(),ds=activeDays(),ymd=localTripDate(t),hm=localTripTime(t),dates=itineraryDates(t),idx=dates.indexOf(ymd);
- let head='<h2>📍 今日の予定・次の移動</h2><p class="muted">旅行先の日時：'+esc(ymd)+' '+esc(hm)+'（上海旅行は中国時間）</p>';
+ let head='<h2>📍 今日の予定・次の移動</h2><p class="muted">旅行先の日時：'+esc(ymd)+' '+esc(hm)+'（'+(t.id===MAIN_TRIP?'中国時間':'端末の現地時間')+'）</p>';
  if(!ds.length)return panel(head+'<p>旅行管理から予定を追加すると、ここに今日の行程が表示されます。</p>');
- if(idx>=0){const es=ds[idx].events||[],now=eventTime(hm);let upcoming=es.find(e=>eventTime(e[0])!==null&&eventTime(e[0])>=now);let next=upcoming||null;
- return panel(head+'<div class="hint"><strong>今日：</strong>'+esc(ds[idx].name||ds[idx].date||ymd)+'</div>'+(next?'<div class="card"><span class="time">次の予定 '+esc(next[0])+'</span><strong>'+esc(next[1])+'</strong><p class="muted">'+esc(next[2]||'')+'</p>'+(next[3]?mapPickButton(next[3],'目的地を地図で開く'):'')+'</div>':'<p>今日の登録済み行程は終了、または開始時刻のない予定のみです。</p>')+'<button class="ghost" data-today-day="'+idx+'">今日の詳細を見る</button>');}
+ if(idx>=0){const es=ds[idx].events||[],now=eventTime(hm);let upcoming=es.find(e=>eventTime(e[0])!==null&&eventTime(e[0])>=now);let next=upcoming||null;const move=es.find(e=>eventTime(e[0])!==null&&eventTime(e[0])>=now&&(/→|移動|駅へ|空港へ|タクシー|地下鉄|列車|高速鉄道|乗車/.test(e[1]+' '+(e[2]||''))));
+ return panel(head+'<div class="hint"><strong>今日：</strong>'+esc(ds[idx].name||ds[idx].date||ymd)+'</div>'+(next?'<div class="card"><span class="time">次の予定 '+esc(next[0])+'</span><strong>'+esc(next[1])+'</strong><p class="muted">'+esc(next[2]||'')+'</p>'+(next[3]?mapPickButton(next[3],'目的地を地図で開く'):'')+'</div>':'<p>今日の登録済み行程は終了、または開始時刻のない予定のみです。</p>')+(move?'<div class="card"><span class="time">次の移動 '+esc(move[0])+'</span><strong>'+esc(move[1])+'</strong><p class="muted">'+esc(move[2]||'')+'</p>'+(move[3]?mapPickButton(move[3],'移動先を地図で開く'):'')+'</div>':'')+'<button class="ghost" data-today-day="'+idx+'">今日の詳細を見る</button>');}
  const future=dates.findIndex(d=>d>=ymd);const i=future>=0?future:ds.length-1;return panel(head+'<p class="muted">'+(future>=0?'次の予定日：':'旅行期間外です。最終日：')+esc(dates[i]||'')+'</p><div class="card"><strong>'+esc(ds[i].name||t.title)+'</strong><p class="muted">'+(ds[i].events||[]).length+'件の行程を登録済み</p></div><button class="ghost" data-today-day="'+i+'">日程を見る</button>');
 }
 function expensePanel(){
