@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
+  "version": "1.5.1",
   "releasedAt": "2026-11-19",
   "features": [
     "update-check",
@@ -12,6 +12,7 @@
     "refined-scrollable-navigation",
     "chinese-themed-tab-icons",
     "chinese-inspired-overall-ui",
-    "ornate-shanghai-hero"
+    "ornate-shanghai-hero",
+    "night-skyline-photo-collage"
   ]
 }
