@@ -236,13 +236,19 @@ document.querySelectorAll('[data-map]').forEach(btn=>btn.onclick=()=>{
  const panelEl=document.createElement('div');panelEl.style.cssText='background:white;border-radius:20px;padding:20px;max-width:420px;width:100%;max-height:85vh;overflow:auto';
  const heading=document.createElement('h2');heading.textContent='地図アプリを選ぶ';panelEl.appendChild(heading);
  const subtitle=document.createElement('p');subtitle.className='muted';subtitle.textContent=q;panelEl.appendChild(subtitle);
+ const regionNames=['绍兴','无锡','苏州','杭州','南京','扬州','嘉兴','湖州','南浔','盐城','常州','镇江'];
+ const regionCities=['绍兴','无锡','苏州','杭州','南京','扬州','嘉兴','湖州','湖州','盐城','常州','镇江'];
+ const regionIndex=regionNames.findIndex(name=>q.includes(name));
+ const region=regionIndex>=0?regionCities[regionIndex]:'上海';
  const choices=[
- ['高徳地図（Amap）','https://uri.amap.com/search?keyword='+encodeURIComponent(q)],
- ['百度地図','https://map.baidu.com/search/'+encodeURIComponent(q)],
+ ['高徳地図（Amap）','https://uri.amap.com/search?keyword='+encodeURIComponent(q)+'&view=map&callnative=1&src=shanghai_tabi_techo'],
+ ['百度地図','https://api.map.baidu.com/place/search?query='+encodeURIComponent(q)+'&region='+encodeURIComponent(region)+'&output=html&src=webapp.shanghai.tabi'],
  ['Appleマップ','https://maps.apple.com/?q='+encodeURIComponent(q)],
  ['Googleマップ（中国本土では非推奨）','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q)]
  ];
+ const instructions=document.createElement('p');instructions.className='muted';instructions.textContent='地図サービスに場所名を渡して検索します。アプリが開かない場合はブラウザ版または検索語のコピーを利用してください。検索結果が複数ある場合は住所を照合してください。';panelEl.appendChild(instructions);
  choices.forEach(([label,url])=>{const a=document.createElement('a');a.textContent=label+' ↗';a.href=url;a.target='_blank';a.rel='noopener';a.style.cssText='display:block;padding:14px;border:1px solid #ead7da;border-radius:12px;margin:8px 0;text-decoration:none';panelEl.appendChild(a)});
+ const copy=document.createElement('button');copy.type='button';copy.className='ghost';copy.textContent='📋 検索語をコピー';copy.style.marginRight='8px';copy.onclick=async()=>{try{await navigator.clipboard.writeText(q);copy.textContent='✓ コピーしました'}catch{prompt('検索語をコピーしてください',q)}};panelEl.appendChild(copy);
  const close=document.createElement('button');close.type='button';close.className='ghost';close.textContent='閉じる';close.onclick=()=>overlay.remove();panelEl.appendChild(close);
  overlay.onclick=e=>{if(e.target===overlay)overlay.remove()};overlay.appendChild(panelEl);document.body.appendChild(overlay);
 });
