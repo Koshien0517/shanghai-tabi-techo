@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "releasedAt": "2026-11-20",
   "features": [
     "update-check",
@@ -44,6 +44,9 @@
     "visit-japan-web-return-guide",
     "wuxi-day-trip-17-step-itinerary",
     "wuxi-jichang-garden-guide",
-    "first-class-rail-unbooked-budget-planning"
+    "first-class-rail-unbooked-budget-planning",
+    "wuxi-balanced-route-dec31",
+    "wuxi-linked-transport-and-budget-recalculation",
+    "wuxi-optional-sanfengqiao-and-food-guide"
   ]
 }
