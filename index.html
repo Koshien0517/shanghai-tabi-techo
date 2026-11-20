@@ -444,6 +444,8 @@ body:not(.page-home) .hero{display:none!important}
 /* Translator recovery: keep retry visible only after an error. */
 .translator-retry{display:block;margin:4px 0 13px;border:1px solid #b95943;background:#fff0dd;color:#943b32;font-weight:850;min-height:44px}
 .translator-retry[hidden]{display:none!important}
+/* Grocery souvenir cards and Japan return guidance */
+.visit-japan-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:13px 0}.visit-japan-steps .card{margin:0}.visit-japan-steps .card strong{color:#753a32}@media(max-width:420px){.visit-japan-steps{grid-template-columns:1fr}}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -595,6 +597,70 @@ function giftCatalogPanel(){
  panel('<h2>🍵 茶・茶器 <small class="catalog-count">3件</small></h2>'+detailCards(extraGiftDetails.slice(13,16),'gifts'))+
  panel('<h2>🪭 文具・雑貨・上海の文創品 <small class="catalog-count">12件</small></h2>'+detailCards(extraGiftDetails.slice(16,28),'gifts'))+
  panel('<h2>🏯 無錫の土産 <small class="catalog-count">2件</small></h2>'+detailCards(extraGiftDetails.slice(28),'gifts'));
+}
+
+
+/* Everyday Chinese supermarket and convenience-store souvenirs.
+   Listings are categories/products to look for, not guaranteed inventory or specific variants. */
+const supermarketGiftGroups=[
+ ['🍪 中国ならではのお菓子・スナック',[
+ ['レイズ・中国限定ポテトチップス','乐事 黄瓜味 薯片','きゅうり味は中国らしい定番。ほかにも地域限定の味をチェック。','全家／罗森／7-Eleven・联华超市・盒马','目安 6〜18元・味は店舗により異なる'],
+ ['レイズ・海鮮系フレーバー','乐事 蟹黄味 薯片','カニ黄風味など中国らしい味。魚介が苦手なら成分と味を確認。','联华超市／盒马 上海','目安 6〜18元・魚介風味'],
+ ['旺旺の米菓','旺旺 雪饼 仙贝','中国で定番の米菓。配りやすい個包装も探せる。','全家／罗森・联华超市／盒马','目安 8〜30元'],
+ ['旺旺のミルク菓子','旺旺 旺仔牛奶糖','中国の定番ブランドのキャンディー。','联华超市／盒马','目安 8〜25元'],
+ ['洽洽のひまわりの種','洽洽 香瓜子','中国で親しまれる種のスナック。小袋・味付けの種類が豊富。','全家・联华超市／盒马','目安 5〜25元・日本持込は植物検疫条件も確認'],
+ ['三只松鼠のナッツ菓子','三只松鼠 坚果 零食','ナッツ・ドライスナックの詰め合わせ。原材料と持込条件を確認。','盒马／大型スーパー・零食店','目安 15〜60元'],
+ ['良品舗子の小袋スナック','良品铺子 零食','中国の小袋菓子。辛くない品や個包装を選ぶ。','零食店／大型スーパー 上海','目安 8〜50元'],
+ ['米多奇の米菓','米多奇 香米饼','中国らしい味付けの米菓。軽くて配りやすい。','联华超市／盒马','目安 8〜25元'],
+ ['徐福記の飴・焼き菓子','徐福记 糖果 酥心糖','キャンディーやサクサクした菓子など種類が豊富。','全家／联华超市／盒马','目安 10〜45元'],
+ ['山査子のお菓子','山楂片 山楂条','甘酸っぱい山査子のシートやスティック菓子。','大型スーパー／零食店 上海','目安 5〜25元'],
+ ['中国版チョコウエハース','脆脆鲨 巧克力 威化','中国スーパーで探しやすいウエハース菓子。','全家／罗森／联华超市','目安 5〜20元']
+ ]],
+ ['🍫 日本でも見かけるブランドの中国版',[
+ ['オレオ・中国限定フレーバー','奥利奥 中国限定口味','白桃烏龍・抹茶系など、時期によって見かける味が異なる。','全家／罗森／盒马・零食店','目安 8〜25元'],
+ ['ポッキー・中国版','百奇 Pocky 中国口味','中国で売られるグリコのポッキー。味や箱のデザインを比較。','全家／罗森／联华超市','目安 6〜18元'],
+ ['プリッツ・中国版','百力滋 Pretz','中国で販売されるプリッツ。日本と異なる味を探すのに向く。','全家／盒马・大型スーパー','目安 6〜18元'],
+ ['キットカット・中国版','奇巧 KitKat 中国口味','限定パッケージ・季節限定味などを探す。常設商品とは限らない。','大型スーパー／コンビニ 上海','目安 8〜30元・在庫要確認'],
+ ['M&M’S・中国パッケージ','M豆 中国限定包装','中国向けのデザインや企画商品を見つけたら候補に。','全家／盒马・大型スーパー','目安 8〜25元'],
+ ['コカ・コーラ・中国版','可口可乐 中国限定 包装','都市名や中国語パッケージの缶・ボトル。液体は機内持込制限に注意。','全家／罗森／7-Eleven','目安 3〜10元'],
+ ['ペプシ・中国限定パッケージ','百事可乐 中国限定','中国語ラベルや限定デザインを探す。','全家／联华超市','目安 3〜10元']
+ ]],
+ ['🍜 カップ麺・袋麺（肉成分に要注意）',[
+ ['康師傅・紅焼牛肉麺','康师傅 红烧牛肉面','中国を代表するインスタント麺。牛肉風味のため日本に持ち帰る場合は肉由来原料に注意。','全家／罗森／联华超市／盒马','目安 5〜12元・原材料要確認'],
+ ['康師傅・香辣牛肉麺','康师傅 香辣牛肉面','辛口牛肉風味。辛いものが苦手なら避ける。','全家／盒马','目安 5〜12元・辛口／原材料要確認'],
+ ['統一・老壇酸菜牛肉麺','统一 老坛酸菜牛肉面','漬物の酸味が特徴の中国カップ麺。牛肉関連の原料に注意。','联华超市／盒马','目安 5〜12元・原材料要確認'],
+ ['統一・湯達人','统一 汤达人','スープに特徴のあるインスタント麺シリーズ。味ごとに内容物を確認。','全家／罗森／联华超市','目安 6〜15元・原材料要確認'],
+ ['白象・中国インスタント麺','白象 方便面','中国メーカーのカップ麺・袋麺。味により肉エキス・肉具材を含む場合あり。','大型スーパー／零食店 上海','目安 5〜15元・原材料要確認'],
+ ['今麦郎・インスタント麺','今麦郎 方便面','中国で親しまれている即席麺ブランド。','联华超市／盒马','目安 5〜13元・原材料要確認'],
+ ['香菜（パクチー）風味カップ麺','香菜 方便面 桶装','話題になった中国らしいパクチー味を探す候補。販売・在庫は不確実。','好特卖 HotMaxx／大型スーパー','目安 5〜15元・取扱不確実／原材料要確認'],
+ ['火鶏麺・中国向けパッケージ','火鸡面 中国版','韓国発の辛い麺の中国流通版。非常に辛いので好みが分かれる。','全家／盒马・零食店','目安 7〜18元・激辛／原材料要確認']
+ ]]
+];
+const supermarketShoppingPlaces=[
+ ['🏪 コンビニ','全家 便利店／罗森 便利店／7-Eleven 上海','飲み物・少量の菓子・カップ麺を探しやすい。店ごとに品揃えは違います。'],
+ ['🛒 一般スーパー','联华超市／华联超市 上海 黄浦','大量購入・小袋菓子の比較に便利。'],
+ ['🥬 食品スーパー','盒马鲜生 上海 黄浦','菓子・即席麺・中国食品をまとめて探す候補。'],
+ ['🏷️ ディスカウント系','好特卖 HotMaxx 上海','中国向け限定品や変わり種を探す候補。店舗の在庫は変動します。'],
+ ['🍬 菓子の専門店','零食很忙／赵一鸣零食 上海','スナックや菓子をまとめ買いする候補。上海での支店有無は地図で確認。']
+];
+function supermarketSouvenirPanel(){
+ const count=supermarketGiftGroups.reduce((n,x)=>n+x[1].length,0);
+ return panel('<span class="tag">便利店 · 超市 · 中国零食</span><h2 style="margin-top:12px">🏪 スーパー・コンビニで探すお土産 <small class="catalog-count">'+count+'件</small></h2>'+
+ '<p class="muted">中国のスナック、日本でも見かけるブランドの中国向け商品、カップ麺を集めました。価格・味・在庫は<strong>参考目安</strong>です。</p>'+
+ '<div class="hint"><strong>⚠️ 日本への持ち込み</strong><p>肉・肉製品および肉成分を含む食品は原則として日本への持ち込みが制限されます。特に<strong>カップ麺の肉具材・肉エキス</strong>に注意。外箱や原材料を確認し、迷ったら日本へ持ち帰らず中国国内で食べてください。植物由来のお土産も品目によって検疫対象です。</p><p><a href="https://www.maff.go.jp/aqs/tetuzuki/product/aq2.html" target="_blank" rel="noopener noreferrer">動物検疫所｜肉製品などのおみやげ ↗</a> ／ <a href="https://www.maff.go.jp/pps/j/pqaqinfo_j.html" target="_blank" rel="noopener noreferrer">植物防疫所｜持込の注意 ↗</a></p></div>')+
+ supermarketGiftGroups.map(([name,items])=>panel('<h2>'+esc(name)+' <small class="catalog-count">'+items.length+'件</small></h2>'+detailCards(items,'gifts'))).join('')+
+ panel('<h2>📍 どこで探す？</h2>'+supermarketShoppingPlaces.map(([title,query,desc])=>'<div class="card"><strong>'+esc(title)+'</strong><p>'+esc(desc)+'</p><p class="muted">'+esc(query)+'</p>'+mapPickButton(query,'店舗を地図で探す')+'</div>').join(''));
+}
+function visitJapanPanel(){
+ return panel('<span class="tag">帰国の準備 · 日本の税関申告</span><h2 style="margin-top:12px">🇯🇵 Visit Japan Web｜帰国時の申告</h2>'+
+ '<p>日本政府（デジタル庁）の<strong>無料</strong>サービスです。日本への帰国でも利用でき、帰国予定や携帯品・別送品の税関申告をオンラインで登録できます。事前登録は便利ですが、紙による税関申告の選択肢もあります。</p>'+
+ '<a class="arrival-official" href="https://services.digital.go.jp/visit-japan-web/" target="_blank" rel="noopener noreferrer">Visit Japan Web 公式サイトを開く ↗</a>'+
+ '<div class="visit-japan-steps"><div class="card"><strong>① ログイン・本人情報を登録</strong><p>アカウントがなければ作成し、各自の旅券情報を公式サイトに登録。</p></div>'+
+ '<div class="card"><strong>② 日本への帰国予定を登録</strong><p>2027年1月2日／JL894／上海浦東 → 関西国際空港（予定）として、実際の予約情報を確認しながら入力。</p></div>'+
+ '<div class="card"><strong>③ 携帯品・別送品申告を入力</strong><p>持ち帰るお土産や現金等について、画面の質問に従い正確に申告。</p></div>'+
+ '<div class="card"><strong>④ 帰国時に二次元コードを表示</strong><p>関西空港で税関の案内に従って提示します。公式画面からコードの表示方法を確認してください。</p></div></div>'+
+ '<p class="tiny-hint">Visit Japan Webへの入力や発行された二次元コードはこの旅行アプリには保存しません。偽サイトや有料代行に注意し、公式ドメインを確認してください。</p>'+
+ '<a href="https://services.digital.go.jp/visit-japan-web/guide/" target="_blank" rel="noopener noreferrer" class="maps">デジタル庁｜利用手順を見る ↗</a>');
 }
 
 const knowledgeTopics=[
@@ -852,11 +918,11 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.0.1';const APP_RELEASE='2026-11-19';
+const APP_VERSION='2.1.0';const APP_RELEASE='2026-11-19';
 function panel(s){return `<section class="panel">${s}</section>`}function jump(p){page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
 function transitPanel(){return panel('<h2>🚄 12/30 空港→ホテル【確定ルート】</h2><p class="hint"><strong>リニア＋地下鉄を利用。</strong> 航空便JL891の浦東12:05着後、入国・荷物受取を済ませて13:30頃に出発する想定です。</p><div class="card"><strong>① リニア（磁浮列车）</strong><p>浦東空港 → 龍陽路：約8分・通常50元／人。当日航空券提示で40元の割引対象となる場合あり。ホーム移動・待機10〜20分を見込む。</p></div><div class="card"><strong>② 地下鉄2号線→10号線</strong><p>龍陽路 → 南京東路（2号線）→ 豫園（10号線）→ ホテル徒歩約3〜6分。地下鉄乗換・徒歩込み約40〜55分、約5元／人。</p></div><div class="breakdown">合計：<strong>約55〜80分、通常55元／人</strong>（割引適用時45元／人）。予算は通常運賃55元で計算。</div><p class="muted">リニア・地下鉄の実際の運行と割引条件は出発前に確認。ホテルは14:00以降チェックイン。</p>')}
-function returnPanel(){return panel('<h2>🥟 1/2 上海の朝食→帰国</h2><p class="hint">朝食はホテル至近。<strong>第一候補：小杨生煎（上海外滩NEO店）</strong>、人民路399号。ホテル人民路388号から徒歩約2〜5分。生煎包＋スープで20〜40元／人を仮置き。朝の開店時刻は未確認のため出発前に確認。</p><div class="card"><strong>予備① 永和豆浆大王（豫园店）</strong><p>人民路463〜465号。徒歩約5〜8分想定。豆浆・油条・粢饭など15〜30元／人（品揃え・営業時間は未確認）。</p></div><div class="card"><strong>予備② 南翔馒头店（豫园店）</strong><p>豫园老街85〜87号。徒歩約10〜15分、約30〜60元／人。8時頃の営業情報がありますが、1/2の営業と行列を要確認。</p></div><div class="data-grid"><div class="data-box"><small>ホテルチェックアウト</small><b>08:45まで</b></div><div class="data-box"><small>ホテル出発</small><b>09:00</b></div></div><p>上海浦東空港へタクシー直行：約45〜75分、160〜250元／台（2人折半で80〜125元／人）。09:45〜10:15に空港到着想定。</p><p class="muted">復路：JL894 13:25上海浦東発 → 16:45関西着（日本時間）。</p>')}
+function returnPanel(){return visitJapanPanel()+panel('<h2>🥟 1/2 上海の朝食→帰国</h2><p class="hint">朝食はホテル至近。<strong>第一候補：小杨生煎（上海外滩NEO店）</strong>、人民路399号。ホテル人民路388号から徒歩約2〜5分。生煎包＋スープで20〜40元／人を仮置き。朝の開店時刻は未確認のため出発前に確認。</p><div class="card"><strong>予備① 永和豆浆大王（豫园店）</strong><p>人民路463〜465号。徒歩約5〜8分想定。豆浆・油条・粢饭など15〜30元／人（品揃え・営業時間は未確認）。</p></div><div class="card"><strong>予備② 南翔馒头店（豫园店）</strong><p>豫园老街85〜87号。徒歩約10〜15分、約30〜60元／人。8時頃の営業情報がありますが、1/2の営業と行列を要確認。</p></div><div class="data-grid"><div class="data-box"><small>ホテルチェックアウト</small><b>08:45まで</b></div><div class="data-box"><small>ホテル出発</small><b>09:00</b></div></div><p>上海浦東空港へタクシー直行：約45〜75分、160〜250元／台（2人折半で80〜125元／人）。09:45〜10:15に空港到着想定。</p><p class="muted">復路：JL894 13:25上海浦東発 → 16:45関西着（日本時間）。</p>')}
 
 function budgetPanel(){
  const fmtY=n=>fmt(Math.round(n*exchangeRate));
@@ -1166,12 +1232,12 @@ if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=translatePanel()+phrasebook
 if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国旅行ガイド</h2><p>上海旅行専用の内容です。</p>');}
 if(page==='knowledge'&&selectedTrip()===MAIN_TRIP){html=knowledgePanel();}
 if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2><p>上海旅行専用のお土産ガイドです。</p>');}
-if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお土産ガイド</h2><p class="muted">お菓子・雑貨・中国茶などの候補を分類し、購入場所の目安も掲載。店舗の取扱商品・在庫は現地で確認してください。</p>')+giftCatalogPanel()+panel('<h2>共有のしかた</h2><p class="intro">同じURLで旅程を友人と共有できます。チェック状態は端末ごとに保存されます。</p><button class="ghost" id="share">このページのURLを共有</button>');}
+if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお土産ガイド</h2><p class="muted">お菓子・雑貨・中国茶などの候補を分類し、購入場所の目安も掲載。店舗の取扱商品・在庫は現地で確認してください。</p>')+supermarketSouvenirPanel()+giftCatalogPanel()+panel('<h2>共有のしかた</h2><p class="intro">同じURLで旅程を友人と共有できます。チェック状態は端末ごとに保存されます。</p><button class="ghost" id="share">このページのURLを共有</button>');}
 if(page==='bookings')html=countdownPanel()+bookingsPanel();
 if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=spendingOverview()+expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();
-if(page==='home'&&selectedTrip()===MAIN_TRIP)html=countdownPanel()+todayPanel()+html+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
+if(page==='home'&&selectedTrip()===MAIN_TRIP)html=countdownPanel()+todayPanel()+html+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
 document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设'}[page])+'</span></span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
