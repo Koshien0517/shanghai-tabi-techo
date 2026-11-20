@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0",
+  "version": "1.7.0",
   "releasedAt": "2026-11-20",
   "features": [
     "update-check",
@@ -18,6 +18,11 @@
     "current-location-route-search",
     "emergency-help",
     "two-person-settlement",
-    "flight-rail-booking-overview"
+    "flight-rail-booking-overview",
+    "home-only-cover",
+    "pinyin-and-japanese-emergency",
+    "food-catalog-expansion",
+    "souvenir-catalog-expansion",
+    "checkbox-free-food-and-gifts"
   ]
 }
