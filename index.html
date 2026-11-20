@@ -406,7 +406,7 @@ function arrivalCardPanel(){
  '<div class="guide-banner"><span class="china-kicker">READY TO COPY</span><h3>🏨 滞在先・航空便をそのままコピー</h3><p class="small-caption">ホテルの予約情報をもとに入力してください。入力欄に合う言語の表記を選んでコピーできます。</p><strong>'+esc(hotel.zh)+'</strong><p>'+esc(hotel.address)+'</p>'+copyTools()+'</div><p class="small-caption">パスポート番号・生年月日などの個人情報はこの旅行アプリには入力・保存しません。入国カードの提出自体は公式サイトで行います。</p><p class="small-caption">参考：国家移民管理局の公式案内・上海市のオンライン入国カード案内。制度・画面は変更される可能性があります。</p><a href="https://english.shanghai.gov.cn/en-ServicesandGuides-OnlineServices/20260805/698aae992e9b4232a58f00e9e49dd22b.html" target="_blank" rel="noopener" class="maps">上海市公式の手順解説を見る ↗</a>');
 }
 function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上海の基礎知識と豆知識</h2><p class="intro">初めての中国旅行でも困らないよう、文化・交通・食事のマナーをまとめました。制度・営業時間は渡航前に公式情報で再確認してください。</p>')+knowledgeTopics.map(([title,a,b])=>panel('<h2>'+esc(title)+'</h2><p class="intro">'+esc(a)+'</p><p class="intro">'+esc(b)+'</p>')).join('')}
-const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['bookings','🎫','予約'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
+const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
 const APP_VERSION='1.6.0';const APP_RELEASE='2026-11-19';
@@ -595,7 +595,7 @@ function safetyPanel(){
  const numbers=[['警察・事件','110','请帮我报警。'],['救急・急病','120','我需要救护车。'],['消防・火災','119','这里着火了，请帮忙！']];
  return panel('<h2>🆘 中国での緊急連絡</h2><p class="hint">生命の危険がある場合、操作より通報や周囲への助けを優先してください。発信には音声通話が必要です。</p>'+
  numbers.map(([name,num,zh])=>'<div class="safety-card"><strong>'+esc(name)+'</strong><a class="safety-call" href="tel:'+num+'">📞 '+num+'</a><p class="safety-zh">'+esc(zh)+'</p></div>').join(''))+
- panel('<h2>🇯🇵 在上海日本国総領事館</h2><p><strong>代表：021-5257-4766</strong></p><p>領事部門：上海市延安西路2299号 上海世貿大厦13階</p><p><a class="ghost" href="tel:+862152574766">📞 電話する</a></p><p class="muted">夜間・休日は代表電話の音声案内に従ってください。公式情報を出発直前にも確認してください。</p><a href="https://www.shanghai.cn.emb-japan.go.jp/" target="_blank" rel="noopener noreferrer">日本国総領事館公式サイト ↗</a></p>')+
+ panel('<h2>🇯🇵 在上海日本国総領事館</h2><p><strong>代表：021-5257-4766</strong></p><p>領事部門：上海市延安西路2299号 上海世貿大厦13階</p><p><a class="ghost" href="tel:+862152574766">📞 電話する</a></p><p class="muted">夜間・休日の緊急時は代表電話の音声案内に従い、内線0で緊急連絡事務所につながります。公式情報を出発直前にも確認してください。</p><a href="https://www.shanghai.cn.emb-japan.go.jp/" target="_blank" rel="noopener noreferrer">日本国総領事館公式サイト ↗</a></p>')+
  panel('<h2>🗣️ 中国語を見せて助けを求める</h2>'+
  safetyTexts.map(([name,zh,note])=>'<div class="safety-card"><strong>'+esc(name)+'</strong><p class="safety-zh">'+esc(zh)+'</p><p class="muted">'+esc(note)+'</p><button type="button" class="ghost" data-safety-copy="'+esc(zh)+'">📋 中国語をコピー</button></div>').join('')+
  '<div class="safety-card"><strong>ホテルを伝える</strong><p class="safety-zh">'+esc(hotel.zh)+'</p><p class="safety-zh">'+esc(hotel.address)+'</p><button type="button" class="ghost" data-safety-copy="'+esc(hotel.zh+'　'+hotel.address)+'">住所をコピー</button></div>');
@@ -659,12 +659,13 @@ if(page==='bookings')html=bookingsPanel();
 if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();
-if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+html;
+if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+html+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
 document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-cn">'+pageThemes[page][1]+'</span><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
 const customAdd=document.getElementById('customAddEvent');if(customAdd)customAdd.onclick=()=>jump('manage');
 
+const homeEmergency=document.getElementById('homeEmergency');if(homeEmergency)homeEmergency.onclick=()=>jump('safety');
 document.querySelectorAll('[data-safety-copy]').forEach(n=>n.onclick=async()=>{try{await navigator.clipboard.writeText(n.dataset.safetyCopy);n.textContent='✓ コピーしました'}catch{prompt('中国語をコピーしてください',n.dataset.safetyCopy)}});
 document.querySelectorAll('[data-booking-check]').forEach(n=>n.onchange=()=>{const b=get('booking-checks');b[n.dataset.bookingCheck]=n.checked;set('booking-checks',b)});
 const memoGo=document.getElementById('openRailMemo');if(memoGo)memoGo.onclick=()=>{day=1;jump('schedule')};
@@ -676,7 +677,7 @@ document.querySelectorAll('[data-route-to]').forEach(btn=>btn.onclick=()=>{
  const child=document.createElement('div');child.className='route-dialog-inner';
  const heading=document.createElement('h2');heading.textContent='📍 現在地から経路検索';child.appendChild(heading);
  const place=document.createElement('p');place.textContent='目的地：'+dest;child.appendChild(place);
- const hint=document.createElement('p');hint.className='muted';hint.textContent='位置情報はボタンを押した場合のみ許可を求めます。高徳地図は目的地検索後に「路线」で現在地を出発点にしてください。';child.appendChild(hint);
+ const hint=document.createElement('p');hint.className='muted';hint.textContent='位置情報は許可を押したときだけ取得し、選択した地図サービスに渡します（端末内には保存しません）。高徳地図は目的地検索後に「路线」で現在地を出発点にしてください。';child.appendChild(hint);
  const direct=document.createElement('button');direct.className='ghost';direct.type='button';direct.textContent='📍 位置情報を許可して経路を開く';child.appendChild(direct);
  const state=document.createElement('p');state.className='muted';state.setAttribute('role','status');child.appendChild(state);
  const links=document.createElement('div');child.appendChild(links);
