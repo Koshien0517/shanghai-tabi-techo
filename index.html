@@ -226,6 +226,34 @@ body:not(.page-home) .shell{padding-top:8px}
 .safety-pinyin{font-size:14px;line-height:1.6;font-weight:700;color:#2d746d;overflow-wrap:anywhere;margin:5px 0}
 .safety-japanese{font-size:13px;line-height:1.65;color:#55463d;margin:5px 0 10px}
 body:not(.page-home) .hero{display:none!important}
+
+/* v1.8.0 Chinese show mode, countdown, expenditure overview */
+.phrase-action-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.phrase-action-row button{min-height:40px}
+.phrase-show-button{background:#fff1de;border-color:#d8b685;color:#7f3632}
+.chinese-show-overlay{position:fixed;inset:0;z-index:110;background:rgba(35,13,19,.95);display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}
+.chinese-show-card{background:#fffaf1;border:2px solid #ddb36b;border-radius:22px;width:min(100%,840px);max-height:calc(100vh - 30px);max-height:calc(100dvh - 30px);overflow-y:auto;padding:clamp(20px,5vw,45px);text-align:center;box-shadow:0 22px 65px #09080b65}
+.chinese-show-caption{color:#7b5652;font-size:13px;letter-spacing:.04em}
+.chinese-show-zh{color:#8d222c;font-weight:850;font-family:"Noto Sans SC","Microsoft YaHei","PingFang SC",sans-serif;font-size:clamp(40px,10vw,86px);line-height:1.35;overflow-wrap:anywhere;word-break:normal;margin:22px 0}
+.chinese-show-pinyin{font-size:clamp(19px,4vw,30px);color:#286a60;line-height:1.55;overflow-wrap:anywhere;margin:10px 0}
+.chinese-show-ja{color:#494443;font-size:clamp(16px,3vw,23px);margin:18px 0;line-height:1.6}
+.chinese-show-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.chinese-show-actions button{min-height:44px}
+.countdown-card{padding:14px 15px;background:#fffaf0;border:1px solid var(--page-line);border-radius:15px;margin:11px 0}
+.countdown-card>strong{display:block;font-size:16px;color:var(--page-accent-dark);margin:7px 0}
+.countdown-number{font-size:clamp(24px,6vw,34px);font-weight:850;letter-spacing:.025em;color:#a73b35;line-height:1.35}
+.countdown-card p{margin:6px 0}
+.spend-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.spend-stats>div{background:#fff5df;padding:13px;border-radius:12px;border:1px solid #e6cba0}
+.spend-stats>div:last-child{grid-column:1/-1}
+.spend-stats small{font-size:12px;color:#7b6040;display:block}
+.spend-stats strong{font-size:clamp(17px,4vw,22px);display:block;color:#7d3b2e;line-height:1.6}
+.spend-bar-label{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;color:#61534b}
+.spend-bar-label strong{font-size:17px;color:#843b31;white-space:nowrap}
+.spend-bar{height:14px;border-radius:99px;background:#e9e0d3;overflow:hidden}
+.spend-bar>span{display:block;height:100%;background:linear-gradient(90deg,#397c72,#d4a45d);border-radius:99px;transition:width .2s}
+@media(max-width:390px){.spend-stats{grid-template-columns:1fr}.spend-stats>div:last-child{grid-column:auto}}
+
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -476,7 +504,7 @@ function phrasebookPanel(){
  const fav=get('phrase-favorites');const groups=['⭐ お気に入り','🔎 全フレーズ',...phraseGroups.map(x=>x[0])];const selected=phraseCategory;
  let entries= selected==='⭐ お気に入り' ? phraseGroups.flatMap(([category,items])=>items.map(item=>[...item,category])).filter(item=>fav[item[0]]) : selected==='🔎 全フレーズ' ? phraseGroups.flatMap(([category,items])=>items.map(item=>[...item,category])) : (phraseGroups.find(x=>x[0]===selected)||phraseGroups[0])[1].map(item=>[...item,selected]);
  if(phraseFavoritesOnly)entries=entries.filter(x=>fav[x[0]]);
- return panel('<span class="tag">中国語 · 旅行会話</span><h2 style="margin-top:12px">🗣️ 旅先ですぐ見せる中国語</h2><p class="intro">簡体字・ピンイン・日本語訳をセットで表示。中国語をコピーして店員さんや駅員さんに見せることもできます。</p><p class="hint">食事：同行者は辛い料理が基本NG。あなたは少し辛くてもOK。2人とも魚・羊肉は控えめに。点心・チャーハン・餃子は上海滞在中に食べる必須メニューです。</p><div class="phrase-cats">'+groups.map(x=>`<button class="phrase-tab ${x===selected?'active':''}" data-phrase-cat="${esc(x)}" aria-pressed="${x===selected}">${esc(x)}</button>`).join('')+'</div><div class="phrase-tools"><input type="search" id="phraseSearch" placeholder="選択中のカテゴリを検索（全件は🔎 全フレーズ）" aria-label="会話フレーズ検索"><button id="phraseFavToggle" class="ghost" aria-pressed="'+phraseFavoritesOnly+'">'+(phraseFavoritesOnly?'★ お気に入りのみ':'☆ お気に入りのみ')+'</button></div><p class="muted">'+entries.length+'フレーズ · ☆でお気に入り保存（端末ごと）</p><div id="phraseList">'+(entries.length?entries.map(([zh,pinyin,ja,cat])=>`<article class="phrase-card" data-search="${esc((zh+' '+pinyin+' '+ja).toLowerCase())}"><div class="phrase-header"><span class="phrase-zh" lang="zh-CN">${esc(zh)}</span><button class="phrase-star" aria-label="お気に入り切替：${esc(ja)}" data-phrase-fav="${esc(zh)}">${fav[zh]?'★':'☆'}</button></div><div class="phrase-pinyin">${esc(pinyin)}</div><p class="phrase-ja">${esc(ja)}</p><button class="copy-btn" data-phrase-copy="${esc(zh)}">📋 中国語をコピー</button></article>`).join(''):'<p class="muted">お気に入りはまだありません。各フレーズの☆から追加できます。</p>')+'</div><p id="phraseNothing" class="muted hidden">該当するフレーズがありません。</p>')
+ return panel('<span class="tag">中国語 · 旅行会話</span><h2 style="margin-top:12px">🗣️ 旅先ですぐ見せる中国語</h2><p class="intro">簡体字・ピンイン・日本語訳をセットで表示。中国語をコピーして店員さんや駅員さんに見せることもできます。</p><p class="hint">食事：同行者は辛い料理が基本NG。あなたは少し辛くてもOK。2人とも魚・羊肉は控えめに。点心・チャーハン・餃子は上海滞在中に食べる必須メニューです。</p><div class="phrase-cats">'+groups.map(x=>`<button class="phrase-tab ${x===selected?'active':''}" data-phrase-cat="${esc(x)}" aria-pressed="${x===selected}">${esc(x)}</button>`).join('')+'</div><div class="phrase-tools"><input type="search" id="phraseSearch" placeholder="選択中のカテゴリを検索（全件は🔎 全フレーズ）" aria-label="会話フレーズ検索"><button id="phraseFavToggle" class="ghost" aria-pressed="'+phraseFavoritesOnly+'">'+(phraseFavoritesOnly?'★ お気に入りのみ':'☆ お気に入りのみ')+'</button></div><p class="muted">'+entries.length+'フレーズ · ☆でお気に入り保存（端末ごと）</p><div id="phraseList">'+(entries.length?entries.map(([zh,pinyin,ja,cat])=>`<article class="phrase-card" data-search="${esc((zh+' '+pinyin+' '+ja).toLowerCase())}"><div class="phrase-header"><span class="phrase-zh" lang="zh-CN">${esc(zh)}</span><button class="phrase-star" aria-label="お気に入り切替：${esc(ja)}" data-phrase-fav="${esc(zh)}">${fav[zh]?'★':'☆'}</button></div><div class="phrase-pinyin">${esc(pinyin)}</div><p class="phrase-ja">${esc(ja)}</p><div class="phrase-action-row"><button class="copy-btn" data-phrase-copy="${esc(zh)}">📋 中国語をコピー</button><button type="button" class="ghost phrase-show-button" data-phrase-show="${esc(zh)}" data-phrase-pinyin="${esc(pinyin)}" data-phrase-ja="${esc(ja)}">🔎 大きく表示</button></div></article>`).join(''):'<p class="muted">お気に入りはまだありません。各フレーズの☆から追加できます。</p>')+'</div><p id="phraseNothing" class="muted hidden">該当するフレーズがありません。</p>')
 }
 
 function fmt(n){return Math.round(n).toLocaleString('ja-JP')}
@@ -505,7 +533,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='1.7.0';const APP_RELEASE='2026-11-19';
+const APP_VERSION='1.8.0';const APP_RELEASE='2026-11-19';
 function panel(s){return `<section class="panel">${s}</section>`}function jump(p){page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
 function transitPanel(){return panel('<h2>🚄 12/30 空港→ホテル【確定ルート】</h2><p class="hint"><strong>リニア＋地下鉄を利用。</strong> 航空便JL891の浦東12:05着後、入国・荷物受取を済ませて13:30頃に出発する想定です。</p><div class="card"><strong>① リニア（磁浮列车）</strong><p>浦東空港 → 龍陽路：約8分・通常50元／人。当日航空券提示で40元の割引対象となる場合あり。ホーム移動・待機10〜20分を見込む。</p></div><div class="card"><strong>② 地下鉄2号線→10号線</strong><p>龍陽路 → 南京東路（2号線）→ 豫園（10号線）→ ホテル徒歩約3〜6分。地下鉄乗換・徒歩込み約40〜55分、約5元／人。</p></div><div class="breakdown">合計：<strong>約55〜80分、通常55元／人</strong>（割引適用時45元／人）。予算は通常運賃55元で計算。</div><p class="muted">リニア・地下鉄の実際の運行と割引条件は出発前に確認。ホテルは14:00以降チェックイン。</p>')}
@@ -735,6 +763,71 @@ async function checkOffline(saveNow){
  }catch(e){out.textContent='保存状態を確認できません：'+e.message}
 }
 
+
+/* v1.8.0 Countdown uses explicit departure time zones; rail requires confirmed tickets. */
+const confirmedFlights=[
+ {id:'JL891',name:'✈️ JL891｜関空 → 上海浦東',iso:'2026-12-30T01:15:00Z',local:'12/30 10:15（日本時間）',type:'航空便・旅程に登録済み'},
+ {id:'JL894',name:'✈️ JL894｜上海浦東 → 関空',iso:'2027-01-02T05:25:00Z',local:'1/2 13:25（中国時間）',type:'航空便・旅程に登録済み'}
+];
+function countdownTargets(){
+ const flights=confirmedFlights.slice(),draft=get('rail-booking');
+ if(draft&&draft.status==='予約済み'&&validYmd(draft.date||'')&&draft.date===sharedRailMemo.date){
+  for(const [key,title] of [['out','🚄 往路・上海 → 無錫'],['back','🚄 復路・無錫 → 上海']]){
+   const val=draft[key+'Dep'],num=draft[key+'Num'];
+   if(/^([01]\d|2[0-3]):[0-5]\d$/.test(String(val||''))&&String(num||'').trim()){
+    flights.push({id:key+'Rail',name:title+'｜'+num,iso:draft.date+'T'+val+':00+08:00',local:draft.date+' '+val+'（中国時間）',type:'端末の予約済み下書き・発車時刻の再確認が必要'});
+   }
+  }
+ }
+ return flights;
+}
+function countdownText(target,nowMs=Date.now()){
+ const remaining=Date.parse(target)-nowMs;if(!Number.isFinite(remaining))return '時刻を確認してください';
+ if(remaining<=0)return '出発時刻を過ぎました';
+ const minutes=Math.ceil(remaining/60000);
+ const d=Math.floor(minutes/1440),h=Math.floor((minutes%1440)/60),m=minutes%60;
+ return (d?d+'日 ':'')+(d||h?h+'時間 ':'')+m+'分';
+}
+function countdownPanel(){
+ if(selectedTrip()!==MAIN_TRIP)return '';
+ const data=countdownTargets().sort((a,b)=>Date.parse(a.iso)-Date.parse(b.iso));
+ return panel('<h2>⏳ 出発・乗車カウントダウン</h2><p class="muted">端末時刻から残り時間を計算。航空便の出発時刻は旅程登録値です（運航状況を自動取得するものではありません）。</p>'+
+ data.map(t=>'<div class="countdown-card"><span class="time">'+esc(t.local)+'</span><strong>'+esc(t.name)+'</strong><div class="countdown-number" data-countdown-iso="'+esc(t.iso)+'">'+esc(countdownText(t.iso))+'</div><p class="muted">'+esc(t.type)+'</p></div>').join('')+
+ '<p class="tiny-hint">'+(data.length===2?'高速鉄道は未予約です。予約済みの列車番号・発車時刻を「日程」の個人メモに保存すると、この端末にカウントダウンを表示します。':'高鉄の時刻は端末内の個人メモに基づきます。変更・遅延があれば最新の予約画面を確認してください。')+' 空港・駅には出発時刻より十分早く到着してください。</p>');
+}
+function refreshCountdownNodes(){
+ document.querySelectorAll('[data-countdown-iso]').forEach(n=>{n.textContent=countdownText(n.dataset.countdownIso)});
+}
+function spendingOverview(){
+ const t=currentTrip(),currency=t.currency||'CNY',records=tripExpenses();
+ const spent=Math.round(records.reduce((sum,e)=>{const a=Number(e.amount);return sum+(Number.isFinite(a)&&a>0?a:0)},0)*100)/100;
+ const fmtAmount=x=>x.toLocaleString('ja-JP',{maximumFractionDigits:2});
+ if(t.id!==MAIN_TRIP)return panel('<h2>📊 予算と支出の進捗</h2><p class="muted">現在の旅行：'+esc(t.title)+'。支出記録は '+fmtAmount(spent)+' '+esc(currency)+'。予算未登録のため残高・消化率は表示しません。</p>');
+ const standard=budget.reduce((sum,x)=>sum+x[1],0);
+ const low=(standard+90+25+35)*2,high=(standard+140+45+63)*2;
+ const pct=low>0?spent/low*100:0,remainingLow=low-spent,remainingHigh=high-spent;
+ const progress=Math.min(100,Math.max(0,pct));
+ return panel('<h2>📊 予算残高・消化率</h2><p class="muted">2人分の現地計画予算と、この端末に記録した全支出を比較します。航空券・宿泊費は計画予算の対象外です。</p>'+
+ '<div class="spend-stats"><div><small>記録済みの支出</small><strong>'+fmtAmount(spent)+' 元</strong></div><div><small>2人分の計画予算</small><strong>'+fmtAmount(low)+'〜'+fmtAmount(high)+' 元</strong></div><div><small>予算残高（参考）</small><strong>'+fmtAmount(remainingLow)+'〜'+fmtAmount(remainingHigh)+' 元</strong></div></div>'+
+ '<div class="spend-bar-label"><span>消化率（計画下限 '+fmtAmount(low)+' 元に対して）</span><strong>'+pct.toFixed(1)+'%</strong></div>'+
+ '<div class="spend-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.round(progress)+'" aria-label="予算消化率"><span style="width:'+progress.toFixed(1)+'%"></span></div>'+
+ (pct>100?'<p class="hint">記録済み支出が予算下限を超えています。</p>':'')+
+ '<p class="tiny-hint">未入力の支出は含みません。2人で同じ支出を重複入力すると実績は過大になります。支出した合計金額を1件として登録してください。記録済みの支出に航空券・宿泊費が含まれる場合は比較対象が異なります。</p>');
+}
+function openChineseShow(zh,pinyin,ja){
+ const existing=document.getElementById('chineseShowOverlay');if(existing)existing.remove();
+ const overlay=document.createElement('div');overlay.id='chineseShowOverlay';overlay.className='chinese-show-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','中国語を大きく表示');
+ const card=document.createElement('section');card.className='chinese-show-card';
+ const label=document.createElement('p');label.className='chinese-show-caption';label.textContent='请看这里 · この画面を見せてください';card.appendChild(label);
+ const message=document.createElement('div');message.className='chinese-show-zh';message.lang='zh-CN';message.textContent=zh;card.appendChild(message);
+ const pin=document.createElement('p');pin.className='chinese-show-pinyin';pin.textContent=pinyin||'';card.appendChild(pin);
+ const jp=document.createElement('p');jp.className='chinese-show-ja';jp.textContent=ja||'';card.appendChild(jp);
+ const actions=document.createElement('div');actions.className='chinese-show-actions';
+ const copy=document.createElement('button');copy.type='button';copy.className='ghost';copy.textContent='📋 中国語をコピー';copy.onclick=async()=>{try{await navigator.clipboard.writeText(zh);copy.textContent='✓ コピーしました'}catch{prompt('この中国語をコピーしてください',zh)}};actions.appendChild(copy);
+ const close=document.createElement('button');close.type='button';close.className='ghost';close.textContent='✕ 閉じる';close.onclick=()=>overlay.remove();actions.appendChild(close);card.appendChild(actions);
+ overlay.appendChild(card);overlay.onclick=e=>{if(e.target===overlay)overlay.remove()};document.body.appendChild(overlay);close.focus();
+}
+
 const pageThemes={home:['朱红','旅程总览'],schedule:['青瓷','每日行程'],packing:['竹青','出发准备'],food:['暖橙','上海美食'],more:['绛紫','上海手信'],budget:['金砂','旅行预算'],phrase:['湖蓝','实用中文'],knowledge:['靛蓝','中国旅行指南'],bookings:['金砂','行程预订'],safety:['朱红','紧急帮助'],expenses:['金砂','旅行支出'],manage:['湖蓝','旅行管理']};
 
 function installHelpPanel(){return panel('<h2>📲 Android｜ホーム画面にアプリを追加する方法</h2><p class="muted">AndroidスマホではGoogle Chromeを使います。Chromeでこの上海旅手帖を開いた状態から操作してください。</p><div class="card"><strong>① Chromeで上海旅手帖を開く</strong><p>下の「アプリURLをコピー」を使ってChromeのアドレス欄に貼り付けてもOKです。</p><button type="button" class="ghost" data-copyval="https://koshien0517.github.io/shanghai-tabi-techo/">📋 アプリURLをコピー</button></div><div class="card"><strong>② Chromeのメニュー「︙」をタップ</strong><p>画面右上の縦3点メニューを開きます。端末によって表示位置や項目名が異なることがあります。</p></div><div class="card"><strong>③ 「アプリをインストール」または「ホーム画面に追加」を選ぶ</strong><p>メニューに「アプリをインストール」があればそれをタップします。「ホーム画面に追加」と表示される場合はそちらを選択します。</p></div><div class="card"><strong>④ 確認画面で「インストール」または「追加」を押す</strong><p>ホーム画面（またはアプリ一覧）に「上海旅手帖」のアイコンが追加されます。アイコンをタップして起動してください。</p></div><p class="tiny-hint">メニューが表示されない場合：Chromeで直接URLを開いているか確認し、ページを再読み込みしてください。すでにインストール済みなら追加項目が表示されない場合があります。</p><p class="muted">iPhoneの場合はSafariの共有メニュー →「ホーム画面に追加」を使用します。オフライン閲覧には事前にオンラインでアプリを一度開いてください。地図など外部サービスには通信が必要です。</p><p class="tiny-hint">個人用メモやお気に入りは端末内保存です。ホーム画面版とChrome版で保存データが共有されない場合があります。</p>')}
@@ -747,19 +840,19 @@ if(page==='packing'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>✅ 持ち物</
 if(page==='packing'&&selectedTrip()===MAIN_TRIP){let state=get('packing');let total=categories.flatMap(x=>x[1]).length;let done=categories.flatMap(x=>x[1]).filter(x=>state[x]).length;html=panel(`<div class="groupHead"><h2>持ち物チェック</h2><span class="tag">${done} / ${total} 準備済み</span></div><div class="progress" role="progressbar" aria-valuenow="${done}" aria-valuemax="${total}"><div class="fill" style="width:${done/total*100}%"></div></div><p class="muted">準備率 ${Math.round(done/total*100)}%</p><p class="muted">チェックはこの端末のブラウザ内に保存されます。友人のチェックとは連動しません。</p>`)+categories.map(([title,items])=>panel(`<div class="groupHead"><h2>${title}</h2><span class="muted">${items.filter(x=>state[x]).length}/${items.length}</span></div>`+items.map(x=>`<label class="checkrow"><input type="checkbox" data-pack="${esc(x)}" ${state[x]?'checked':''}><span class="${state[x]?'checked':''}">${esc(x)}</span></label>`).join(''))).join('')+panel('<button class="ghost" id="resetPacking">すべてのチェックを解除</button>');}
 if(page==='food'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🥟 グルメ</h2><p>上海旅行向けのグルメガイドです。上海に切り替えると確認できます。</p>');}
 if(page==='food'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🥟 上海グルメガイド</h2><p class="muted">料理・チェーン店・日本食・ファストフードを種類別に掲載。出店場所と価格は参考です。</p>')+panel('<div class="hint">辛さを控えたいとき：请不要放辣椒（Qǐng bú yào fàng làjiāo）＝唐辛子を入れないでください。記載価格は概算で店舗によって異なります。</div>')+foodCatalogPanel();}
-if(page==='budget'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>💴 予算</h2><p>この旅行の支出実績は「支出」画面で管理できます。上海旅行の計画予算は上海版に保存されています。</p>');}
-if(page==='budget'&&selectedTrip()===MAIN_TRIP){html=budgetPanel();}
+if(page==='budget'&&selectedTrip()!==MAIN_TRIP){html=spendingOverview();}
+if(page==='budget'&&selectedTrip()===MAIN_TRIP){html=spendingOverview()+budgetPanel();}
 if(page==='phrase'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🗣️ 中国語フレーズ</h2><p>上海旅行専用のフレーズです。上海旅行に切り替えてください。</p>');}
 if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=phrasebookPanel();}
 if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国旅行ガイド</h2><p>上海旅行専用の内容です。</p>');}
 if(page==='knowledge'&&selectedTrip()===MAIN_TRIP){html=knowledgePanel();}
 if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2><p>上海旅行専用のお土産ガイドです。</p>');}
 if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお土産ガイド</h2><p class="muted">お菓子・雑貨・中国茶などの候補を分類し、購入場所の目安も掲載。店舗の取扱商品・在庫は現地で確認してください。</p>')+giftCatalogPanel()+panel('<h2>共有のしかた</h2><p class="intro">同じURLで旅程を友人と共有できます。チェック状態は端末ごとに保存されます。</p><button class="ghost" id="share">このページのURLを共有</button>');}
-if(page==='bookings')html=bookingsPanel();
+if(page==='bookings')html=countdownPanel()+bookingsPanel();
 if(page==='safety')html=safetyPanel();
-if(page==='expenses')html=expensePanel()+splitPanel();
+if(page==='expenses')html=spendingOverview()+expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();
-if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+html+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
+if(page==='home'&&selectedTrip()===MAIN_TRIP)html=countdownPanel()+todayPanel()+html+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
 document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-cn">'+pageThemes[page][1]+'</span><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
@@ -838,6 +931,9 @@ document.querySelectorAll('[data-phrase-cat]').forEach(n=>n.onclick=()=>{phraseC
 let search=document.getElementById('phraseSearch');if(search)search.oninput=()=>{let q=search.value.trim().toLowerCase();let visible=0;document.querySelectorAll('.phrase-card').forEach(n=>{let show=n.dataset.search.includes(q);n.style.display=show?'':'none';if(show)visible++});let empty=document.getElementById('phraseNothing');if(empty)empty.classList.toggle('hidden',visible>0)};
 let favToggle=document.getElementById('phraseFavToggle');if(favToggle)favToggle.onclick=()=>{phraseFavoritesOnly=!phraseFavoritesOnly;render()};
 document.querySelectorAll('[data-phrase-fav]').forEach(n=>n.onclick=()=>{let fav=get('phrase-favorites'),key=n.dataset.phraseFav;fav[key]=!fav[key];set('phrase-favorites',fav);render()});
+document.querySelectorAll('[data-phrase-show]').forEach(n=>n.onclick=()=>openChineseShow(n.dataset.phraseShow,n.dataset.phrasePinyin,n.dataset.phraseJa));
+document.querySelectorAll('[data-safety-show]').forEach(n=>n.onclick=()=>openChineseShow(n.dataset.safetyShow,n.dataset.safetyPinyin,n.dataset.safetyJa));
+refreshCountdownNodes();
 document.querySelectorAll('[data-phrase-copy]').forEach(n=>n.onclick=async()=>{let value=n.dataset.phraseCopy;try{await navigator.clipboard.writeText(value);n.textContent='✓ コピーしました'}catch{prompt('こちらをコピーしてください',value)}});
 let addressCopy=document.getElementById('copyAddress');if(addressCopy)addressCopy.onclick=async()=>{let address=hotel.zh+'\n'+hotel.address;try{await navigator.clipboard.writeText(address);addressCopy.textContent='コピーしました'}catch{prompt('ホテル情報をコピーしてください',address)}};document.querySelectorAll('[data-route]').forEach(n=>n.onclick=()=>{budgetMode=n.dataset.route;render()});document.querySelectorAll('[data-rail]').forEach(n=>n.onclick=()=>{railChoice=n.dataset.rail;render()});document.querySelectorAll('[data-yen]').forEach(n=>n.onclick=()=>{yenMode=n.dataset.yen;render()});
 
