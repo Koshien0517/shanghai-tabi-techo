@@ -198,6 +198,16 @@ input[type=checkbox]{accent-color:var(--china-jade)}
 .hero-imperial .hero-moon-gate.hero-illustration{background:#41243a;border:7px solid #d6a362;box-shadow:0 0 0 2px #f0c67a,0 8px 20px #30121a88}
 .hero-imperial .hero-illustration svg{display:block;width:100%;height:100%}
 .hero-imperial .hero-art-caption{background:#6e2329ec}
+
+body.page-safety{--page-accent:#aa3337;--page-accent-dark:#78292b;--page-bg:#fcf8f0;--page-tint:#ffede3;--page-line:#e5c4b9;--page-ink:#7e3d37}
+body.page-bookings{--page-accent:#977133;--page-accent-dark:#775827;--page-bg:#fdfaf1;--page-tint:#f9ecd6;--page-line:#e3d1aa;--page-ink:#77572e}
+.safety-card,.booking-line{border:1px solid var(--page-line);border-radius:14px;background:#fffcf5;padding:14px;margin:10px 0}
+.safety-card strong,.booking-line strong{display:block;color:var(--page-accent-dark);font-size:16px}
+.safety-zh{font-size:clamp(19px,5vw,27px);font-weight:800;color:#8d3235;line-height:1.5;overflow-wrap:anywhere}
+.safety-call{display:inline-block;border-radius:10px;background:#ad3436;color:white;text-decoration:none;font-weight:800;font-size:24px;padding:8px 18px;margin:9px 0}
+.settle-summary{margin:12px 0;padding:17px;border-radius:14px;background:#fff0d7;border:1px solid #dabf91}
+.settle-summary small{display:block;color:#75613c}.settle-summary strong{display:block;color:#783b2b;font-size:20px;line-height:1.7}
+
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -388,10 +398,10 @@ function arrivalCardPanel(){
  '<div class="guide-banner"><span class="china-kicker">READY TO COPY</span><h3>🏨 滞在先・航空便をそのままコピー</h3><p class="small-caption">ホテルの予約情報をもとに入力してください。入力欄に合う言語の表記を選んでコピーできます。</p><strong>'+esc(hotel.zh)+'</strong><p>'+esc(hotel.address)+'</p>'+copyTools()+'</div><p class="small-caption">パスポート番号・生年月日などの個人情報はこの旅行アプリには入力・保存しません。入国カードの提出自体は公式サイトで行います。</p><p class="small-caption">参考：国家移民管理局の公式案内・上海市のオンライン入国カード案内。制度・画面は変更される可能性があります。</p><a href="https://english.shanghai.gov.cn/en-ServicesandGuides-OnlineServices/20260805/698aae992e9b4232a58f00e9e49dd22b.html" target="_blank" rel="noopener" class="maps">上海市公式の手順解説を見る ↗</a>');
 }
 function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上海の基礎知識と豆知識</h2><p class="intro">初めての中国旅行でも困らないよう、文化・交通・食事のマナーをまとめました。制度・営業時間は渡航前に公式情報で再確認してください。</p>')+knowledgeTopics.map(([title,a,b])=>panel('<h2>'+esc(title)+'</h2><p class="intro">'+esc(a)+'</p><p class="intro">'+esc(b)+'</p>')).join('')}
-const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
+const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['bookings','🎫','予約'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='1.5.2';const APP_RELEASE='2026-11-19';
+const APP_VERSION='1.6.0';const APP_RELEASE='2026-11-19';
 function panel(s){return `<section class="panel">${s}</section>`}function jump(p){page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
 function transitPanel(){return panel('<h2>🚄 12/30 空港→ホテル【確定ルート】</h2><p class="hint"><strong>リニア＋地下鉄を利用。</strong> 航空便JL891の浦東12:05着後、入国・荷物受取を済ませて13:30頃に出発する想定です。</p><div class="card"><strong>① リニア（磁浮列车）</strong><p>浦東空港 → 龍陽路：約8分・通常50元／人。当日航空券提示で40元の割引対象となる場合あり。ホーム移動・待機10〜20分を見込む。</p></div><div class="card"><strong>② 地下鉄2号線→10号線</strong><p>龍陽路 → 南京東路（2号線）→ 豫園（10号線）→ ホテル徒歩約3〜6分。地下鉄乗換・徒歩込み約40〜55分、約5元／人。</p></div><div class="breakdown">合計：<strong>約55〜80分、通常55元／人</strong>（割引適用時45元／人）。予算は通常運賃55元で計算。</div><p class="muted">リニア・地下鉄の実際の運行と割引条件は出発前に確認。ホテルは14:00以降チェックイン。</p>')}
@@ -542,7 +552,82 @@ async function checkAppVersion(){
  }catch(err){label.textContent='確認できませんでした。通信接続・公開状況を確認してください。'}
 }
 
-const pageThemes={home:['朱红','旅程总览'],schedule:['青瓷','每日行程'],packing:['竹青','出发准备'],food:['暖橙','上海美食'],more:['绛紫','上海手信'],budget:['金砂','旅行预算'],phrase:['湖蓝','实用中文'],knowledge:['靛蓝','中国旅行指南'],expenses:['金砂','旅行支出'],manage:['湖蓝','旅行管理']};
+
+/* Shared static travel facts and per-device safety/settlement tools */
+function settleExpenses(items){
+ let selfPaid=0,friendPaid=0,selfShare=0,friendShare=0,unknown=0;
+ for(const e of items){
+  const amt=Number(e.amount),payer=String(e.payer||'').trim(),split=e.split||'half';
+  if(!(amt>0)||!Number.isFinite(amt))continue;
+  if(!['自分','友人'].includes(payer)||!['half','self','friend'].includes(split)){unknown++;continue}
+  const share=split==='self'?amt:split==='friend'?0:amt/2;
+  selfShare+=share;friendShare+=amt-share;
+  if(payer==='自分')selfPaid+=amt;else friendPaid+=amt;
+ }
+ const round=x=>Math.round(x*100)/100;
+ return {selfPaid:round(selfPaid),friendPaid:round(friendPaid),selfShare:round(selfShare),friendShare:round(friendShare),balance:round(selfPaid-selfShare),unknown};
+}
+function splitPanel(){
+ const t=currentTrip(),cur=t.currency||'CNY',s=settleExpenses(tripExpenses());
+ const fmt=n=>n.toLocaleString('ja-JP',{maximumFractionDigits:2});
+ const dir=s.balance>0?'友人 → 自分':s.balance<0?'自分 → 友人':'精算不要';
+ return panel('<h2>🤝 2人の割り勘・精算</h2><p class="muted">この端末の支出明細から計算。友人の端末とは自動共有されません。</p>'+
+ '<div class="data-grid"><div class="data-box"><small>自分の立替</small><b>'+fmt(s.selfPaid)+' '+esc(cur)+'</b></div><div class="data-box"><small>友人の立替</small><b>'+fmt(s.friendPaid)+' '+esc(cur)+'</b></div><div class="data-box"><small>自分の負担額</small><b>'+fmt(s.selfShare)+' '+esc(cur)+'</b></div><div class="data-box"><small>友人の負担額</small><b>'+fmt(s.friendShare)+' '+esc(cur)+'</b></div></div>'+
+ '<div class="settle-summary"><small>精算方向</small><strong>'+esc(dir)+'</strong><strong>'+fmt(Math.abs(s.balance))+' '+esc(cur)+'</strong></div>'+
+ (s.unknown?'<p class="hint">支払者が未記録などの '+s.unknown+' 件を精算から除外しています。元の明細は保持します。</p>':'')+
+ '<p class="tiny-hint">「半分ずつ」「自分全額」「友人全額」で計算。通貨換算や送金は行いません。</p>');
+}
+const safetyTexts=[
+ ['パスポートを紛失','我的护照丢了。','警察に届け出て、日本国総領事館に連絡。受理書類を保管してください。'],
+ ['病気やけが','我身体不舒服，需要去医院。','緊急なら救急120。旅行保険の連絡先も確認してください。'],
+ ['列車が遅れた','我的火车晚点了，请问怎么办？','12306や駅窓口に変更・払い戻しの条件を確認してください。'],
+ ['ホテルへ戻りたい','请带我去这家酒店。','ホテル名と中国語住所を見せてください。']
+];
+function safetyPanel(){
+ const numbers=[['警察・事件','110','请帮我报警。'],['救急・急病','120','我需要救护车。'],['消防・火災','119','这里着火了，请帮忙！']];
+ return panel('<h2>🆘 中国での緊急連絡</h2><p class="hint">生命の危険がある場合、操作より通報や周囲への助けを優先してください。発信には音声通話が必要です。</p>'+
+ numbers.map(([name,num,zh])=>'<div class="safety-card"><strong>'+esc(name)+'</strong><a class="safety-call" href="tel:'+num+'">📞 '+num+'</a><p class="safety-zh">'+esc(zh)+'</p></div>').join(''))+
+ panel('<h2>🇯🇵 在上海日本国総領事館</h2><p><strong>代表：021-5257-4766</strong></p><p>領事部門：上海市延安西路2299号 上海世貿大厦13階</p><p><a class="ghost" href="tel:+862152574766">📞 電話する</a></p><p class="muted">夜間・休日は代表電話の音声案内に従ってください。公式情報を出発直前にも確認してください。</p><a href="https://www.shanghai.cn.emb-japan.go.jp/" target="_blank" rel="noopener noreferrer">日本国総領事館公式サイト ↗</a></p>')+
+ panel('<h2>🗣️ 中国語を見せて助けを求める</h2>'+
+ safetyTexts.map(([name,zh,note])=>'<div class="safety-card"><strong>'+esc(name)+'</strong><p class="safety-zh">'+esc(zh)+'</p><p class="muted">'+esc(note)+'</p><button type="button" class="ghost" data-safety-copy="'+esc(zh)+'">📋 中国語をコピー</button></div>').join('')+
+ '<div class="safety-card"><strong>ホテルを伝える</strong><p class="safety-zh">'+esc(hotel.zh)+'</p><p class="safety-zh">'+esc(hotel.address)+'</p><button type="button" class="ghost" data-safety-copy="'+esc(hotel.zh+'　'+hotel.address)+'">住所をコピー</button></div>');
+}
+function bookingsPanel(){
+ if(selectedTrip()!==MAIN_TRIP)return panel('<h2>🎫 予約情報</h2><p>上海旅行専用の予約メモです。「管理」で上海旅行に切り替えてください。</p>');
+ const flags=get('booking-checks');
+ const line=(title,detail,info)=>'<div class="booking-line"><strong>'+esc(title)+'</strong><p>'+esc(detail)+'</p><p class="muted">'+esc(info)+'</p></div>';
+ const flight1=line('✈️ JL891　12/30 関空 → 上海浦東','10:15（日本）発 → 12:05（中国）着','旅程登録済み。ターミナルと運航状況は直前に確認');
+ const flight2=line('✈️ JL894　1/2 上海浦東 → 関空','13:25（中国）発 → 16:45（日本）着','旅程登録済み。ターミナルと運航状況は直前に確認');
+ const train=(name,v)=>line(name+'　'+sharedRailMemo.date,v.from+' → '+v.to+' ／ '+v.departure+' → '+v.arrival,sharedRailMemo.status+' ／ '+v.train);
+ return panel('<h2>🎫 航空便・高鉄の予約情報</h2><p class="hint">共有旅程の要約です。予約・発券状況の自動照会は行っていません。高鉄は未予約として表示します。</p>'+
+ flight1+flight2+train('🚄 往路：上海 → 無錫',sharedRailMemo.outbound)+train('🚄 復路：無錫 → 上海',sharedRailMemo.inbound))+
+ panel('<h2>✅ 個人用の予約確認チェック</h2><p class="muted">この端末だけに保存。友人の画面や共有旅程は変更されません。</p>'+
+ [['outFlight','往路航空便の予約情報'],['backFlight','復路航空便の予約情報'],['outRail','高鉄・往路の予約情報'],['backRail','高鉄・復路の予約情報'],['terminal','ターミナル／駅を確認'],['documents','予約資料を安全に準備']].map(([k,title])=>'<label class="checkrow"><input type="checkbox" data-booking-check="'+k+'" '+(flags[k]?'checked':'')+'><span>'+title+'</span></label>').join('')+
+ '<p class="tiny-hint">氏名・パスポート番号・予約番号・QRコードは公開サイトの情報に入れないでください。</p><button type="button" class="ghost" id="openRailMemo">12/31 高速鉄道の詳細メモへ →</button>');
+}
+function offlinePanel(){
+ return panel('<h2>📴 オフラインの準備・確認</h2><p class="muted">出発前にオンラインで基本画面・アイコンを端末へ保存。日程・中国語フレーズ・ホテル住所・緊急案内は同じHTMLから表示できます。</p>'+
+ '<button type="button" class="ghost" id="offlineSave">📥 オフライン用に保存</button> <button type="button" class="ghost" id="offlineInspect">保存状態を確認</button>'+
+ '<p id="offlineResult" role="status" class="rail-note">未確認です。Wi-Fiにつないで保存してください。</p>'+
+ '<p class="tiny-hint">地図や外部サイト、運航状況などには通信が必要です。ストレージ削除・アプリ削除でキャッシュは失われます。</p>');
+}
+async function checkOffline(saveNow){
+ const out=document.getElementById('offlineResult');if(!out)return;
+ if(!('caches' in window)||!('serviceWorker' in navigator)){out.textContent='この環境ではPWAオフライン保存を確認できません。';return}
+ out.textContent='保存状態を確認しています…';
+ try{
+  if(saveNow&&!navigator.onLine)throw Error('保存には通信が必要です');
+  const reg=await navigator.serviceWorker.getRegistration('./');if(!reg)throw Error('PWAの登録がありません。オンラインでアプリを開き直してください');
+  const keys=(await caches.keys()).filter(k=>k.startsWith('shanghai-tabi-techo-pwa-')).sort((a,b)=>Number(b.split('-v').pop())-Number(a.split('-v').pop()));
+  if(!keys.length)throw Error('PWA用キャッシュが見つかりません');
+  const cache=await caches.open(keys[0]),paths=['./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
+  if(saveNow){for(const p of paths){const res=await fetch(p,{cache:'reload'});if(!res.ok)throw Error('取得失敗 '+p);await cache.put(p,res)}}
+  const checks=await Promise.all(paths.map(p=>cache.match(p))),count=checks.filter(Boolean).length;
+  out.textContent=count===paths.length?'✓ 基本ファイル '+count+'/'+paths.length+' 件が保存済みです。通信なしでも主要画面を表示できます。':'保存済み '+count+'/'+paths.length+' 件。通信があるときに「保存」を押してください。';
+ }catch(e){out.textContent='保存状態を確認できません：'+e.message}
+}
+
+const pageThemes={home:['朱红','旅程总览'],schedule:['青瓷','每日行程'],packing:['竹青','出发准备'],food:['暖橙','上海美食'],more:['绛紫','上海手信'],budget:['金砂','旅行预算'],phrase:['湖蓝','实用中文'],knowledge:['靛蓝','中国旅行指南'],bookings:['金砂','行程预订'],safety:['朱红','紧急帮助'],expenses:['金砂','旅行支出'],manage:['湖蓝','旅行管理']};
 
 function installHelpPanel(){return panel('<h2>📲 Android｜ホーム画面にアプリを追加する方法</h2><p class="muted">AndroidスマホではGoogle Chromeを使います。Chromeでこの上海旅手帖を開いた状態から操作してください。</p><div class="card"><strong>① Chromeで上海旅手帖を開く</strong><p>下の「アプリURLをコピー」を使ってChromeのアドレス欄に貼り付けてもOKです。</p><button type="button" class="ghost" data-copyval="https://koshien0517.github.io/shanghai-tabi-techo/">📋 アプリURLをコピー</button></div><div class="card"><strong>② Chromeのメニュー「︙」をタップ</strong><p>画面右上の縦3点メニューを開きます。端末によって表示位置や項目名が異なることがあります。</p></div><div class="card"><strong>③ 「アプリをインストール」または「ホーム画面に追加」を選ぶ</strong><p>メニューに「アプリをインストール」があればそれをタップします。「ホーム画面に追加」と表示される場合はそちらを選択します。</p></div><div class="card"><strong>④ 確認画面で「インストール」または「追加」を押す</strong><p>ホーム画面（またはアプリ一覧）に「上海旅手帖」のアイコンが追加されます。アイコンをタップして起動してください。</p></div><p class="tiny-hint">メニューが表示されない場合：Chromeで直接URLを開いているか確認し、ページを再読み込みしてください。すでにインストール済みなら追加項目が表示されない場合があります。</p><p class="muted">iPhoneの場合はSafariの共有メニュー →「ホーム画面に追加」を使用します。オフライン閲覧には事前にオンラインでアプリを一度開いてください。地図など外部サービスには通信が必要です。</p><p class="tiny-hint">個人用メモやお気に入りは端末内保存です。ホーム画面版とChrome版で保存データが共有されない場合があります。</p>')}
 function render(){document.body.className='page-'+page;const nav=document.getElementById('nav');const previousScroll=nav.scrollLeft;nav.classList.add('nav-6');nav.setAttribute('aria-label','旅行メニュー');nav.innerHTML=navItems.map(([id,emoji,title])=>`<button type="button" aria-label="${title}" ${page===id?'aria-current="page"':''} class="${page===id?'active':''}" data-page="${id}"><span aria-hidden="true">${emoji}</span>${title}</button>`).join('');nav.scrollLeft=previousScroll;const activeTab=nav.querySelector('[aria-current="page"]');if(activeTab){const target=activeTab.offsetLeft+activeTab.offsetWidth/2-nav.clientWidth/2;nav.scrollLeft=Math.max(0,target)}document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>jump(n.dataset.page));let html='';
@@ -562,10 +647,12 @@ if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国�
 if(page==='knowledge'&&selectedTrip()===MAIN_TRIP){html=knowledgePanel();}
 if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2><p>上海旅行専用のお土産ガイドです。</p>');}
 if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお土産ガイド</h2><p class="muted">中国語名、商品の特徴、購入場所の候補を掲載。チェックは端末別です。</p>')+panel(detailCards(giftDetails,'gifts'))+panel('<h2>共有のしかた</h2><p class="intro">同じURLで旅程を友人と共有できます。チェック状態は端末ごとに保存されます。</p><button class="ghost" id="share">このページのURLを共有</button>');}
-if(page==='expenses')html=expensePanel();
-if(page==='manage')html=managePanel();
+if(page==='bookings')html=bookingsPanel();
+if(page==='safety')html=safetyPanel();
+if(page==='expenses')html=expensePanel()+splitPanel();
+if(page==='manage')html=offlinePanel()+managePanel();
 if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+html;
-document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-cn">'+pageThemes[page][1]+'</span><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',expenses:'支出',manage:'管理'}[page])+'</span></div>'+html;
+document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-cn">'+pageThemes[page][1]+'</span><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
 const customAdd=document.getElementById('customAddEvent');if(customAdd)customAdd.onclick=()=>jump('manage');
