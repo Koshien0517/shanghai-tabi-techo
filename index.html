@@ -414,6 +414,16 @@ body:not(.page-home) .hero{display:none!important}
  .hero-imperial .hero-travel-sub{font-size:9px}
 }
 
+
+/* Arrival card: clear Japanese-first workflow */
+.arrival-ja-guide{margin:17px 0;border-top:1px solid #e4c38d;padding-top:15px}
+.arrival-ja-guide>strong{font-family:"Yu Mincho",serif;color:#7b302d;font-size:19px}
+.arrival-ja-guide>.muted{line-height:1.7;margin:6px 0 12px}
+.arrival-ja-step{display:flex;align-items:flex-start;gap:12px;padding:15px 6px;border-bottom:1px solid #eddfc8}
+.arrival-ja-number{flex:none;display:grid;place-items:center;width:39px;height:39px;border-radius:9px;border:1px solid #d6a96d;background:#903037;color:#fff5dc;font-weight:800;letter-spacing:.04em}
+.arrival-ja-step h3{margin:0 0 6px;font-family:inherit;color:#76352f;font-size:15px}
+.arrival-ja-step p{margin:0;color:#5f5550;font-size:13px;line-height:1.75}
+
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -679,21 +689,29 @@ function copyTools(){
  return '<div class="copy-list">'+items.map(([label,val])=>'<button type="button" data-copyval="'+esc(val)+'">📋 '+esc(label)+'をコピー</button>').join('')+'</div>';
 }
 function arrivalCardPanel(){
+ const official='https://s.nia.gov.cn/ArrivalCardFillingPC/';
  const steps=[
- ['言語を選択','公式ページを開き、利用する言語を選択。日本語対応の有無は実際の画面で確認してください。','<svg viewBox="0 0 320 122" role="img" aria-label="手続きの流れを説明するイメージ図" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="304" height="105" rx="10" fill="#fffdfa" stroke="#c7bba8"/><rect x="8" y="8" width="304" height="23" rx="10" fill="#8f2837"/><text x="21" y="24" fill="white" font-size="12" font-weight="bold">NIA · Arrival Card</text><rect x="26" y="45" width="120" height="36" rx="7" fill="#f1e7d9" stroke="#d7c3a2"/><text x="43" y="67" font-size="12" fill="#443c37">Language ▾</text><rect x="166" y="45" width="128" height="36" rx="7" fill="#f8e2dd" stroke="#bc6d72"/><text x="177" y="67" font-size="12" fill="#842d3b">English / 中文</text></svg>'],
- ['渡航情報・滞在先を入力','パスポートに記載された氏名、到着便、渡航日、滞在先など、実際に表示される項目を正確に入力。画面の項目や順序は変更されることがあります。','<svg viewBox="0 0 320 122" role="img" aria-label="手続きの流れを説明するイメージ図" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="304" height="105" rx="10" fill="#fffdfa" stroke="#c7bba8"/><rect x="8" y="8" width="304" height="23" rx="10" fill="#8f2837"/><text x="21" y="24" fill="white" font-size="12" font-weight="bold">NIA · Arrival Card</text><text x="22" y="48" font-size="11" fill="#635952">Passport / Flight / Stay</text><rect x="22" y="54" width="130" height="18" rx="4" fill="#f5eee2" stroke="#ddcbb9"/><rect x="165" y="54" width="129" height="18" rx="4" fill="#f5eee2" stroke="#ddcbb9"/><text x="26" y="66" font-size="10" fill="#8f2837">Passport name</text><text x="169" y="66" font-size="10" fill="#8f2837">Flight number</text><rect x="22" y="80" width="272" height="21" rx="5" fill="#fcf1e4" stroke="#d3c3a8"/><text x="29" y="94" font-size="10" fill="#86603c">Accommodation address</text></svg>'],
- ['内容を確認して電子署名','入力内容を見直し、画面の指示に従って署名・送信。入力ミスがないか必ず確認してください。','<svg viewBox="0 0 320 122" role="img" aria-label="手続きの流れを説明するイメージ図" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="304" height="105" rx="10" fill="#fffdfa" stroke="#c7bba8"/><rect x="8" y="8" width="304" height="23" rx="10" fill="#8f2837"/><text x="21" y="24" fill="white" font-size="12" font-weight="bold">NIA · Arrival Card</text><text x="25" y="48" font-size="12" fill="#6d5550">Review the information</text><path d="M32 87q30-19 58 0t45-5" fill="none" stroke="#a03442" stroke-width="3"/><rect x="188" y="74" width="101" height="24" rx="7" fill="#9b3440"/><text x="204" y="90" font-size="11" fill="white">Confirm</text></svg>'],
- ['受付用QRコードを保存','送信後に表示されるQRコードを画像やスクリーンショットで保存。渡航時に提示できるよう、オフラインで見られる状態に。','<svg viewBox="0 0 320 122" role="img" aria-label="手続きの流れを説明するイメージ図" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="304" height="105" rx="10" fill="#fffdfa" stroke="#c7bba8"/><rect x="8" y="8" width="304" height="23" rx="10" fill="#8f2837"/><text x="21" y="24" fill="white" font-size="12" font-weight="bold">NIA · Arrival Card</text><rect x="31" y="44" width="66" height="62" fill="#fff" stroke="#aaa"/><path d="M38 51h20v20H38zM68 51h22v22H68zM38 81h20v18H38z" stroke="#303030" stroke-width="6" fill="none"/><path d="M69 83h7m8 0h7m-15 9h7m8 0h-7" stroke="#303030" stroke-width="5"/><text x="126" y="61" font-size="14" font-weight="bold" fill="#81323d">Submission receipt</text><text x="126" y="83" font-size="12" fill="#655a51">Save QR code</text><text x="126" y="99" font-size="10" fill="#8a7767">Illustration only</text></svg>']
+ ['01','公式サイトを開いて「日本語」に切り替える','右上の言語メニュー（Language）から「日本語」を選択。以降は日本語表示の案内に沿って進みます。'],
+ ['02','「入国カード記入」を選ぶ','入国申告のページで入国カードの記入を開始。各自の旅券を手元に用意してください。'],
+ ['03','本人・渡航・滞在情報を入力する','氏名・旅券情報はパスポートどおりに入力。訪問目的や入国日、到着便（JL891）、滞在先など、画面に表示された必須項目を確認して入力します。'],
+ ['04','内容を確認して送信する','入国日・航空便・ホテル所在地・旅券の記載に誤りがないか確認し、日本語画面の案内に従って申告を完了してください。'],
+ ['05','提出完了の控えを保存する','完了画面に受付番号・QRコード等が表示された場合は、スクリーンショットなどで端末内に保存。入国審査で確認を求められたとき提示できるようにしておきます。']
  ];
- return panel('<span class="china-kicker">ENTRY GUIDE · 入境卡</span><h2>🛂 中国オンライン入国カード</h2><p class="intro">中国国家移民管理局（NIA）のオンライン入国カード。スマホから事前に提出できます。公式サービスの入力は<strong>無料</strong>です。</p><a class="arrival-official" href="https://s.nia.gov.cn/ArrivalCardFillingPC/" target="_blank" rel="noopener">公式のオンライン入国カードを開く ↗</a><div class="arrival-warning"><strong>⚠️ 偽サイトに注意</strong>：入力代行を装った有料サイトが報告されています。必ずNIA公式から進んでください。事前に提出できない場合は、入国審査場所での手続きや紙のカードも案内されています。</div><p class="small-caption">以下の画像は操作手順の説明用に作成した模式図です。実際の公式画面のスクリーンショットではありません。</p>'+
- steps.map(([title,desc,svg],i)=>'<article class="arrival-step"><div class="step-top"><span class="step-n">'+(i+1)+'</span><strong>'+title+'</strong></div><div class="step-picture">'+svg+'</div><p>'+desc+'</p></article>').join('')+
- '<div class="guide-banner"><span class="china-kicker">READY TO COPY</span><h3>🏨 滞在先・航空便をそのままコピー</h3><p class="small-caption">ホテルの予約情報をもとに入力してください。入力欄に合う言語の表記を選んでコピーできます。</p><strong>'+esc(hotel.zh)+'</strong><p>'+esc(hotel.address)+'</p>'+copyTools()+'</div><p class="small-caption">パスポート番号・生年月日などの個人情報はこの旅行アプリには入力・保存しません。入国カードの提出自体は公式サイトで行います。</p><p class="small-caption">参考：国家移民管理局の公式案内・上海市のオンライン入国カード案内。制度・画面は変更される可能性があります。</p><a href="https://english.shanghai.gov.cn/en-ServicesandGuides-OnlineServices/20260805/698aae992e9b4232a58f00e9e49dd22b.html" target="_blank" rel="noopener" class="maps">上海市公式の手順解説を見る ↗</a>');
+ return panel('<span class="china-kicker">ENTRY GUIDE · 入境卡</span><h2>🛂 中国オンライン入国カード｜日本語で申告</h2>'+
+ '<p class="intro">中国国家移民管理局（NIA）の公式オンライン入国カードは<strong>日本語表示に対応</strong>しています。日本語に切り替えてから手続きを進めれば、中国語で入力方法を調べる必要はありません。申告は<strong>無料</strong>です。</p>'+
+ '<a class="arrival-official" href="'+official+'" target="_blank" rel="noopener noreferrer">🇨🇳 NIA公式サイトで日本語申告を始める ↗</a>'+
+ '<div class="arrival-warning"><strong>⚠️ 偽サイト・有料代行に注意</strong>：入国カードのオンライン申告に手数料は不要です。公式URL（s.nia.gov.cn）を確認してください。事前提出できない場合は、到着後に現地端末や紙のカードで手続きする方法も案内されています。</div>'+
+ '<div class="arrival-ja-guide"><strong>日本語での入力手順</strong><p class="muted">以下は日本語対応を前提にした操作ガイドです。実際のボタン名称・入力順序は公式サイトの更新により変わる場合があります。</p>'+
+ steps.map(([n,title,desc])=>'<article class="arrival-ja-step"><span class="arrival-ja-number">'+n+'</span><div><h3>'+esc(title)+'</h3><p>'+esc(desc)+'</p></div></article>').join('')+'</div>'+
+ '<div class="guide-banner"><span class="china-kicker">READY TO COPY · 入力に使う旅程</span><h3>🏨 ホテル・航空便をコピー</h3><p class="small-caption">日本語画面で入力する際も、ホテル名・住所は予約内容と照合し、必要に応じて中国語／英語表記を利用してください。</p><strong>'+esc(hotel.zh)+'</strong><p>'+esc(hotel.address)+'</p>'+copyTools()+'</div>'+
+ '<p class="small-caption">申告は旅行者ごとに行います。旅券番号・生年月日・申告完了QRなどの個人情報は、この公開旅行アプリには保存しません。控えは各自の端末で安全に管理してください。</p>'+
+ '<a href="https://japanese.shanghai.gov.cn/ja-Expat%20Services-Videos-WhatsNew/20251121/9bd95088e2f04a6b9f934664a331ec73.html" target="_blank" rel="noopener noreferrer" class="maps">上海市公式・日本語のオンライン申告案内 ↗</a>');
 }
 function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上海の基礎知識と豆知識</h2><p class="intro">初めての中国旅行でも困らないよう、文化・交通・食事のマナーをまとめました。制度・営業時間は渡航前に公式情報で再確認してください。</p>')+knowledgeTopics.map(([title,a,b])=>panel('<h2>'+esc(title)+'</h2><p class="intro">'+esc(a)+'</p><p class="intro">'+esc(b)+'</p>')).join('')}
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='1.9.1';const APP_RELEASE='2026-11-19';
+const APP_VERSION='1.9.2';const APP_RELEASE='2026-11-19';
 function panel(s){return `<section class="panel">${s}</section>`}function jump(p){page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
 function transitPanel(){return panel('<h2>🚄 12/30 空港→ホテル【確定ルート】</h2><p class="hint"><strong>リニア＋地下鉄を利用。</strong> 航空便JL891の浦東12:05着後、入国・荷物受取を済ませて13:30頃に出発する想定です。</p><div class="card"><strong>① リニア（磁浮列车）</strong><p>浦東空港 → 龍陽路：約8分・通常50元／人。当日航空券提示で40元の割引対象となる場合あり。ホーム移動・待機10〜20分を見込む。</p></div><div class="card"><strong>② 地下鉄2号線→10号線</strong><p>龍陽路 → 南京東路（2号線）→ 豫園（10号線）→ ホテル徒歩約3〜6分。地下鉄乗換・徒歩込み約40〜55分、約5元／人。</p></div><div class="breakdown">合計：<strong>約55〜80分、通常55元／人</strong>（割引適用時45元／人）。予算は通常運賃55元で計算。</div><p class="muted">リニア・地下鉄の実際の運行と割引条件は出発前に確認。ホテルは14:00以降チェックイン。</p>')}
