@@ -1,5 +1,5 @@
 {
-  "version": "1.9.0",
+  "version": "1.9.1",
   "releasedAt": "2026-11-20",
   "features": [
     "update-check",
@@ -30,6 +30,7 @@
     "jiangnan-editorial-ui",
     "cinnabar-tab-banners",
     "jade-phrase-cards",
-    "gold-accent-navigation"
+    "gold-accent-navigation",
+    "compact-home-cover"
   ]
 }
