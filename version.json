@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.1",
   "releasedAt": "2026-11-20",
   "features": [
     "update-check",
@@ -35,6 +35,8 @@
     "japanese-arrival-card-guide",
     "free-ja-zh-translation",
     "offline-exact-phrase-translation",
-    "translator-large-display-and-tts"
+    "translator-large-display-and-tts",
+    "translator-timeout-retry",
+    "native-translation-fallback-timeout"
   ]
 }
