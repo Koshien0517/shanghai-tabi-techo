@@ -1,5 +1,5 @@
 {
-  "version": "2.1.0",
+  "version": "2.2.0",
   "releasedAt": "2026-11-20",
   "features": [
     "update-check",
@@ -41,6 +41,9 @@
     "supermarket-snacks-26-items",
     "china-brand-variants",
     "instant-noodle-import-warnings",
-    "visit-japan-web-return-guide"
+    "visit-japan-web-return-guide",
+    "wuxi-day-trip-17-step-itinerary",
+    "wuxi-jichang-garden-guide",
+    "first-class-rail-unbooked-budget-planning"
   ]
 }
