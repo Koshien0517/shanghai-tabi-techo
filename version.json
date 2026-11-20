@@ -1,5 +1,5 @@
 {
-  "version": "2.0.1",
+  "version": "2.1.0",
   "releasedAt": "2026-11-20",
   "features": [
     "update-check",
@@ -37,6 +37,10 @@
     "offline-exact-phrase-translation",
     "translator-large-display-and-tts",
     "translator-timeout-retry",
-    "native-translation-fallback-timeout"
+    "native-translation-fallback-timeout",
+    "supermarket-snacks-26-items",
+    "china-brand-variants",
+    "instant-noodle-import-warnings",
+    "visit-japan-web-return-guide"
   ]
 }
