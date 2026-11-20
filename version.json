@@ -1,6 +1,6 @@
 {
-  "version": "1.5.2",
-  "releasedAt": "2026-11-19",
+  "version": "1.6.0",
+  "releasedAt": "2026-11-20",
   "features": [
     "update-check",
     "today-and-next",
@@ -13,6 +13,11 @@
     "chinese-themed-tab-icons",
     "chinese-inspired-overall-ui",
     "ornate-shanghai-hero",
-    "photo-free-illustrated-hero"
+    "photo-free-illustrated-hero",
+    "offline-readiness",
+    "current-location-route-search",
+    "emergency-help",
+    "two-person-settlement",
+    "flight-rail-booking-overview"
   ]
 }
