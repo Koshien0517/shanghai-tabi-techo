@@ -254,6 +254,115 @@ body:not(.page-home) .hero{display:none!important}
 .spend-bar>span{display:block;height:100%;background:linear-gradient(90deg,#397c72,#d4a45d);border-radius:99px;transition:width .2s}
 @media(max-width:390px){.spend-stats{grid-template-columns:1fr}.spend-stats>div:last-child{grid-column:auto}}
 
+
+/* ─── Shanghai travel notebook | Jiangnan editorial system v1.9 ───
+   Self-contained CSS decoration (no images, fonts or extra requests).
+   Preserve content hierarchy, readable controls and home-only hero. */
+:root{
+ --ink-warm:#342c2b;--cinnabar:#9e302e;--vermillion:#bd4936;
+ --antique-gold:#c79a53;--tea-paper:#fffaf0;--seal-jade:#286c62;
+}
+body{
+ color:var(--ink-warm);
+ background-color:#faf5eb;
+ background-image:
+   radial-gradient(circle at 14px 14px,rgba(154,99,45,.075) 1px,transparent 1.5px),
+   radial-gradient(ellipse at 80% 0%,rgba(203,166,101,.15),transparent 45%),
+   linear-gradient(180deg,#fbf5e9 0%,#fcf8f0 45%,#faf4e8 100%);
+ background-size:28px 28px,100% 100%,100% 100%;
+}
+.shell{max-width:790px;padding-bottom:140px}
+.page-intro{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ margin:12px 0 19px;padding:17px 17px 17px 20px;
+ min-height:107px;
+ border:1px solid #c98e56;
+ border-bottom:3px solid #dcb878;
+ border-radius:17px;
+ background:
+  radial-gradient(circle at 88% 30%,rgba(247,193,114,.13) 0 44px,transparent 45px),
+  repeating-radial-gradient(circle at 95% 115%,transparent 0 13px,rgba(240,192,123,.085) 14px 16px,transparent 17px 29px),
+  linear-gradient(117deg,#6e1f27,#952b30 58%,#ab3f35);
+ box-shadow:0 6px 18px rgba(103,40,36,.13);
+ overflow:hidden;
+ position:relative;
+}
+.page-intro:before{content:'';position:absolute;inset:6px;pointer-events:none;border:1px solid rgba(247,206,149,.45);border-radius:12px}
+.page-intro:after{content:'';position:absolute;top:15px;left:0;width:4px;height:calc(100% - 30px);border-radius:0 3px 3px 0;background:#efc981;transform:none}
+.page-intro-name{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:6px}
+.page-intro-kicker{font-size:10px;font-weight:750;letter-spacing:.13em;color:#f7d6a2;line-height:1.3}
+.page-intro-cn{font-size:clamp(24px,5.5vw,31px);font-family:"Yu Mincho","Noto Serif CJK SC","Songti SC",serif;letter-spacing:.075em;line-height:1.35;color:#fff9eb;font-weight:800;text-shadow:0 1px 4px #351b1b45;white-space:normal}
+.page-intro-right{display:flex;gap:10px;align-items:center;position:relative;z-index:1;flex-shrink:0}
+.page-intro-ja{white-space:nowrap;color:#fff0d8;background:#6c282c99;border:1px solid #e2b77d;font-size:11px;font-weight:750;border-radius:7px;padding:6px 9px}
+.page-intro-seal{display:grid;place-items:center;height:43px;width:43px;flex:none;border-radius:7px;background:#ad3535;color:#fff3d6;border:3px double #f3c57f;font-family:"Yu Mincho","Songti SC",serif;font-size:25px;box-shadow:inset 0 0 0 2px #8d2929,0 2px 7px #39131330}
+.panel{
+ position:relative;background:#fffdf8;border:1px solid #e7d3b3;
+ border-top:2px solid #d8ad71;border-radius:16px;
+ box-shadow:0 5px 17px rgba(83,49,26,.055);margin:16px 0;padding:19px;
+}
+.panel:before{content:'';position:absolute;top:0;right:0;width:30px;height:30px;pointer-events:none;opacity:.32;background:repeating-linear-gradient(135deg,transparent 0 6px,#bf8b50 7px 8px,transparent 9px 15px);clip-path:polygon(100% 0,100% 100%,0 0)}
+.panel h2{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;letter-spacing:.035em;color:#792d2a;border-left:0;padding-left:14px;position:relative;font-size:19px;line-height:1.5}
+.panel h2:before{content:'';position:absolute;left:0;top:.32em;bottom:.32em;width:4px;border-radius:4px;background:linear-gradient(180deg,#b43132,#d6a75c)}
+.panel h3{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;color:#76502f}
+.panel .tag{border:1px solid #e8cda2;border-radius:6px;background:#fff1db;color:#8b4633;font-weight:750;letter-spacing:.03em;padding:5px 9px}
+.card,.booking-line,.safety-card,.countdown-card,.emergency-item{
+ border:1px solid #e9d8bc;background:linear-gradient(145deg,#fffdf8,#fdf7ea);
+ border-left:3px solid #d1a366;border-radius:12px;padding:14px;
+ box-shadow:0 1px 4px rgba(86,45,23,.035)
+}
+.card>strong,.booking-line>strong,.safety-card>strong,.countdown-card>strong{color:#663730}
+.card .time,.booking-line .time,.countdown-card .time,.time{color:#95613c;letter-spacing:.025em}
+.detail-no-checkbox{border-left-color:#b94b3b}
+.detail-no-checkbox .detail-heading strong{font-size:16px;color:#7a332e}
+.detail-no-checkbox .detail-heading .muted{color:#6b6259}
+.phrase-card{border:1px solid #d7d7c1!important;border-left:3px solid #387c70!important;background:linear-gradient(140deg,#fffefa,#f1f6ef)!important;border-radius:13px;box-shadow:0 2px 8px #405d3920}
+.phrase-zh{color:#792c30!important;font-weight:850}
+.phrase-pinyin,.safety-pinyin{color:#236e61!important}
+.phrase-ja,.safety-japanese{color:#5c5550}
+.hint{border:1px solid #ecd5a8;border-left:3px solid #cfa05d;background:linear-gradient(110deg,#fff5df,#fffbf2);color:#655240}
+.budget-total,.settle-summary,.spend-stats>div{border:1px solid #e3c28b!important;background:linear-gradient(120deg,#fff0d6,#fff9ec)!important}
+.budget-total strong,.spend-stats strong{color:#873c2e}
+.money-table{border-radius:9px;overflow:hidden}
+.money-table th{background:#f7ecd6;color:#684c2e}
+.money-table td,.money-table th{border-bottom-color:#e9dcc8}
+.data-box{background:#fff7e9;border:1px solid #ead8b6}
+.segment,.phrase-cats{scrollbar-width:thin;scrollbar-color:#d6ae75 transparent}
+.segment button,.phrase-tab{border-radius:8px!important;border:1px solid #e2caa5!important;background:#fffaf0!important;color:#74513e!important}
+.segment button.active,.phrase-tab.active{background:linear-gradient(130deg,#8a2830,#b5433a)!important;border-color:#9f3537!important;color:#fff8e8!important;box-shadow:inset 0 0 0 1px #e2b57855}
+.ghost,.copy-btn,.choice,.route-from-here,.phrase-show-button{
+ background:#fffcf6;border-color:#ddc296;color:#793a31;
+ border-radius:9px;min-height:38px;
+}
+.ghost:active,.copy-btn:active,.choice:active{transform:scale(.99)}
+.ghost:focus-visible,.copy-btn:focus-visible,.bottom button:focus-visible,.segment button:focus-visible,.phrase-tab:focus-visible{outline:3px solid #a75c3d;outline-offset:2px}
+.maps{color:#286d64}
+input,textarea,select{accent-color:#ac3935}
+input:not([type="checkbox"]):not([type="radio"]),select,textarea{border-radius:9px;max-width:100%}
+input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid #a65c40;outline-offset:1px}
+.bottom{background:rgba(255,250,239,.97);border-top:2px solid #d9b77d;box-shadow:0 -7px 22px rgba(89,45,28,.13)}
+.bottom.nav-6 button{color:#755e50;border-radius:13px}
+.bottom.nav-6 button span{filter:saturate(.95)}
+.bottom.nav-6 button.active{background:linear-gradient(150deg,#8e2830,#b7473c)!important;border-color:#dcb777!important;color:#fff3df!important;box-shadow:0 3px 10px #702b2640}
+.bottom.nav-6 button.active span{filter:none}
+.bottom.nav-6 button.active:after{background:#f3cc8a!important;width:19px}
+.update-float .update-now{border:1px solid #cda269;background:#fff0d6;color:#7d3030;box-shadow:0 5px 15px #6c332d38;font-weight:850}
+.chinese-show-card{background:linear-gradient(135deg,#fffaf0,#f7ecdc);border:3px double #ca9c58}
+.chinese-show-zh{color:#982e35}
+.safety-call{background:linear-gradient(135deg,#9b2c32,#c54a38);border:1px solid #dbad6a}
+.spend-bar>span{background:linear-gradient(90deg,#316e66,#b58b49)}
+.checkrow input[type="checkbox"]{accent-color:#9e3435}
+body:not(.page-home) .hero{display:none!important}
+@media(max-width:420px){
+ .page-intro{min-height:91px;padding:14px 12px 14px 16px}
+ .page-intro-kicker{font-size:9px;letter-spacing:.04em}
+ .page-intro-right{gap:6px}
+ .page-intro-ja{font-size:10px;padding:5px 7px}
+ .page-intro-seal{height:35px;width:35px;font-size:21px}
+ .panel{padding:16px}
+ .panel h2{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){.ghost,.copy-btn,.card,.bottom button{transition:none!important}}
+
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -533,7 +642,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='1.8.0';const APP_RELEASE='2026-11-19';
+const APP_VERSION='1.9.0';const APP_RELEASE='2026-11-19';
 function panel(s){return `<section class="panel">${s}</section>`}function jump(p){page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
 function transitPanel(){return panel('<h2>🚄 12/30 空港→ホテル【確定ルート】</h2><p class="hint"><strong>リニア＋地下鉄を利用。</strong> 航空便JL891の浦東12:05着後、入国・荷物受取を済ませて13:30頃に出発する想定です。</p><div class="card"><strong>① リニア（磁浮列车）</strong><p>浦東空港 → 龍陽路：約8分・通常50元／人。当日航空券提示で40元の割引対象となる場合あり。ホーム移動・待機10〜20分を見込む。</p></div><div class="card"><strong>② 地下鉄2号線→10号線</strong><p>龍陽路 → 南京東路（2号線）→ 豫園（10号線）→ ホテル徒歩約3〜6分。地下鉄乗換・徒歩込み約40〜55分、約5元／人。</p></div><div class="breakdown">合計：<strong>約55〜80分、通常55元／人</strong>（割引適用時45元／人）。予算は通常運賃55元で計算。</div><p class="muted">リニア・地下鉄の実際の運行と割引条件は出発前に確認。ホテルは14:00以降チェックイン。</p>')}
@@ -853,7 +962,7 @@ if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=spendingOverview()+expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();
 if(page==='home'&&selectedTrip()===MAIN_TRIP)html=countdownPanel()+todayPanel()+html+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
-document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-cn">'+pageThemes[page][1]+'</span><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span></div>'+html;
+document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设'}[page])+'</span></span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
 const customAdd=document.getElementById('customAddEvent');if(customAdd)customAdd.onclick=()=>jump('manage');
