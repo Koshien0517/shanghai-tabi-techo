@@ -1,5 +1,5 @@
 {
-  "version": "1.8.0",
+  "version": "1.9.0",
   "releasedAt": "2026-11-20",
   "features": [
     "update-check",
@@ -26,6 +26,10 @@
     "checkbox-free-food-and-gifts",
     "large-chinese-display",
     "live-flight-rail-countdown",
-    "budget-spending-progress"
+    "budget-spending-progress",
+    "jiangnan-editorial-ui",
+    "cinnabar-tab-banners",
+    "jade-phrase-cards",
+    "gold-accent-navigation"
   ]
 }
