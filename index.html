@@ -216,6 +216,13 @@ body.page-bookings{--page-accent:#977133;--page-accent-dark:#775827;--page-bg:#f
 .route-dialog-inner h2{font-size:20px;margin:0 0 10px;color:#773d34}
 .route-link{display:block;margin:10px 0;padding:13px;border-radius:12px;border:1px solid #e6c7aa;background:#fff6e9;color:#713d35;text-decoration:none;font-weight:700;font-size:14px}
 
+/* Compact readable catalog, no checkboxes in shopping/food */
+.detail-no-checkbox .detail-heading{display:flex;flex-direction:column;gap:3px;margin-bottom:9px}
+.detail-no-checkbox .detail-heading strong{display:block;font-size:16px;color:var(--page-accent-dark)}
+.detail-no-checkbox .detail-heading .muted{font-size:13px}
+.catalog-count{font-size:11px;font-weight:600;color:var(--page-accent);white-space:nowrap}
+body:not(.page-home) .hero{display:none!important}
+body:not(.page-home) .shell{padding-top:8px}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -285,6 +292,90 @@ const giftDetails=[
 ['上海風マグネット','上海城市冰箱贴','外灘・東方明珠・上海タワーなどのデザイン。','観光地・文創店','小物'],
 ['上海老字号の菓子','上海老字号糕点','昔ながらの点心・焼き菓子。賞味期限と日本への持込条件を確認。','第一食品商店など','食品']
 ];
+
+const extraFoodDetails=[
+ ['大壺春｜老舗の生煎','大壶春','上海の老舗生煎専門店。揚げ焼き点心やスープなどを手軽に楽しめる。','大壶春 上海 人民广场','中国点心チェーン・約20〜50元'],
+ ['徳興館｜上海の麺','德兴馆','上海の伝統的な葱油麺やスープ麺を選ぶ候補。辛くない味を注文できるか確認。','德兴馆 上海','上海老舗・約25〜60元'],
+ ['老盛昌｜小籠包・麺','老盛昌汤包','小籠包、麺やご飯物などの上海で探しやすい軽食チェーン。','老盛昌汤包 上海 黄浦','中国軽食チェーン・約20〜45元'],
+ ['老郷鶏｜中国の定食','老乡鸡','鶏料理・野菜・ご飯・スープが中心の中国式定食チェーン。辛さと具材を確認。','老乡鸡 上海','中国定食チェーン・約25〜55元'],
+ ['真功夫｜中華定食','真功夫','蒸し料理・肉とご飯の定食で知られる中国チェーン。中国のファストカジュアルを体験。','真功夫 上海','中国チェーン・約25〜50元'],
+ ['永和大王｜朝食・豆漿','永和大王','豆漿・油条・粥・ご飯類を扱う中国チェーン。帰国日朝食候補とは別に周辺店舗も検索。','永和大王 上海 黄浦','中国朝食チェーン・約15〜40元'],
+ ['沙県小吃｜ワンタン・蒸し餃子','沙县小吃','福建発祥の大衆食堂型チェーン。扁肉（ワンタン）や蒸し餃子、麺を低予算で。','沙县小吃 上海','中国軽食チェーン・約15〜35元'],
+ ['楊国福麻辣湯｜具材選択','杨国福麻辣烫','具材と辛さを選ぶスープ料理。辛さゼロでも香辛料を含む場合があるため注文時に要確認。','杨国福麻辣烫 上海','中国チェーン・約25〜55元・辛さ注意'],
+ ['張亮麻辣燙｜具材選択','张亮麻辣烫','具材を選ぶスープチェーン。白湯（清湯）など辛くない味があるか確認。','张亮麻辣烫 上海','中国チェーン・約25〜55元・辛さ注意'],
+ ['海底撈｜火鍋','海底捞火锅','中国を代表する火鍋チェーン。トマトスープ・白湯などの辛くない鍋を選びやすい。','海底捞 上海 黄浦','中国火鍋チェーン・約100〜200元'],
+ ['外婆家｜家庭的な中華','外婆家','ご飯物・野菜・肉料理など中国の家庭料理系チェーン。辛い料理は注文前に確認。','外婆家 上海','中国チェーン・約50〜100元'],
+ ['西貝｜西北料理','西贝莜面村','中国北西部の麺料理や肉料理のチェーン。羊肉が苦手なら豚・鶏料理を確認。','西贝莜面村 上海','中国チェーン・約70〜130元'],
+ ['喜茶｜中国ティースタンド','喜茶 HEYTEA','人気の中国茶ドリンクチェーン。フルーツ茶など乳製品なしの飲み物も探せる。','喜茶 上海 南京东路','中国ドリンクチェーン・約18〜40元'],
+ ['奈雪的茶｜お茶・パン','奈雪的茶','中国発のお茶とベーカリーのチェーン。休憩に便利。','奈雪的茶 上海','中国カフェチェーン・約20〜55元'],
+ ['蜜雪冰城｜ソフト・ドリンク','蜜雪冰城','中国らしい低価格の冷たいドリンクやソフトクリームが特徴。','蜜雪冰城 上海','中国ドリンクチェーン・約5〜20元'],
+ ['霸王茶姫｜中国茶ラテ','霸王茶姬 CHAGEE','中国茶を生かしたミルクティー系チェーン。砂糖や氷の指定を確認。','霸王茶姬 上海','中国ドリンクチェーン・約15〜35元'],
+ ['寿司郎｜回転寿司','寿司郎','日本式回転寿司の中国店舗。中国限定メニューもチェック。行列が長い場合あり。','寿司郎 上海','日系寿司チェーン・約70〜140元'],
+ ['はま寿司｜回転寿司','滨寿司','日本の回転寿司チェーンの中国店舗。注文方式・当日営業状況を確認。','滨寿司 上海','日系寿司チェーン・約70〜140元'],
+ ['争鮮｜中国で展開する寿司','争鲜回转寿司','上海でも展開する回転寿司系チェーン。手頃な寿司の選択肢。','争鲜回转寿司 上海','寿司チェーン・約50〜110元'],
+ ['元気寿司｜日本式寿司','元气寿司','寿司・巻物などのメニューを扱うチェーン。出店店舗を検索。','元气寿司 上海','日系寿司チェーン・約70〜140元'],
+ ['味千拉麺｜熊本系ラーメン','味千拉面','日系ラーメンチェーン。豚骨系ラーメンや餃子などを選べる。','味千拉面 上海 日月光','日本式ラーメンチェーン・約40〜85元'],
+ ['一風堂｜博多豚骨','一风堂拉面','博多系の豚骨ラーメン。出店状況は最新の地図で要確認。','一风堂拉面 上海','日本式ラーメン・約60〜110元'],
+ ['吉野家｜牛丼','吉野家','中国でも見かける牛丼系チェーン。日本と中国のメニューの違いを楽しめる。','吉野家 上海','日系ファストフード・約25〜55元'],
+ ['マクドナルド中国｜現地限定','麦当劳','中国限定バーガー・朝食・ドリンクを探すのも旅行ならでは。','麦当劳 上海 南京东路','ファストフード・約25〜60元'],
+ ['KFC中国｜ご当地メニュー','肯德基','中国で広く展開。粥・油条など朝食メニューや中国限定商品も候補。','肯德基 上海 豫园','ファストフード・約20〜60元'],
+ ['ピザハット中国｜ピザ','必胜客','ピザ・パスタ・ご飯など幅広いメニュー。辛くないものを選びやすい。','必胜客 上海','ファストフード系・約55〜120元'],
+ ['バーガーキング中国｜バーガー','汉堡王','ワッパーなどのハンバーガーチェーン。移動途中の食事に便利。','汉堡王 上海','ファストフード・約30〜65元'],
+ ['タースティン｜中国バーガー','塔斯汀中国汉堡','中国式の焼きたてバンズを使うバーガーチェーン。中華風メニューが特徴。','塔斯汀中国汉堡 上海','中国発バーガー・約18〜40元'],
+ ['デコス｜中国フライドチキン','德克士','中国で展開するチキン・バーガー系チェーン。','德克士 上海','ファストフード・約25〜55元'],
+ ['ウォレス｜中国バーガー','华莱士','中国発のハンバーガー・フライドチキンチェーン。','华莱士 上海','中国ファストフード・約18〜45元']
+];
+const extraGiftDetails=[
+ ['上海第一食品の詰合せ','第一食品商店 上海特产礼盒','定番菓子を複数まとめて選べる。箱の大きさと賞味期限を確認。','上海第一食品商店 南京东路720号','食品・30〜150元'],
+ ['沈大成の糕団','沈大成 糕团','条頭糕・双醸団など江南らしい餅菓子。生菓子は当日中の賞味期限に注意。','沈大成 南京东路 上海','食品・15〜60元'],
+ ['沈大成の緑豆糕','沈大成 绿豆糕','緑豆を使う上品な菓子。小分け商品があれば便利。','第一食品商店 南京东路720号 上海','食品・20〜75元'],
+ ['杏花楼の菓子','杏花楼 糕点','上海の老舗菓子。缶・箱入りの点心や焼き菓子を候補に。','杏花楼 福州路343号 上海','食品・30〜120元'],
+ ['真老大房の鮮肉月餅','真老大房 鲜肉月饼','上海風の肉入り月餅。肉製品は日本へ持ち込まず中国国内で食べる。','真老大房 南京东路 上海','現地で食べる・10〜40元'],
+ ['哈爾浜食品廠の菓子','哈尔滨食品厂 杏仁排','杏仁を使う焼き菓子など。割れにくい箱入りがあれば選ぶ。','哈尔滨食品厂 上海 南京东路','食品・25〜100元'],
+ ['老香齋の菓子','老香斋 桃酥','桃酥（中華風クッキー）など中国らしい菓子。','第一食品商店 南京东路720号 上海','食品・15〜60元'],
+ ['冠生園の菓子','冠生园 蜂蜜 糕点','上海の老舗ブランド。菓子・蜂蜜などの取り扱いは店舗ごとに確認。','上海第一食品商店 南京东路720号','食品・15〜90元'],
+ ['光明のミルク菓子','光明 乳制品 糖果','上海の乳製品ブランド。常温保存できる菓子を選ぶ。','第一食品商店・大型スーパー 上海','食品・10〜50元'],
+ ['三陽南貨の乾物・菓子','三阳南货','老舗の南貨店。個包装のお菓子・乾物などを探す。','三阳南货 南京东路 上海','食品・20〜100元'],
+ ['邵万生の上海土産','邵万生 南货','老舗の南貨店。肉・魚加工品は日本の持ち込み条件に注意。','邵万生 南京东路 上海','食品・20〜100元'],
+ ['上海風の蝴蝶酥ギフト箱','上海蝴蝶酥 礼盒','蝶型のパイ菓子。国際飯店などの有名店も候補。','国际饭店西饼屋・第一食品商店 上海','食品・30〜100元'],
+ ['大白兎の限定パッケージ','大白兔 奶糖 礼盒','上海定番キャンディーの限定缶や箱。','第一食品商店 南京东路720号 上海','食品・20〜90元'],
+ ['龍井茶の小分け','龙井茶 小包装','緑茶のお土産。茶葉の産地表示・保存期限を確認。','上海 茶叶店 南京东路','茶・25〜150元'],
+ ['茉莉花茶・花茶','茉莉花茶 礼盒','香りのある中国茶。小分けパックは配りやすい。','豫园 茶叶店 上海','茶・20〜100元'],
+ ['八宝茶・茶器セット','八宝茶 茶具','中国らしい茶器とブレンド茶。割れ物の梱包に注意。','豫园商城 茶具店 上海','茶器・30〜160元'],
+ ['豫園の建築モチーフしおり','豫园 文创 书签','伝統建築の形をした金属しおり・文房具。','豫园商城 文创店 上海','文創・10〜60元'],
+ ['外灘・東方明珠のポストカード','外滩 东方明珠 明信片','上海の建築や夜景を描いたカード。','上海书城 福州路465号 上海','文創・10〜40元'],
+ ['中国風スタンプ・印章','上海 印章 文创','名前や都市名の印章風スタンプ。中国らしい紙物。','豫园商城 文创店','文創・20〜100元'],
+ ['故宮風マスキングテープ','国风 文创 胶带','中国柄・古典文様のマスキングテープ。','上海书城 福州路465号 上海','文具・10〜40元'],
+ ['中国の文房具・万年筆','英雄钢笔 上海','中国ブランドの筆記具。ケース入りギフトも候補。','上海书城 福州路465号 上海','文具・20〜150元'],
+ ['上海の絵はがき・画集','上海 风景 画册','上海書城で外灘・歴史的建築の図録や写真集を探す。','上海书城 福州路465号 上海','書籍・30〜180元'],
+ ['上海博物館のマグネット','上海博物馆 冰箱贴','展示品モチーフの冷蔵庫マグネット。','上海博物馆 文创商店','文創・20〜85元'],
+ ['中国風の扇子','中国风 折扇','江南らしい絵柄の扇子。軽く持ち運びやすい。','豫园商城 纪念品店','雑貨・15〜80元'],
+ ['中国結びのキーホルダー','中国结 挂件','赤い中国結びの飾り。小物のお土産に。','豫园商城 上海','雑貨・10〜50元'],
+ ['上海の限定タンブラー','上海 城市限定 随行杯','上海の景色や都市名入りタンブラー。販売時期・在庫は未確認。','星巴克 上海・上海烘焙工坊','雑貨・80〜260元'],
+ ['レトロ上海柄のトートバッグ','上海 复古 帆布袋','上海の街並みや文字入りの帆布バッグ。','上海 文创店 张园','雑貨・30〜120元'],
+ ['上海の建築模型','上海 外滩 建筑 模型','外灘・東方明珠のミニチュア。大きさと重量をチェック。','南京东路 纪念品店 上海','雑貨・30〜160元'],
+ ['無錫・惠山泥人','惠山泥人','無錫の伝統的な彩色土人形。12/31に恵山古鎮で探す。','惠山古镇 无锡','無錫土産・30〜180元'],
+ ['無錫の文創品','无锡 南长街 文创','南長街や清名橋の街並みをデザインした小物。','南长街 无锡','無錫土産・15〜85元']
+];
+function foodCatalogPanel(){
+ const all=[...foodDetails,...extraFoodDetails];
+ const groups=[
+ ['🥟 上海・中国の定番料理',all.filter((x,i)=>i<foodDetails.length)],
+ ['🍜 中国の飲食チェーン',extraFoodDetails.filter((x,i)=>i<=15)],
+ ['🍣 寿司・日本式ラーメン',extraFoodDetails.filter((x,i)=>i>=16&&i<=21)],
+ ['🍔 ファストフード・気軽な食事',extraFoodDetails.filter((x,i)=>i>=22)]
+ ];
+ return groups.map(([title,items])=>panel('<h2>'+title+' <small class="catalog-count">'+items.length+'件</small></h2>'+detailCards(items,'food'))).join('');
+}
+function giftCatalogPanel(){
+ const all=[...giftDetails,...extraGiftDetails];
+ return panel('<h2>🎁 従来の候補 <small class="catalog-count">'+giftDetails.length+'件</small></h2>'+detailCards(giftDetails,'gifts'))+
+ panel('<h2>🍬 上海の定番お菓子・食品 <small class="catalog-count">13件</small></h2>'+detailCards(extraGiftDetails.slice(0,13),'gifts'))+
+ panel('<h2>🍵 茶・茶器 <small class="catalog-count">3件</small></h2>'+detailCards(extraGiftDetails.slice(13,16),'gifts'))+
+ panel('<h2>🪭 文具・雑貨・上海の文創品 <small class="catalog-count">12件</small></h2>'+detailCards(extraGiftDetails.slice(16,28),'gifts'))+
+ panel('<h2>🏯 無錫の土産 <small class="catalog-count">2件</small></h2>'+detailCards(extraGiftDetails.slice(28),'gifts'));
+}
+
 const knowledgeTopics=[
 ['🇨🇳 中国の基本','正式名称は中華人民共和国。通貨は人民元（CNY／元）。標準時は中国標準時UTC+8で、日本より1時間遅い。全国で同じ標準時を使用。','中国語は普通話（標準中国語）が広く使われる。簡体字表記が一般的。旅行中は中国語の地名・店名を保存すると便利。'],
 ['🏙️ 上海の基本','上海（Shànghǎi）は中国の直轄市のひとつ。黄浦江の西側が浦西、東側が浦東。外灘は浦西、陸家嘴の高層ビル群は浦東に位置。','豫園は伝統的な江南建築、外灘は近代建築、武康路は歴史ある洋風建築、上海タワーは現代的な眺望を楽しめる。'],
@@ -388,7 +479,9 @@ function phrasebookPanel(){
 function fmt(n){return Math.round(n).toLocaleString('ja-JP')}
 
 function mapPickButton(query,label){return '<span class="map-action-wrap"><button type="button" class="maps map-choice" data-map="'+esc(query)+'">🗺️ '+esc(label||'地図アプリを選ぶ')+' ↗</button><button type="button" class="maps route-from-here" data-route-to="'+esc(query)+'">📍 現在地から経路</button></span>'}
-function detailCards(items,stateKey){const state=get(stateKey);return items.map(([name,zh,desc,where,meta])=>'<div class="card"><label class="checkrow"><input type="checkbox" data-'+stateKey+'="'+esc(name)+'" '+(state[name]?'checked':'')+'><span><strong>'+esc(name)+'</strong><span class="muted">'+esc(zh)+'</span></span></label><p>'+esc(desc)+'</p><p class="muted">📍 '+esc(where)+' ／ '+esc(meta)+(stateKey==='food'?'（価格は参考目安）':'')+'</p>'+mapPickButton(where,'候補のお店・場所を探す')+'</div>').join('')}
+function detailCards(items,stateKey){
+ return items.map(([name,zh,desc,where,meta])=>'<article class="card detail-no-checkbox"><div class="detail-heading"><strong>'+esc(name)+'</strong><span class="muted">'+esc(zh)+'</span></div><p>'+esc(desc)+'</p><p class="muted">📍 '+esc(where)+' ／ '+esc(meta)+'</p>'+mapPickButton(where,stateKey==='food'?'店舗・エリアを地図で探す':'購入場所を地図で探す')+'</article>').join('');
+}
 
 function copyTools(){
  const items=[['中国語ホテル名',hotel.zh],['英語ホテル名',hotel.name],['中国語住所',hotel.address],['英語住所',hotel.en],['中国語ホテル名＋住所',hotel.zh+'\n'+hotel.address],['英語ホテル名＋住所',hotel.name+'\n'+hotel.en],['往路便名','JL891'],['復路便名','JL894'],['入国日','2026-12-30'],['出国日','2027-01-02'],['滞在期間','2026/12/30〜2027/01/02']];
@@ -646,7 +739,7 @@ if(page==='schedule'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>日別スケ�
 if(page==='packing'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>✅ 持ち物</h2><p>この旅行の持ち物チェックは旅行管理機能の次段階で追加します。上海版のチェックリストは保持されています。</p>');}
 if(page==='packing'&&selectedTrip()===MAIN_TRIP){let state=get('packing');let total=categories.flatMap(x=>x[1]).length;let done=categories.flatMap(x=>x[1]).filter(x=>state[x]).length;html=panel(`<div class="groupHead"><h2>持ち物チェック</h2><span class="tag">${done} / ${total} 準備済み</span></div><div class="progress" role="progressbar" aria-valuenow="${done}" aria-valuemax="${total}"><div class="fill" style="width:${done/total*100}%"></div></div><p class="muted">準備率 ${Math.round(done/total*100)}%</p><p class="muted">チェックはこの端末のブラウザ内に保存されます。友人のチェックとは連動しません。</p>`)+categories.map(([title,items])=>panel(`<div class="groupHead"><h2>${title}</h2><span class="muted">${items.filter(x=>state[x]).length}/${items.length}</span></div>`+items.map(x=>`<label class="checkrow"><input type="checkbox" data-pack="${esc(x)}" ${state[x]?'checked':''}><span class="${state[x]?'checked':''}">${esc(x)}</span></label>`).join(''))).join('')+panel('<button class="ghost" id="resetPacking">すべてのチェックを解除</button>');}
 if(page==='food'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🥟 グルメ</h2><p>上海旅行向けのグルメガイドです。上海に切り替えると確認できます。</p>');}
-if(page==='food'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🥟 上海グルメガイド</h2><p class="muted">料理名（中国語）・特徴・探すエリア・予算目安を掲載。チェック状態は端末別です。</p>')+panel('<div class="hint">辛さを控えたいとき：请不要放辣椒（Qǐng bú yào fàng làjiāo）＝唐辛子を入れないでください。記載価格は概算で店舗によって異なります。</div>')+panel(detailCards(foodDetails,'food'));}
+if(page==='food'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🥟 上海グルメガイド</h2><p class="muted">料理・チェーン店・日本食・ファストフードを種類別に掲載。出店場所と価格は参考です。</p>')+panel('<div class="hint">辛さを控えたいとき：请不要放辣椒（Qǐng bú yào fàng làjiāo）＝唐辛子を入れないでください。記載価格は概算で店舗によって異なります。</div>')+foodCatalogPanel();}
 if(page==='budget'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>💴 予算</h2><p>この旅行の支出実績は「支出」画面で管理できます。上海旅行の計画予算は上海版に保存されています。</p>');}
 if(page==='budget'&&selectedTrip()===MAIN_TRIP){html=budgetPanel();}
 if(page==='phrase'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🗣️ 中国語フレーズ</h2><p>上海旅行専用のフレーズです。上海旅行に切り替えてください。</p>');}
@@ -654,7 +747,7 @@ if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=phrasebookPanel();}
 if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国旅行ガイド</h2><p>上海旅行専用の内容です。</p>');}
 if(page==='knowledge'&&selectedTrip()===MAIN_TRIP){html=knowledgePanel();}
 if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2><p>上海旅行専用のお土産ガイドです。</p>');}
-if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお土産ガイド</h2><p class="muted">中国語名、商品の特徴、購入場所の候補を掲載。チェックは端末別です。</p>')+panel(detailCards(giftDetails,'gifts'))+panel('<h2>共有のしかた</h2><p class="intro">同じURLで旅程を友人と共有できます。チェック状態は端末ごとに保存されます。</p><button class="ghost" id="share">このページのURLを共有</button>');}
+if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお土産ガイド</h2><p class="muted">お菓子・雑貨・中国茶などの候補を分類し、購入場所の目安も掲載。店舗の取扱商品・在庫は現地で確認してください。</p>')+giftCatalogPanel()+panel('<h2>共有のしかた</h2><p class="intro">同じURLで旅程を友人と共有できます。チェック状態は端末ごとに保存されます。</p><button class="ghost" id="share">このページのURLを共有</button>');}
 if(page==='bookings')html=bookingsPanel();
 if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=expensePanel()+splitPanel();
