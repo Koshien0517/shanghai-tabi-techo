@@ -1,6 +1,6 @@
 {
-  "version": "2.3.0",
-  "releasedAt": "2026-11-20",
+  "version": "2.3.1",
+  "releasedAt": "2026-11-21",
   "features": [
     "update-check",
     "today-and-next",
@@ -47,6 +47,8 @@
     "first-class-rail-unbooked-budget-planning",
     "wuxi-balanced-route-dec31",
     "wuxi-linked-transport-and-budget-recalculation",
-    "wuxi-optional-sanfengqiao-and-food-guide"
+    "wuxi-optional-sanfengqiao-and-food-guide",
+    "dec30-yuyuan-paid-garden",
+    "dec30-yuyuan-ticket-budget-and-timing"
   ]
 }
