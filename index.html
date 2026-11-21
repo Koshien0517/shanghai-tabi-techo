@@ -677,7 +677,7 @@ const knowledgeTopics=[
 ];
 const hotel={name:'Atour Hotel Shanghai Bund Yuyuan Subway Station',zh:'上海外滩豫园地铁站亚朵酒店',address:'上海市黄浦区人民路388号3楼',en:'3rd Floor, No. 388 Renmin Road, Huangpu District, Shanghai, China',checkin:'2026/12/30 14:00以降',checkout:'2027/1/2 12:00まで',nights:'3泊',booking:'Trip.com',transfer:'空港送迎なし'};
 const routes=[{id:'maglev',title:'リニア＋地下鉄【採用】',time:'55〜80分',price:'通常55元／人（航空券提示割引時45元）',arrival:'14:25〜14:50',route:'浦東空港 → リニア8分・50元（対象航空券提示なら40元）→ 龍陽路で地下鉄2号線 → 南京東路で10号線 → 豫園 → ホテル徒歩。地下鉄約5元',yuan:55},{id:'metro',title:'地下鉄のみ',time:'75〜100分',price:'7〜9元／人',arrival:'14:45〜15:10',route:'浦東空港 → 地下鉄2号線（南京東路）→ 10号線（豫園）→ 徒歩 → ホテル',yuan:8},{id:'taxi',title:'タクシー',time:'45〜75分',price:'160〜250元／台',arrival:'14:15〜14:45',route:'浦東空港 → ホテル直行',yuan:102.5}];
-const budget=[['食事（1/2朝食・無錫昼食を含む）',600],['食べ歩き・飲み物',160],['上海市内交通（無錫駅アクセスを除く）',75],['12/30 リニア＋地下鉄',55],['1/2 浦東空港タクシー（2人で折半）',100],['観光施設・庭園（豫園入園30元を含む）',250],['お土産・買い物',300],['予備費',150]];
+const budget=[['食事（1/2朝食・無錫昼食を含む）',600],['食べ歩き・飲み物',160],['上海市内交通（無錫駅アクセスを除く）',75],['12/30 リニア＋地下鉄',55],['1/2 浦東空港タクシー（2人で折半）',100],['観光施設・庭園（豫園入園1回30元を含む）',250],['お土産・買い物',300],['予備費',150]];
 const exchangeRate=24;
 // Per-person planning estimates, not live quotes or bookable trains.
 const railCandidates=[
@@ -920,7 +920,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.3.2';const APP_RELEASE='2026-11-21';
+const APP_VERSION='2.3.3';const APP_RELEASE='2026-11-21';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -932,23 +932,22 @@ const yuyuanAlternateDays={
     ...days[0].events.slice(5)
   ],
   2:[
-    ['09:15–10:30','豫園の庭園内部（12/30から振替）','元日は朝に優先訪問。通常9:00〜16:30（入園16:00まで）、冬季大人30元／人。2027年元日の特別開園・混雑・当日券は未確認。北門：福佑路168号。','豫园园林 福佑路168号 上海'],
-    ['10:30–11:00','豫園 → 中共一大記念館','地下鉄・タクシーなどで新天地方面へ移動。遅延時は以降の予定を調整。','中共一大纪念馆 上海'],
-    ['11:00–12:20','中共一大記念館・会址','元日の開館・入場条件は直前確認。見学できない場合は新天地の街歩きへ。','中共一大纪念馆 上海'],
-    ['12:20–13:40','新天地で昼食・街並み散策','食事と石庫門の町並み。思南公館と武康路の訪問はこの予備案では省略。','新天地 上海'],
-    ['13:40–14:20','スターバックス リザーブへ移動','混雑や交通状況によって調整。','星巴克臻选上海烘焙工坊'],
-    ['14:20–15:15','スターバックス リザーブ ロースタリー','上海限定マグ・タンブラーをチェック。混雑時は短縮。','星巴克臻选上海烘焙工坊'],
-    ['15:30–16:30','張園','石庫門の街並みと買い物。','张园 上海'],
-    ['16:30–17:40','呉江路美食街','生煎包・葱油拌麺などの夕食。','吴江路 上海'],
-    ['18:10–19:30','陸家嘴へ移動・入場準備','上海タワーの予約時刻に合わせて調整。','上海中心大厦'],
-    ['19:30–20:45','上海タワー118階・夜景','予備ルートでも必ず残す優先スポット。営業・予約状況は要確認。','上海中心大厦'],
+    ['09:40–11:20','中共一大記念館・会址','元日の開館・入場条件は直前確認。','中共一大紀念館 上海'],
+    ['11:20–11:50','一大文創','歴史関連の記念グッズを探す。','中共一大紀念館 上海'],
+    ['11:50–13:20','新天地で昼食・周辺散策','思南公館は時間があれば短時間。武康路は振替プランでは省略。','新天地 上海'],
+    ['13:20–14:00','新天地 → 豫園へ移動','地下鉄またはタクシー。元日の混雑を見込んだ計画枠。','豫园 福佑路168号 上海'],
+    ['14:00–15:20','豫園の庭園内部（12/30から振替）','豫园（Yùyuán）の庭園を約80分見学。冬季通常大人30元／人、通常16:00最終入園。元日の特別営業・混雑は直前確認。12/30に入園できた場合は振替不要。','豫园园林 福佑路168号 上海'],
+    ['15:20–16:10','豫園商城・九曲橋','庭園のあとに商店街・九曲橋を散策。12/30に十分見た場合は短縮。','豫園商城 上海'],
+    ['16:10–17:10','豫園周辺で早めの夕食','点心・上海料理など。魚・羊・辛味は避ける。','豫園商城 上海'],
+    ['17:10–19:30','陸家嘴へ移動・上海タワー入場準備','地下鉄またはタクシー。上海タワーの予約時刻に合わせて調整。','上海中心大厦'],
+    ['19:30–20:45','上海タワー118階・夜景','予備ルートでも維持する優先スポット。営業・予約状況は要確認。','上海中心大厦'],
     ['20:45–22:00','陸家嘴散歩・ホテルへ','高層ビルの夜景を楽しむ。','陆家嘴 上海']
   ]
 };
 function yuyuanEvents(i){return yuyuanPlanMode==='backup'&&Object.hasOwn(yuyuanAlternateDays,i)?yuyuanAlternateDays[i]:days[i].events}
 function yuyuanDayName(i){return yuyuanPlanMode==='backup'&&i===0?'豫園商城・書城・北外灘（庭園は翌日）':yuyuanPlanMode==='backup'&&i===2?'豫園庭園・近代史・上海タワー':days[i].name}
 function yuyuanPlanSelector(){
- return panel('<h2>🏯 豫園庭園｜訪問日の切り替え</h2><p class="muted">12/30の入園が厳しい場合のみ、1/1振替を選択。両日とも庭園に入る旅程ではありません。選択はこの端末に保存します。</p><div class="segment"><button type="button" data-yuyuan-mode="normal" class="'+(yuyuanPlanMode==='normal'?'active':'')+'">通常：12/30入園</button><button type="button" data-yuyuan-mode="backup" class="'+(yuyuanPlanMode==='backup'?'active':'')+'">予備：1/1入園</button></div><p class="hint">'+(yuyuanPlanMode==='normal'?'12/30は庭園を先に見学し、1/1は従来の市内観光です。':'12/30は商城のみ。1/1の午前に庭園へ行き、午後は武康路・思南公館を省略します。')+'<br>通常開園9:00〜16:30／最終入園16:00・冬季大人30元。年末年始の特別営業は公式発表を確認してください。</p><a class="arrival-official" href="https://www.yugarden.com.cn/page/articleview/message.html" target="_blank" rel="noopener noreferrer">豫園公式｜営業時間・チケットを確認 ↗</a>');
+ return panel('<h2>🏯 豫園庭園｜訪問日の切り替え</h2><p class="muted">12/30の入園が厳しい場合のみ、1/1振替を選択。両日とも庭園に入る旅程ではありません。選択はこの端末に保存します。</p><div class="segment"><button type="button" data-yuyuan-mode="normal" class="'+(yuyuanPlanMode==='normal'?'active':'')+'">通常：12/30入園</button><button type="button" data-yuyuan-mode="backup" class="'+(yuyuanPlanMode==='backup'?'active':'')+'">予備：1/1入園</button></div><p class="hint">'+(yuyuanPlanMode==='normal'?'12/30は庭園を先に見学し、1/1は従来の市内観光です。':'12/30は商城のみ。1/1の午後に庭園へ行き、武康路・スターバックス・張園・呉江路を省略します。')+'<br>通常開園9:00〜16:30／最終入園16:00・冬季大人30元。年末年始の特別営業は公式発表を確認してください。</p><a class="arrival-official" href="https://www.yugarden.com.cn/page/articleview/message.html" target="_blank" rel="noopener noreferrer">豫園公式｜営業時間・チケットを確認 ↗</a>');
 }
 function panel(s){return `<section class="panel">${s}</section>`}function jump(p){page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
