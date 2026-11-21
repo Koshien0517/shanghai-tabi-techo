@@ -1,5 +1,5 @@
 {
-  "version": "2.3.1",
+  "version": "2.3.2",
   "releasedAt": "2026-11-21",
   "features": [
     "update-check",
@@ -49,6 +49,9 @@
     "wuxi-linked-transport-and-budget-recalculation",
     "wuxi-optional-sanfengqiao-and-food-guide",
     "dec30-yuyuan-paid-garden",
-    "dec30-yuyuan-ticket-budget-and-timing"
+    "dec30-yuyuan-ticket-budget-and-timing",
+    "jan1-yuyuan-fallback-itinerary",
+    "linked-dec30-jan1-route-selection",
+    "yuyuan-ticket-counted-once-in-budget"
   ]
 }
