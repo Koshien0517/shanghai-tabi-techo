@@ -1,5 +1,5 @@
 {
-  "version": "2.3.2",
+  "version": "2.3.3",
   "releasedAt": "2026-11-21",
   "features": [
     "update-check",
@@ -52,6 +52,7 @@
     "dec30-yuyuan-ticket-budget-and-timing",
     "jan1-yuyuan-fallback-itinerary",
     "linked-dec30-jan1-route-selection",
-    "yuyuan-ticket-counted-once-in-budget"
+    "yuyuan-ticket-counted-once-in-budget",
+    "jan1-afternoon-yuyuan-fallback"
   ]
 }
