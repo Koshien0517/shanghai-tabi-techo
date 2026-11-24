@@ -1,5 +1,5 @@
 {
-  "version": "2.11.2",
+  "version": "2.11.3",
   "releasedAt": "2026-11-25",
   "features": [
     "update-check",
@@ -107,6 +107,7 @@
     "simple-update-button-label",
     "force-plain-update-button-label",
     "network-fresh-pwa-navigation",
-    "service-worker-no-cached-update-check"
+    "service-worker-no-cached-update-check",
+    "nonoverlapping-update-and-back-to-top-controls"
   ]
 }
