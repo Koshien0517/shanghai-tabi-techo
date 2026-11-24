@@ -1,5 +1,5 @@
 {
-  "version": "2.7.0",
+  "version": "2.7.1",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -72,6 +72,9 @@
     "pinned-safety-settings",
     "contextual-direct-shortcuts",
     "unified-budget-expenses",
-    "existing-13-features-preserved"
+    "existing-13-features-preserved",
+    "deferred-initial-render-fix",
+    "compact-ui-cache-busting",
+    "blank-screen-recovery"
   ]
 }
