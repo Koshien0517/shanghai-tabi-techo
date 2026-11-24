@@ -10,9 +10,12 @@ const travelTaxiDestinations=[
  ['恵山古鎮','惠山古镇','江苏省无锡市梁溪区'],
  ['南長街','南长街','江苏省无锡市梁溪区']
 ];
+function taxiLocationPanel(){
+ const taxi=travelTaxiDestinations.map(x=>'<div class="card"><span class="time">'+esc(x[0])+'</span><h3 style="font-size:20px">'+esc(x[1])+'</h3><p style="font-size:16px">'+esc(x[2])+'</p><button class="ghost" data-taxi-show="'+esc('师傅，请带我们去'+x[1]+'，地址是'+x[2]+'。谢谢！')+'">中国語を大きく表示</button> <button class="ghost" data-copyval="'+esc(x[1]+'\n'+x[2])+'">住所コピー</button></div>').join('');
+ return panel('<h2>🚕 場所・住所の中国語（タクシー用）</h2><p class="muted">ホテル・駅・観光地の中国語名称と住所。運転手に画面を見せるか、住所をコピーできます。現地の地図・予約内容との照合を推奨します。</p>'+taxi);
+}
 function travelToolsPanel(){
- const taxi=travelTaxiDestinations.map(x=>'<div class="card"><span class="time">'+esc(x[0])+'</span><h2 style="font-size:22px">'+esc(x[1])+'</h2><p style="font-size:17px">'+esc(x[2])+'</p><button class="ghost" data-taxi-show="'+esc('师傅，请带我们去'+x[1]+'，地址是'+x[2]+'。谢谢！')+'">中国語を大きく表示</button> <button class="ghost" data-copyval="'+esc(x[1]+'\n'+x[2])+'">住所コピー</button></div>').join('');
- return panel('<h2>🚕 タクシー用中国語カード</h2><p class="muted">運転手に見せるか住所をコピー。住所は現地の地図・予約内容と照合してください。</p>'+taxi)+
+ return taxiLocationPanel()+
  panel('<h2>🌦️ 上海・無錫の天気予報</h2><p class="muted">直近7日間のみ表示。年末年始の予報は旅行が近づいてから確認してください。通信が必要です。</p><div class="segment"><button class="ghost" data-weather="shanghai">上海の予報</button><button class="ghost" data-weather="wuxi">無錫の予報</button></div><div id="weatherResult" role="status">都市を選択すると予報を取得します。</div><p class="tiny-hint">提供：<a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>。予報は最新の実測値や警報ではありません。</p>')+
  panel('<h2>📄 旅程PDF出力</h2><p class="muted">現在選択中の豫園通常／1月1日振替プランと、最新の計画予算を含む印刷版を作ります。「印刷」画面で「PDFとして保存」を選択してください。</p><button class="ghost" id="printTravelPlan">印刷・PDF保存画面を開く</button>');
 }
