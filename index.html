@@ -1432,6 +1432,22 @@ function boardingAssistant(){
 }
 
 const expandedSectionState=Object.create(null); // Preserve expanded panels during in-page updates without changing saved trip data.
+/* Chinese destination cards are part of the main app so the Chinese tab never depends on external tools. */
+const coreTaxiDestinations=[
+ ['ホテル','上海外滩豫园地铁站亚朵酒店','上海市黄浦区人民路388号3楼'],
+ ['豫園','豫园','上海市黄浦区福佑路168号'],
+ ['上海駅','上海火车站','上海市静安区秣陵路303号'],
+ ['外灘','外滩','上海市黄浦区中山东一路'],
+ ['上海タワー','上海中心大厦','上海市浦东新区银城中路501号'],
+ ['浦東空港','上海浦东国际机场','上海市浦东新区'],
+ ['無錫駅','无锡站','江苏省无锡市梁溪区'],
+ ['恵山古鎮','惠山古镇','江苏省无锡市梁溪区'],
+ ['南長街','南长街','江苏省无锡市梁溪区']
+];
+function coreTaxiLocationPanel(){
+ const cards=coreTaxiDestinations.map(x=>'<div class="card"><span class="time">'+esc(x[0])+'</span><h3 style="font-size:20px">'+esc(x[1])+'</h3><p style="font-size:16px">'+esc(x[2])+'</p><button class="ghost" data-taxi-show="'+esc('师傅，请带我们去'+x[1]+'，地址是'+x[2]+'。谢谢！')+'">中国語を大きく表示</button> <button class="ghost" data-copyval="'+esc(x[1]+'\\n'+x[2])+'">住所コピー</button></div>').join('');
+ return panel('<h2>🚕 場所・住所の中国語（タクシー用）</h2><p class="muted">ホテル・駅・観光地の中国語名称と住所。運転手に画面を見せるか住所をコピーできます。現地の地図・予約情報で住所も確認してください。</p>'+cards);
+}
 function render(){document.body.className='page-'+page;const nav=document.getElementById('nav');const previousScroll=nav.scrollLeft;nav.classList.remove('nav-6');nav.classList.add('nav-horizontal');nav.setAttribute('aria-label','旅行メニュー');nav.innerHTML=navItems.map(([id,emoji,title])=>`<button type="button" aria-label="${title}" ${page===id?'aria-current="page"':''} class="${page===id?'active':''}" data-page="${id}"><span aria-hidden="true">${emoji}</span>${title}</button>`).join('');nav.scrollLeft=previousScroll;const activeTab=nav.querySelector('[aria-current="page"]');if(activeTab){const left=activeTab.offsetLeft,right=left+activeTab.offsetWidth;const start=nav.scrollLeft,end=start+nav.clientWidth;if(left<start+6)nav.scrollLeft=Math.max(0,left-12);else if(right>end-6)nav.scrollLeft=right-nav.clientWidth+12;}document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>jump(n.dataset.page));let html='';
 if(page==='home'&&selectedTrip()!==MAIN_TRIP){html=installHelpPanel()+panel('<h2>✈️ '+esc(currentTrip().title)+'</h2><p>'+esc(currentTrip().start)+'〜'+esc(currentTrip().end)+'</p><p class="muted">この旅行は端末内に保存されます。上海旅行への切替は「管理」から行えます。</p>')+todayPanel()+panel('<button class="ghost" id="customHomeSchedule">旅行の日程を見る</button>');}
 if(page==='home'&&selectedTrip()===MAIN_TRIP){html=panel('<span class="tag">友人との上海旅行</span><h2 style="margin-top:12px">旅のしおり</h2><p class="intro">豫園の路地、上海の近代史、外灘の夜景。4日間の旅程と準備をこのページにまとめました。</p><p><strong>往路：</strong>12/30 JL891 関空 10:15 → 上海浦東 12:05（現地時刻）</p><p><strong>復路：</strong>1/2 JL894 上海浦東 13:25 → 関空 16:45（日本時刻）</p>')+hotelPanel()+installHelpPanel()+panel('<h2>4日間の見どころ</h2>'+days.map((d,i)=>`<div class="card"><span class="time">DAY ${i+1} · ${d.date}</span><strong>${yuyuanDayName(i)}</strong></div>`).join('')+'<button class="ghost" onclick="jump(\'schedule\')">詳しい旅程を見る →</button>')+panel('<h2>旅の準備・予算</h2><p class="intro">旅行準備の持ち物と、12月31日無錫日帰り・帰国日朝食も含めた現地予算を確認できます。</p><button class="ghost" onclick="jump(\'packing\')">持ち物チェックリストへ →</button>　<button class="ghost" onclick="jump(\'budget\')">現地予算を見る →</button><p style="margin-top:15px"><button class="ghost" onclick="jump(\'knowledge\')">🛂 入国カードの書き方・中国旅行ガイド →</button></p>');}
@@ -1443,7 +1459,7 @@ if(page==='food'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🥟 グルメ</h2
 if(page==='food'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🥟 上海グルメガイド</h2><p class="muted">料理・チェーン店・日本食・ファストフードを種類別に掲載。出店場所と価格は参考です。</p>')+panel('<div class="hint">辛さを控えたいとき：请不要放辣椒（Qǐng bú yào fàng làjiāo）＝唐辛子を入れないでください。記載価格は概算で店舗によって異なります。</div>')+foodCatalogPanel();}
 if(page==='budget'){html=selectedTrip()===MAIN_TRIP?spendingOverview()+budgetAssistantPanel()+budgetPanel():spendingOverview();}
 if(page==='phrase'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🗣️ 中国語フレーズ</h2><p>上海旅行専用のフレーズです。上海旅行に切り替えてください。</p>');}
-if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=translatePanel()+(typeof taxiLocationPanel==='function'?taxiLocationPanel():panel('<h2>🚕 場所・住所の中国語</h2><p class="hint">住所データの読み込みに失敗しました。画面を更新してください。</p>'))+phrasebookPanel();}
+if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=translatePanel()+coreTaxiLocationPanel()+phrasebookPanel();}
 if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国旅行ガイド</h2><p>上海旅行専用の内容です。</p>');}
 if(page==='knowledge'&&selectedTrip()===MAIN_TRIP){html=knowledgePanel();}
 if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2><p>上海旅行専用のお土産ガイドです。</p>');}
