@@ -1,5 +1,5 @@
 {
-  "version": "2.5.0",
+  "version": "2.6.0",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -61,6 +61,12 @@
     "boarding-preparation-guidance",
     "taxi-chinese-cards",
     "open-meteo-7day-weather",
-    "print-to-pdf-itinerary"
+    "print-to-pdf-itinerary",
+    "compact-five-tab-navigation",
+    "accordion-panels",
+    "in-app-search",
+    "scroll-to-top",
+    "compact-detailed-itinerary-toggle",
+    "reversible-ui-v2-5-0-baseline"
   ]
 }
