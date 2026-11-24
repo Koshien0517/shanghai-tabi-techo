@@ -497,6 +497,34 @@ body:not(.page-home) .hero{display:none!important}
 #compactPinnedActions button:first-child{border-color:#cd8782;color:#a33938}
 @media(max-width:350px){#compactPinnedActions button span{display:none}.direct-shortcut strong{font-size:10px}.bottom button span{font-size:17px!important}}
 @media(min-width:800px){.bottom{max-width:760px;margin:auto}#compactPinnedActions{right:calc((100vw - min(100vw,900px))/2 + 14px)}}
+
+/* v2.9: restore all 13 direct tabs; swipe horizontally, optimize only vertical content */
+.bottom{display:flex!important;grid-template-columns:none!important;justify-content:flex-start!important;gap:2px!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;max-width:none!important;padding:5px 8px calc(7px + env(safe-area-inset-bottom))!important}
+.bottom::-webkit-scrollbar{display:none}
+.bottom button{flex:0 0 auto!important;min-width:67px!important;width:auto!important;padding:6px 7px!important;font-size:11px!important;letter-spacing:0!important;white-space:nowrap!important}
+.bottom button span{font-size:19px!important}
+@media(min-width:800px){.bottom{max-width:none!important;justify-content:center!important}.bottom button{min-width:72px!important}}
+#compactPinnedActions{display:none!important}
+#content section.panel{margin-bottom:10px}
+#content .compact-accordion.panel{margin-bottom:8px}
+.compact-accordion summary{padding:12px 15px;font-size:14px}
+.compact-accordion[open] summary{margin-bottom:5px}
+#content .card{margin-block:6px;padding:10px 12px}
+#content .card p{margin-block:5px}
+.itinerary-compact .compact-event{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 11px!important}
+.itinerary-compact .compact-event span.time{flex:0 0 100px;font-size:11px}
+.itinerary-compact .compact-event strong{flex:1;font-size:13px;line-height:1.3}
+.itinerary-compact .compact-event .muted,.itinerary-compact .compact-event .map-action-wrap{display:none!important}
+.itinerary-compact .compact-event.expanded{display:block}
+.itinerary-compact .compact-event.expanded .muted,.itinerary-compact .compact-event.expanded .map-action-wrap{display:block!important}
+.vertical-compact-item{cursor:pointer;min-height:46px}
+.vertical-compact-item .detail-heading{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.vertical-compact-item .detail-heading strong{font-size:13px}
+.vertical-compact-item .detail-heading .muted{font-size:11px;max-width:45%;overflow-wrap:anywhere}
+.vertical-compact-item:not(.expanded)>p,.vertical-compact-item:not(.expanded)>.map-action-wrap{display:none!important}
+.vertical-compact-item:not(.expanded)::after{content:'詳細を見る ＋';display:block;text-align:right;color:#9b5560;font-size:11px}
+.vertical-compact-item.expanded::after{content:'詳細を閉じる −';display:block;text-align:right;color:#9b5560;font-size:11px}
+#compactToTop{bottom:calc(84px + env(safe-area-inset-bottom))}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -969,7 +997,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.8.0';const APP_RELEASE='2026-11-24';
+const APP_VERSION='2.9.0';const APP_RELEASE='2026-11-24';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1350,18 +1378,18 @@ function boardingAssistant(){
  return panel('<h2>🚄✈️ 乗車・搭乗準備アシスト</h2><p class="muted">航空便は空港へ出発3時間前を目安、高鉄は45分前の駅到着を目安として表示。航空便の3時間前は空港への到着目安で、ホテル出発時刻ではありません。保安検査・運行情報を自動取得するものではありません。</p>'+targets.map(t=>'<div class="card"><strong>'+esc(t.label)+'</strong><p>出発 '+esc(t.time)+' ／ 到着目安 '+minus(t.time,t.offset)+'</p><p class="muted">出発まで '+esc(countdownText(t.date+'T'+t.time+':00'+(t.label.includes('関空')?'+09:00':'+08:00')))+'</p></div>').join('')+(targets.length===2?'<p class="hint">高速鉄道は未予約です。予約メモに往復の発車時刻を入力すると表示されます。</p>':''));
 }
 
-function render(){document.body.className='page-'+page;const nav=document.getElementById('nav');const previousScroll=nav.scrollLeft;nav.classList.add('nav-6');nav.setAttribute('aria-label','旅行メニュー');nav.innerHTML=compactBottomNav.map(([id,emoji,title])=>`<button type="button" aria-label="${title}" ${page===id?'aria-current="page"':''} class="${page===id?'active':''}" data-page="${id}"><span aria-hidden="true">${emoji}</span>${title}</button>`).join('');nav.scrollLeft=previousScroll;const activeTab=nav.querySelector('[aria-current="page"]');if(activeTab){const target=activeTab.offsetLeft+activeTab.offsetWidth/2-nav.clientWidth/2;nav.scrollLeft=Math.max(0,target)}document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>jump(n.dataset.page));let html='';
+function render(){document.body.className='page-'+page;const nav=document.getElementById('nav');const previousScroll=nav.scrollLeft;nav.classList.remove('nav-6');nav.classList.add('nav-horizontal');nav.setAttribute('aria-label','旅行メニュー');nav.innerHTML=navItems.map(([id,emoji,title])=>`<button type="button" aria-label="${title}" ${page===id?'aria-current="page"':''} class="${page===id?'active':''}" data-page="${id}"><span aria-hidden="true">${emoji}</span>${title}</button>`).join('');nav.scrollLeft=previousScroll;const activeTab=nav.querySelector('[aria-current="page"]');if(activeTab){const target=activeTab.offsetLeft+activeTab.offsetWidth/2-nav.clientWidth/2;nav.scrollLeft=Math.max(0,target)}document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>jump(n.dataset.page));let html='';
 if(page==='home'&&selectedTrip()!==MAIN_TRIP){html=installHelpPanel()+panel('<h2>✈️ '+esc(currentTrip().title)+'</h2><p>'+esc(currentTrip().start)+'〜'+esc(currentTrip().end)+'</p><p class="muted">この旅行は端末内に保存されます。上海旅行への切替は「管理」から行えます。</p>')+todayPanel()+panel('<button class="ghost" id="customHomeSchedule">旅行の日程を見る</button>');}
 if(page==='home'&&selectedTrip()===MAIN_TRIP){html=panel('<span class="tag">友人との上海旅行</span><h2 style="margin-top:12px">旅のしおり</h2><p class="intro">豫園の路地、上海の近代史、外灘の夜景。4日間の旅程と準備をこのページにまとめました。</p><p><strong>往路：</strong>12/30 JL891 関空 10:15 → 上海浦東 12:05（現地時刻）</p><p><strong>復路：</strong>1/2 JL894 上海浦東 13:25 → 関空 16:45（日本時刻）</p>')+hotelPanel()+installHelpPanel()+panel('<h2>4日間の見どころ</h2>'+days.map((d,i)=>`<div class="card"><span class="time">DAY ${i+1} · ${d.date}</span><strong>${yuyuanDayName(i)}</strong></div>`).join('')+'<button class="ghost" onclick="jump(\'schedule\')">詳しい旅程を見る →</button>')+panel('<h2>旅の準備・予算</h2><p class="intro">旅行準備の持ち物と、12月31日無錫日帰り・帰国日朝食も含めた現地予算を確認できます。</p><button class="ghost" onclick="jump(\'packing\')">持ち物チェックリストへ →</button>　<button class="ghost" onclick="jump(\'budget\')">現地予算を見る →</button><p style="margin-top:15px"><button class="ghost" onclick="jump(\'knowledge\')">🛂 入国カードの書き方・中国旅行ガイド →</button></p>');}
 if(page==='schedule'&&selectedTrip()!==MAIN_TRIP){html=customSchedulePanel();}
-if(page==='schedule'&&selectedTrip()===MAIN_TRIP){html=(typeof scheduleShortcutPanel==='function'?scheduleShortcutPanel():'')+itineraryProgressPanel(day)+visitPanel(day)+panel('<h2>日別スケジュール</h2><div class="segment">'+days.map((d,i)=>`<button class="${i===day?'active':''}" data-day="${i}">${d.date}</button>`).join('')+'</div>'+(day===0||day===2?yuyuanPlanSelector():'')+'<h3>'+yuyuanDayName(day)+'</h3>'+yuyuanEvents(day).map(e=>`<div class="card"><span class="time">${esc(e[0])}</span><strong>${esc(e[1])}</strong>${e[2]?`<p class="muted">${esc(e[2])}</p>`:''}${e[3]?`${mapPickButton(e[3],'地図アプリを選ぶ')}`:''}</div>`).join(''))+(day===0?hotelPanel()+transitPanel():day===1?wuxiDayGuidePanel()+railBookingPanel():day===3?returnPanel():'')+panel('<div class="hint">年末年始の施設開館・予約・入場制限、12/31の外灘の通行規制は直前に確認してください。記載時刻は計画であり予約確定ではありません。</div>');}
+if(page==='schedule'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>日別スケジュール</h2><div class="segment">'+days.map((d,i)=>`<button class="${i===day?'active':''}" data-day="${i}">${d.date}</button>`).join('')+'</div>'+(day===0||day===2?yuyuanPlanSelector():'')+'<h3>'+yuyuanDayName(day)+'</h3>'+yuyuanEvents(day).map(e=>`<div class="card"><span class="time">${esc(e[0])}</span><strong>${esc(e[1])}</strong>${e[2]?`<p class="muted">${esc(e[2])}</p>`:''}${e[3]?`${mapPickButton(e[3],'地図アプリを選ぶ')}`:''}</div>`).join(''))+(day===0?hotelPanel()+transitPanel():day===1?wuxiDayGuidePanel()+railBookingPanel():day===3?returnPanel():'')+itineraryProgressPanel(day)+visitPanel(day)+panel('<div class="hint">年末年始の施設開館・予約・入場制限、12/31の外灘の通行規制は直前に確認してください。記載時刻は計画であり予約確定ではありません。</div>');}
 if(page==='packing'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>✅ 持ち物</h2><p>この旅行の持ち物チェックは旅行管理機能の次段階で追加します。上海版のチェックリストは保持されています。</p>');}
 if(page==='packing'&&selectedTrip()===MAIN_TRIP){let state=get('packing');let total=categories.flatMap(x=>x[1]).length;let done=categories.flatMap(x=>x[1]).filter(x=>state[x]).length;html=panel(`<div class="groupHead"><h2>持ち物チェック</h2><span class="tag">${done} / ${total} 準備済み</span></div><div class="progress" role="progressbar" aria-valuenow="${done}" aria-valuemax="${total}"><div class="fill" style="width:${done/total*100}%"></div></div><p class="muted">準備率 ${Math.round(done/total*100)}%</p><p class="muted">チェックはこの端末のブラウザ内に保存されます。友人のチェックとは連動しません。</p>`)+categories.map(([title,items])=>panel(`<div class="groupHead"><h2>${title}</h2><span class="muted">${items.filter(x=>state[x]).length}/${items.length}</span></div>`+items.map(x=>`<label class="checkrow"><input type="checkbox" data-pack="${esc(x)}" ${state[x]?'checked':''}><span class="${state[x]?'checked':''}">${esc(x)}</span></label>`).join(''))).join('')+panel('<button class="ghost" id="resetPacking">すべてのチェックを解除</button>');}
 if(page==='food'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🥟 グルメ</h2><p>上海旅行向けのグルメガイドです。上海に切り替えると確認できます。</p>');}
 if(page==='food'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🥟 上海グルメガイド</h2><p class="muted">料理・チェーン店・日本食・ファストフードを種類別に掲載。出店場所と価格は参考です。</p>')+panel('<div class="hint">辛さを控えたいとき：请不要放辣椒（Qǐng bú yào fàng làjiāo）＝唐辛子を入れないでください。記載価格は概算で店舗によって異なります。</div>')+foodCatalogPanel();}
-if(page==='budget'){html=typeof unifiedMoneyPanel==='function'?unifiedMoneyPanel():(selectedTrip()===MAIN_TRIP?budgetAssistantPanel()+spendingOverview()+budgetPanel():spendingOverview());}
+if(page==='budget'){html=selectedTrip()===MAIN_TRIP?spendingOverview()+budgetAssistantPanel()+budgetPanel():spendingOverview();}
 if(page==='phrase'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🗣️ 中国語フレーズ</h2><p>上海旅行専用のフレーズです。上海旅行に切り替えてください。</p>');}
-if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=(typeof phraseShortcutPanel==='function'?phraseShortcutPanel():'')+translatePanel()+phrasebookPanel();}
+if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=translatePanel()+phrasebookPanel();}
 if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国旅行ガイド</h2><p>上海旅行専用の内容です。</p>');}
 if(page==='knowledge'&&selectedTrip()===MAIN_TRIP){html=knowledgePanel();}
 if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2><p>上海旅行専用のお土産ガイドです。</p>');}
@@ -1370,7 +1398,7 @@ if(page==='bookings')html=countdownPanel()+bookingsPanel();
 if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=spendingOverview()+expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();if(page==='tools')html=travelToolsPanel();if(page==='menu')html=typeof compactMenuPanel==='function'?compactMenuPanel():panel('<h2>メニュー</h2><p>更新後に再度お試しください。</p>');if(page==='map')html=typeof compactMapPanel==='function'?compactMapPanel():panel('<h2>地図</h2><p>更新後に再度お試しください。</p>');
-if(page==='home'&&selectedTrip()===MAIN_TRIP)html=(typeof homeShortcutPanel==='function'?homeShortcutPanel():'')+offlineTravelCard()+boardingAssistant()+countdownPanel()+todayPanel()+html+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
+if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+html+countdownPanel()+offlineTravelCard()+boardingAssistant()+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
 document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理',tools:'便利',map:'地図',menu:'メニュー'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设',tools:'便',map:'图',menu:'目'}[page])+'</span></span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
@@ -1479,7 +1507,7 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.s
 
 /* Embedded six-tab navigation: no external JS required for startup. */
 /* Compact UI experiment v2.6: no itinerary data migrations. */
-const compactBottomNav=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['phrase','🀄','中国語'],['budget','💴','お金']];
+const compactBottomNav=navItems; // v2.9: restore all 13 direct-access tabs; horizontal swipe is supported
 const compactMenuGroups=[
  ['旅の準備',[['bookings','🎫','予約・航空便'],['packing','🧳','持ち物'],['tools','🧰','便利ツール']]],
  ['観光・現地',[['food','🥟','グルメ'],['more','🪭','お土産'],['phrase','🀄','中国語・翻訳'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急連絡']]],
@@ -1577,23 +1605,34 @@ function compactEnhance(){
  const top=document.getElementById('compactToTop');if(top)top.hidden=window.scrollY<450;
  document.querySelectorAll('[data-direct-page]').forEach(b=>b.onclick=()=>directGo(b.dataset.directPage,b.dataset.directAnchor||''));
  document.querySelectorAll('[data-money-tab]').forEach(b=>b.onclick=()=>{set('money-view',{tab:b.dataset.moneyTab});render()});
- compactPinnedActions();
- const collapsiblePages=['food','more','knowledge','tools','budget','manage','home','schedule','phrase','packing','bookings','expenses'];
+ const collapsiblePages=['home','schedule','food','more','knowledge','tools','budget','manage','phrase','packing','bookings','expenses'];
  if(collapsiblePages.includes(page)){
   [...container.querySelectorAll(':scope > section.panel')].forEach((section,i)=>{
    const head=section.querySelector(':scope > h2');
-   if(!head||section.querySelector('form#railForm'))return;
+   if(!head)return;
    const heading=head.textContent.trim();
-   // Keep summary and current itinerary immediately visible.
-   if(page==='home'&&i<3)return;
-   if((page==='food'||page==='more'||page==='knowledge')&&i===0)return;
-   if(page==='schedule'&&(heading==='日別スケジュール'||heading.includes('関連する機能')))return;
-   if(page==='budget'&&i<3)return;
-   if(page==='phrase'&&i===0)return;
+   const keep=(page==='home'&&i<=1)||(page==='schedule'&&heading==='日別スケジュール')||
+      (page==='budget'&&i===0)||(page==='phrase'&&i===0)||
+      ((page==='food'||page==='more'||page==='knowledge')&&i===0)||
+      (page==='tools'&&i===0)||(page==='expenses'&&i===0)||
+      (page==='packing'&&i===0)||(page==='bookings'&&i===0);
+   if(keep)return;
    const details=document.createElement('details');details.className='compact-accordion panel';
    const summary=document.createElement('summary');summary.textContent=heading;details.appendChild(summary);
    head.remove();while(section.firstChild)details.appendChild(section.firstChild);
    section.replaceWith(details);
+  });
+ }
+ // For long food/souvenir listings, each place starts as a compact one-line card.
+ if(page==='food'||page==='more'){
+  container.querySelectorAll('.detail-no-checkbox').forEach(card=>{
+   card.classList.add('vertical-compact-item');
+   card.setAttribute('tabindex','0');
+   card.setAttribute('role','button');
+   card.setAttribute('aria-expanded','false');
+   const toggle=()=>{const show=card.classList.toggle('expanded');card.setAttribute('aria-expanded',show?'true':'false')};
+   card.addEventListener('click',e=>{if(!e.target.closest('button,a,input'))toggle()});
+   card.addEventListener('keydown',e=>{if(e.target===card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggle()}});
   });
  }
  if(page==='schedule'){
@@ -1621,6 +1660,7 @@ function compactTopButtonSetup(){
 // Initial page rendering is triggered once by index.html on DOMContentLoaded.
 // This module only provides helpers; avoid rendering twice during startup.
 compactTopButtonSetup();
-compactPinnedActions();
+// The 13-tab bar itself exposes emergency and settings; no duplicate pinned overlays.
+const obsoletePinned=document.getElementById('compactPinnedActions');if(obsoletePinned)obsoletePinned.remove();
 
 </script><script src="./travel-tools.js"></script></body></html>
