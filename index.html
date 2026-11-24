@@ -917,10 +917,10 @@ function arrivalCardPanel(){
  '<a href="https://japanese.shanghai.gov.cn/ja-Expat%20Services-Videos-WhatsNew/20251121/9bd95088e2f04a6b9f934664a331ec73.html" target="_blank" rel="noopener noreferrer" class="maps">上海市公式・日本語のオンライン申告案内 ↗</a>');
 }
 function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上海の基礎知識と豆知識</h2><p class="intro">初めての中国旅行でも困らないよう、文化・交通・食事のマナーをまとめました。制度・営業時間は渡航前に公式情報で再確認してください。</p>')+knowledgeTopics.map(([title,a,b])=>panel('<h2>'+esc(title)+'</h2><p class="intro">'+esc(a)+'</p><p class="intro">'+esc(b)+'</p>')).join('')}
-const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
+const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.4.0';const APP_RELEASE='2026-11-24';
+const APP_VERSION='2.5.0';const APP_RELEASE='2026-11-24';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1251,7 +1251,7 @@ function openChineseShow(zh,pinyin,ja){
  overlay.appendChild(card);overlay.onclick=e=>{if(e.target===overlay)overlay.remove()};document.body.appendChild(overlay);close.focus();
 }
 
-const pageThemes={home:['朱红','旅程总览'],schedule:['青瓷','每日行程'],packing:['竹青','出发准备'],food:['暖橙','上海美食'],more:['绛紫','上海手信'],budget:['金砂','旅行预算'],phrase:['湖蓝','实用中文'],knowledge:['靛蓝','中国旅行指南'],bookings:['金砂','行程预订'],safety:['朱红','紧急帮助'],expenses:['金砂','旅行支出'],manage:['湖蓝','旅行管理']};
+const pageThemes={home:['朱红','旅程总览'],schedule:['青瓷','每日行程'],packing:['竹青','出发准备'],food:['暖橙','上海美食'],more:['绛紫','上海手信'],budget:['金砂','旅行预算'],phrase:['湖蓝','实用中文'],knowledge:['靛蓝','中国旅行指南'],bookings:['金砂','行程预订'],safety:['朱红','紧急帮助'],expenses:['金砂','旅行支出'],manage:['湖蓝','旅行管理'],tools:['青瓷','旅行工具']};
 
 function installHelpPanel(){return panel('<h2>📲 Android｜ホーム画面にアプリを追加する方法</h2><p class="muted">AndroidスマホではGoogle Chromeを使います。Chromeでこの上海旅手帖を開いた状態から操作してください。</p><div class="card"><strong>① Chromeで上海旅手帖を開く</strong><p>下の「アプリURLをコピー」を使ってChromeのアドレス欄に貼り付けてもOKです。</p><button type="button" class="ghost" data-copyval="https://koshien0517.github.io/shanghai-tabi-techo/">📋 アプリURLをコピー</button></div><div class="card"><strong>② Chromeのメニュー「︙」をタップ</strong><p>画面右上の縦3点メニューを開きます。端末によって表示位置や項目名が異なることがあります。</p></div><div class="card"><strong>③ 「アプリをインストール」または「ホーム画面に追加」を選ぶ</strong><p>メニューに「アプリをインストール」があればそれをタップします。「ホーム画面に追加」と表示される場合はそちらを選択します。</p></div><div class="card"><strong>④ 確認画面で「インストール」または「追加」を押す</strong><p>ホーム画面（またはアプリ一覧）に「上海旅手帖」のアイコンが追加されます。アイコンをタップして起動してください。</p></div><p class="tiny-hint">メニューが表示されない場合：Chromeで直接URLを開いているか確認し、ページを再読み込みしてください。すでにインストール済みなら追加項目が表示されない場合があります。</p><p class="muted">iPhoneの場合はSafariの共有メニュー →「ホーム画面に追加」を使用します。オフライン閲覧には事前にオンラインでアプリを一度開いてください。地図など外部サービスには通信が必要です。</p><p class="tiny-hint">個人用メモやお気に入りは端末内保存です。ホーム画面版とChrome版で保存データが共有されない場合があります。</p>')}
 
@@ -1321,9 +1321,9 @@ if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお�
 if(page==='bookings')html=countdownPanel()+bookingsPanel();
 if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=spendingOverview()+expensePanel()+splitPanel();
-if(page==='manage')html=offlinePanel()+managePanel();
+if(page==='manage')html=offlinePanel()+managePanel();if(page==='tools')html=travelToolsPanel();
 if(page==='home'&&selectedTrip()===MAIN_TRIP)html=offlineTravelCard()+boardingAssistant()+countdownPanel()+todayPanel()+html+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
-document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设'}[page])+'</span></span></div>'+html;
+document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理',tools:'便利'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设',tools:'便'}[page])+'</span></span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
 const customAdd=document.getElementById('customAddEvent');if(customAdd)customAdd.onclick=()=>jump('manage');
@@ -1427,4 +1427,4 @@ setInterval(()=>{if(!document.hidden)refreshCountdownNodes()},30000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const modal=document.getElementById('chineseShowOverlay');if(modal)modal.remove()}});
 const updateNowButton=document.getElementById('updateNow');if(updateNowButton)updateNowButton.addEventListener('click',updateAppNow);
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(err=>console.warn('オフライン機能の登録に失敗しました',err));});}
-</script></body></html>
+</script><script src="./travel-tools.js"></script></body></html>
