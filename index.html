@@ -1476,4 +1476,4 @@ setInterval(()=>{if(!document.hidden)refreshCountdownNodes()},30000);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const modal=document.getElementById('chineseShowOverlay');if(modal)modal.remove()}});
 const updateNowButton=document.getElementById('updateNow');if(updateNowButton)updateNowButton.addEventListener('click',updateAppNow);
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(err=>console.warn('オフライン機能の登録に失敗しました',err));});}
-</script><script src="./travel-tools.js"></script><script src="./compact-ui.js"></script></body></html>
+</script><script src="./travel-tools.js"></script><script src="./compact-ui.js?v=2.7.1"></script></body></html>
