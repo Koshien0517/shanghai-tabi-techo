@@ -1050,7 +1050,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.10.0';const APP_RELEASE='2026-11-24';
+const APP_VERSION='2.10.1';const APP_RELEASE='2026-11-24';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1443,7 +1443,7 @@ if(page==='food'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🥟 グルメ</h2
 if(page==='food'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🥟 上海グルメガイド</h2><p class="muted">料理・チェーン店・日本食・ファストフードを種類別に掲載。出店場所と価格は参考です。</p>')+panel('<div class="hint">辛さを控えたいとき：请不要放辣椒（Qǐng bú yào fàng làjiāo）＝唐辛子を入れないでください。記載価格は概算で店舗によって異なります。</div>')+foodCatalogPanel();}
 if(page==='budget'){html=selectedTrip()===MAIN_TRIP?spendingOverview()+budgetAssistantPanel()+budgetPanel():spendingOverview();}
 if(page==='phrase'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🗣️ 中国語フレーズ</h2><p>上海旅行専用のフレーズです。上海旅行に切り替えてください。</p>');}
-if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=translatePanel()+phrasebookPanel();}
+if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=translatePanel()+taxiLocationPanel()+phrasebookPanel();}
 if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国旅行ガイド</h2><p>上海旅行専用の内容です。</p>');}
 if(page==='knowledge'&&selectedTrip()===MAIN_TRIP){html=knowledgePanel();}
 if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2><p>上海旅行専用のお土産ガイドです。</p>');}
@@ -1668,7 +1668,7 @@ function compactEnhance(){
    const keep=(page==='home'&&i<=1)||(page==='schedule'&&heading==='日別スケジュール')||
       (page==='budget'&&i===0)||(page==='phrase'&&i===0)||
       ((page==='food'||page==='more'||page==='knowledge')&&i===0)||
-      (page==='tools'&&i===0)||(page==='expenses'&&i===0)||
+      (page==='expenses'&&i===0)||
       (page==='packing'&&i===0)||(page==='bookings'&&i===0);
    if(keep)return;
    const details=document.createElement('details');details.className='compact-accordion panel';
