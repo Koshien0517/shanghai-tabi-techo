@@ -1,5 +1,5 @@
 {
-  "version": "2.11.1",
+  "version": "2.11.2",
   "releasedAt": "2026-11-25",
   "features": [
     "update-check",
@@ -104,6 +104,9 @@
     "indexeddb-private-booking-vault",
     "offline-booking-preview",
     "booking-metadata-edit-delete",
-    "simple-update-button-label"
+    "simple-update-button-label",
+    "force-plain-update-button-label",
+    "network-fresh-pwa-navigation",
+    "service-worker-no-cached-update-check"
   ]
 }
