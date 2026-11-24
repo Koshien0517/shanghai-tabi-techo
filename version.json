@@ -1,5 +1,5 @@
 {
-  "version": "2.8.0",
+  "version": "2.9.0",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -78,6 +78,11 @@
     "blank-screen-recovery",
     "six-tabs-inlined-into-html",
     "no-external-navigation-script",
-    "blank-screen-boot-guard"
+    "blank-screen-boot-guard",
+    "restore-13-horizontal-tabs",
+    "shorter-vertical-itinerary",
+    "expandable-compact-catalog-cards",
+    "summary-first-home",
+    "retain-all-13-direct-pages"
   ]
 }
