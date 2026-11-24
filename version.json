@@ -1,5 +1,5 @@
 {
-  "version": "2.6.0",
+  "version": "2.7.0",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -67,6 +67,11 @@
     "in-app-search",
     "scroll-to-top",
     "compact-detailed-itinerary-toggle",
-    "reversible-ui-v2-5-0-baseline"
+    "reversible-ui-v2-5-0-baseline",
+    "six-one-tap-tabs",
+    "pinned-safety-settings",
+    "contextual-direct-shortcuts",
+    "unified-budget-expenses",
+    "existing-13-features-preserved"
   ]
 }
