@@ -1,5 +1,5 @@
 {
-  "version": "2.10.1",
+  "version": "2.10.2",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -94,6 +94,9 @@
     "keep-13-tab-horizontal-navigation",
     "responsive-spacing-polish",
     "taxi-location-accordion-default-closed",
-    "chinese-tab-destination-addresses"
+    "chinese-tab-destination-addresses",
+    "chinese-tab-standalone-destination-render",
+    "travel-tools-script-cache-bust",
+    "chinese-tab-navigation-crash-fix"
   ]
 }
