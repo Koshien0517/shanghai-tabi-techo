@@ -525,6 +525,34 @@ body:not(.page-home) .hero{display:none!important}
 .vertical-compact-item:not(.expanded)::after{content:'詳細を見る ＋';display:block;text-align:right;color:#9b5560;font-size:11px}
 .vertical-compact-item.expanded::after{content:'詳細を閉じる −';display:block;text-align:right;color:#9b5560;font-size:11px}
 #compactToTop{bottom:calc(84px + env(safe-area-inset-bottom))}
+
+/* v2.9.1: audited mobile overflow across all tables and dense content */
+#content .panel,#content details.panel{min-width:0;max-width:100%}
+#content .compact-accordion.panel{width:100%;max-width:100%}
+#content .compact-accordion>.responsive-table-scroll{display:block;width:calc(100% - 24px);max-width:calc(100% - 24px);margin:9px 12px;min-width:0}
+#content section.panel>.responsive-table-scroll{display:block;width:100%;max-width:100%;margin:8px 0;min-width:0}
+#content .responsive-table-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:#c5a279 #fff4e0;border-radius:10px}
+#content .responsive-table-scroll:focus-visible{outline:2px solid #98624b;outline-offset:2px}
+#content .responsive-table-scroll table.money-table{width:100%!important;max-width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse;margin:0!important}
+#content .money-table th,#content .money-table td{min-width:0;box-sizing:border-box;padding:9px 5px;vertical-align:top}
+#content .money-table th:first-child,#content .money-table td:first-child{width:56%;overflow-wrap:anywhere;white-space:normal!important}
+#content .money-table th:nth-child(2),#content .money-table td:nth-child(2){width:17%;white-space:nowrap;text-align:right}
+#content .money-table th:nth-child(3),#content .money-table td:nth-child(3){width:27%;white-space:normal!important;text-align:right;overflow-wrap:anywhere}
+#content .money-table th{font-size:clamp(10px,2.6vw,13px)}
+#content .money-table td{font-size:clamp(11px,2.9vw,14px)}
+#content .compact-accordion>p,#content .compact-accordion>.card,#content .compact-accordion>.rate-grid,#content .compact-accordion>.budget-total,#content .compact-accordion>.spend-stats,#content .compact-accordion>.breakdown{max-width:calc(100% - 28px);min-width:0;overflow-wrap:anywhere}
+#content .card,#content .data-box,#content .budget-total,#content .spend-stats>div{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#content .spend-stats,#content .rate-grid,#content .data-grid,#content .rail-form,#content .copy-list{min-width:0;max-width:100%}
+#content input:not([type="checkbox"]):not([type="radio"]),#content textarea,#content select{max-width:100%;min-width:0}
+#content .spend-stats strong,#content .budget-total strong{white-space:normal;overflow-wrap:anywhere}
+#content .spend-bar-label{flex-wrap:wrap}
+@media(max-width:420px){
+ #content .money-table th:first-child,#content .money-table td:first-child{width:52%}
+ #content .money-table th:nth-child(2),#content .money-table td:nth-child(2){width:18%}
+ #content .money-table th:nth-child(3),#content .money-table td:nth-child(3){width:30%}
+ #content .money-table th,#content .money-table td{padding:8px 3px}
+ #content .rate-grid,#content .data-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -997,7 +1025,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.9.0';const APP_RELEASE='2026-11-24';
+const APP_VERSION='2.9.1';const APP_RELEASE='2026-11-24';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1635,6 +1663,18 @@ function compactEnhance(){
    card.addEventListener('keydown',e=>{if(e.target===card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggle()}});
   });
  }
+ // Tables inside accordions must not inherit width:100% plus 28px outside margins.
+ // Wrap each table in its own scroll container so all amounts remain accessible.
+ container.querySelectorAll('table').forEach(table=>{
+  if(table.closest('.responsive-table-scroll'))return;
+  const wrapper=document.createElement('div');
+  wrapper.className='responsive-table-scroll';
+  wrapper.setAttribute('role','region');
+  wrapper.setAttribute('aria-label',table.classList.contains('money-table')?'予算の内訳表':'詳細一覧表');
+  wrapper.setAttribute('tabindex','0');
+  table.parentNode.insertBefore(wrapper,table);
+  wrapper.appendChild(table);
+ });
  if(page==='schedule'){
   // Keep the itinerary switcher visible without hiding the scheduled stops.
   let host=[...container.querySelectorAll('section.panel')].find(el=>el.querySelector(':scope > h2')?.textContent.includes('日別スケジュール'));
