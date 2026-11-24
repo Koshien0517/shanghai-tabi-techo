@@ -1257,7 +1257,7 @@ function installHelpPanel(){return panel('<h2>📲 Android｜ホーム画面に�
 
 /* Travel assistant: progress, visits, cash planning and boarding preparations. All personal state remains on-device. */
 function tripProgress(){const x=get('trip-progress');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}
-function progressKey(i,j){return i+'-'+j}
+function progressKey(i,j){return ((i===0||i===2)?yuyuanPlanMode:'shared')+'-'+i+'-'+j}
 function statusLabel(v){return v==='done'?'完了':v==='skip'?'スキップ':'未完了'}
 function progressSummary(i){const es=yuyuanEvents(i),state=tripProgress(),values=es.map((e,j)=>state[progressKey(i,j)]||'todo');return {total:es.length,done:values.filter(v=>v==='done').length,skip:values.filter(v=>v==='skip').length}}
 function itineraryProgressPanel(i){
@@ -1274,7 +1274,7 @@ function visitLog(){const x=get('visit-log');return x&&typeof x==='object'&&!Arr
 function visitPanel(i){
  const es=yuyuanEvents(i),spots=es.map((e,j)=>({name:e[1],location:e[3],index:j})).filter(e=>e.location&&!/ホテル →|駅で保安|航空|空港|へ移動|→ ホテル|出発準備|鉄道|高鉄|散歩・ホテルへ|タクシー|乗車待ち/.test(e.name));
  const saved=visitLog();
- return panel('<h2>📍 観光地の訪問記録</h2><p class="muted">チェックインは手動です。GPSによる自動判定は行いません。メモと訪問済み状態は端末内に保存。</p>'+spots.map(s=>{const key=i+'-'+s.index,v=saved[key]||{};return '<div class="card"><strong>'+esc(s.name)+'</strong><p class="muted">'+esc(s.location)+'</p><button type="button" class="ghost" data-visit="'+key+'">'+(v.done?'✓ 訪問済み（解除）':'訪問済みにする')+'</button><label class="wide">訪問メモ<input type="text" maxlength="160" data-visit-note="'+key+'" value="'+esc(v.note||'')+'" placeholder="例：景色がきれい、入園待ち20分"></label>'+(v.at?'<p class="muted">記録日時：'+esc(v.at)+'</p>':'')+'</div>'}).join(''));
+ return panel('<h2>📍 観光地の訪問記録</h2><p class="muted">チェックインは手動です。GPSによる自動判定は行いません。メモと訪問済み状態は端末内に保存。</p>'+spots.map(s=>{const key=progressKey(i,s.index),v=saved[key]||{};return '<div class="card"><strong>'+esc(s.name)+'</strong><p class="muted">'+esc(s.location)+'</p><button type="button" class="ghost" data-visit="'+key+'">'+(v.done?'✓ 訪問済み（解除）':'訪問済みにする')+'</button><label class="wide">訪問メモ<input type="text" maxlength="160" data-visit-note="'+key+'" value="'+esc(v.note||'')+'" placeholder="例：景色がきれい、入園待ち20分"></label>'+(v.at?'<p class="muted">記録日時：'+esc(v.at)+'</p>':'')+'</div>'}).join(''));
 }
 function plannedBudget(){
  const base=budget.reduce((s,row)=>s+row[1],0),booking=get('rail-booking');
