@@ -1,5 +1,5 @@
 {
-  "version": "2.9.0",
+  "version": "2.9.1",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -83,6 +83,9 @@
     "shorter-vertical-itinerary",
     "expandable-compact-catalog-cards",
     "summary-first-home",
-    "retain-all-13-direct-pages"
+    "retain-all-13-direct-pages",
+    "responsive-table-overflow-fix",
+    "accordion-table-wrapper",
+    "mobile-amount-columns-audit"
   ]
 }
