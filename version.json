@@ -1,5 +1,5 @@
 {
-  "version": "2.10.2",
+  "version": "2.11.0",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -97,6 +97,12 @@
     "chinese-tab-destination-addresses",
     "chinese-tab-standalone-destination-render",
     "travel-tools-script-cache-bust",
-    "chinese-tab-navigation-crash-fix"
+    "chinese-tab-navigation-crash-fix",
+    "offline-pdf-booking-import",
+    "offline-image-booking-import",
+    "manual-booking-to-dated-itinerary-link",
+    "indexeddb-private-booking-vault",
+    "offline-booking-preview",
+    "booking-metadata-edit-delete"
   ]
 }
