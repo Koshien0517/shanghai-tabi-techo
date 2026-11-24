@@ -1,6 +1,6 @@
 {
-  "version": "2.11.0",
-  "releasedAt": "2026-11-24",
+  "version": "2.11.1",
+  "releasedAt": "2026-11-25",
   "features": [
     "update-check",
     "today-and-next",
@@ -103,6 +103,7 @@
     "manual-booking-to-dated-itinerary-link",
     "indexeddb-private-booking-vault",
     "offline-booking-preview",
-    "booking-metadata-edit-delete"
+    "booking-metadata-edit-delete",
+    "simple-update-button-label"
   ]
 }
