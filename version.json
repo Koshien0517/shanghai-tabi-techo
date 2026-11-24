@@ -1,6 +1,6 @@
 {
-  "version": "2.3.3",
-  "releasedAt": "2026-11-21",
+  "version": "2.5.0",
+  "releasedAt": "2026-11-24",
   "features": [
     "update-check",
     "today-and-next",
@@ -53,6 +53,14 @@
     "jan1-yuyuan-fallback-itinerary",
     "linked-dec30-jan1-route-selection",
     "yuyuan-ticket-counted-once-in-budget",
-    "jan1-afternoon-yuyuan-fallback"
+    "jan1-afternoon-yuyuan-fallback",
+    "itinerary-progress-status",
+    "offline-travel-quick-card",
+    "linked-budget-and-rail-fare",
+    "manual-visit-checkin",
+    "boarding-preparation-guidance",
+    "taxi-chinese-cards",
+    "open-meteo-7day-weather",
+    "print-to-pdf-itinerary"
   ]
 }
