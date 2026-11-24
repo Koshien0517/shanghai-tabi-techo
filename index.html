@@ -608,6 +608,24 @@ body:not(.page-home) .hero{display:none!important}
 @media(max-width:390px){.vault-fields{grid-template-columns:minmax(0,1fr)}.vault-preview-box{height:94dvh}}
 /* Always show one short, icon-free update label. */
 .update-float #updateNow{min-width:64px;min-height:44px;padding:9px 13px;font-size:14px;white-space:nowrap;letter-spacing:.02em}
+
+/* v2.11.3: separate floating controls vertically. Preserve the 13-tab dock. */
+.update-float{
+ right:max(14px,env(safe-area-inset-right))!important;
+ bottom:calc(98px + env(safe-area-inset-bottom))!important;
+ z-index:36;
+}
+.update-float #updateNow{min-height:44px;min-width:64px}
+#compactToTop{
+ right:max(14px,env(safe-area-inset-right))!important;
+ bottom:calc(162px + env(safe-area-inset-bottom))!important;
+ width:46px;height:46px;
+ z-index:37;
+}
+@media(max-width:390px){
+ .update-float{bottom:calc(94px + env(safe-area-inset-bottom))!important}
+ #compactToTop{bottom:calc(158px + env(safe-area-inset-bottom))!important}
+}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -1080,7 +1098,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.11.2';const APP_RELEASE='2026-11-25';
+const APP_VERSION='2.11.3';const APP_RELEASE='2026-11-25';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
