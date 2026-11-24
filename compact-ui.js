@@ -138,6 +138,7 @@ function compactTopButtonSetup(){
  button.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});document.body.appendChild(button);
  const update=()=>{button.hidden=window.scrollY<450};window.addEventListener('scroll',update,{passive:true});update();
 }
+// Initial page rendering is triggered once by index.html on DOMContentLoaded.
+// This module only provides helpers; avoid rendering twice during startup.
 compactTopButtonSetup();
 compactPinnedActions();
-render();
