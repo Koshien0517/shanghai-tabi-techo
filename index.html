@@ -920,7 +920,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.3.3';const APP_RELEASE='2026-11-21';
+const APP_VERSION='2.4.0';const APP_RELEASE='2026-11-24';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -957,15 +957,13 @@ function returnPanel(){return visitJapanPanel()+panel('<h2>🥟 1/2 上海の朝
 function budgetPanel(){
  const fmtY=n=>fmt(Math.round(n*exchangeRate));
  const standard=budget.reduce((a,r)=>a+r[1],0);
- const rail=[150,250]; // first class round-trip per person, provisional planning allowance
- const station=[25,45]; // Shanghai station taxis, outbound & return, per passenger, two sharing
- const wuxi=[50,90]; // 4 Wuxi taxi trips, shared by 2
+ const linked=plannedBudget(),rail=linked.rail,station=linked.station,wuxi=linked.taxi;
  const daily=[rail[0]+station[0]+wuxi[0],rail[1]+station[1]+wuxi[1]];
- const low=standard+daily[0],high=standard+daily[1];
+ const low=linked.low,high=linked.high;
  const rate=yenMode==='card'?exchangeRate*1.03:exchangeRate;
  const money=n=>fmt(Math.round(n*rate))+'円';
  const baseTable='<table class="money-table"><thead><tr><th>費目（1人）</th><th>元</th><th>円（24円換算）</th></tr></thead><tbody>'+budget.map(([title,val])=>'<tr><td>'+esc(title)+'</td><td>'+fmt(val)+'</td><td>'+fmtY(val)+'</td></tr>').join('')+'<tr><th>基本現地予算</th><th>'+fmt(standard)+'</th><th>'+fmtY(standard)+'</th></tr></tbody></table>';
- const extraTable='<table class="money-table"><thead><tr><th>12/31 の追加費用（1人）</th><th>下限</th><th>上限</th></tr></thead><tbody><tr><td>上海⇄無錫 高鉄一等座希望・未予約</td><td>150元</td><td>250元</td></tr><tr><td>上海駅⇄ホテル（タクシー2回・2人折半）</td><td>25元</td><td>45元</td></tr><tr><td>無錫市内タクシー4回（2人折半）</td><td>50元</td><td>90元</td></tr><tr><th>追加費用合計</th><th>'+daily[0]+'元</th><th>'+daily[1]+'元</th></tr></tbody></table>';
+ const extraTable='<table class="money-table"><thead><tr><th>12/31 の追加費用（1人）</th><th>下限</th><th>上限</th></tr></thead><tbody><tr><td>上海⇄無錫 高鉄一等座希望・未予約</td><td>'+rail[0]+'元</td><td>'+rail[1]+'元</td></tr><tr><td>上海駅⇄ホテル（タクシー2回・2人折半）</td><td>25元</td><td>45元</td></tr><tr><td>無錫市内タクシー4回（2人折半）</td><td>'+wuxi[0]+'元</td><td>'+wuxi[1]+'元</td></tr><tr><th>追加費用合計</th><th>'+daily[0]+'元</th><th>'+daily[1]+'元</th></tr></tbody></table>';
  return panel('<span class="tag">12/30 リニア＋地下鉄／12/31 無錫日帰り</span><h2 style="margin-top:12px">💴 旅行現地予算・再計算</h2><p class="hint">交通・食費の重複を避けて計算。12/31の高速鉄道は未予約なので運賃は概算幅で掲載します。料金はすべて計画用です。</p><div class="budget-total"><small>現地予算・1人／3泊4日（航空券・ホテル代を除く）</small><strong>'+fmt(low)+'〜'+fmt(high)+'元</strong><b>基準換算：約'+fmtY(low)+'〜'+fmtY(high)+'円</b><br><br><small>2人合計</small><strong>'+fmt(low*2)+'〜'+fmt(high*2)+'元</strong><b>約'+fmtY(low*2)+'〜'+fmtY(high*2)+'円</b></div>')+
  panel('<h2>① 上海市内・飲食・買い物などの基本費用</h2>'+baseTable+'<p class="tiny-hint">食費600元は無錫の昼食・1/2朝食を含む全日程分。食べ歩き160元も無錫での軽食を含みます。観光施設250元に豫園入園30元（12/30または1/1の1回のみ）、寄暢園・天下第二泉の景区券70〜100元程度を含め、重複加算しません。1/2帰国タクシーは1台200元を2人で折半した100元を標準値としています（実際は1台160〜250元想定）。</p>')+
  panel('<h2>② 12/31 無錫日帰りの別枠追加費用</h2>'+extraTable+'<p class="tiny-hint">上海駅アクセスのタクシーは往復各25〜45元／台、2人で折半。無錫タクシー4区間は1台合計100〜180元を2人で折半。三鳳橋を省略する場合は減額。高速鉄道一等座は150〜250元／人の未確認概算を仮置きし、予約後に実額へ差し替えます。現地昼食・軽食・お土産・入場料は基本費用に含むため二重計上しません。</p>')+
@@ -1229,7 +1227,7 @@ function spendingOverview(){
  const fmtAmount=x=>x.toLocaleString('ja-JP',{maximumFractionDigits:2});
  if(t.id!==MAIN_TRIP)return panel('<h2>📊 予算と支出の進捗</h2><p class="muted">現在の旅行：'+esc(t.title)+'。支出記録は '+fmtAmount(spent)+' '+esc(currency)+'。予算未登録のため残高・消化率は表示しません。</p>');
  const standard=budget.reduce((sum,x)=>sum+x[1],0);
- const low=(standard+150+25+35)*2,high=(standard+250+45+63)*2;
+ const liveBudget=plannedBudget();const low=liveBudget.low*2,high=liveBudget.high*2;
  const pct=low>0?spent/low*100:0,remainingLow=low-spent,remainingHigh=high-spent;
  const progress=Math.min(100,Math.max(0,pct));
  return panel('<h2>📊 予算残高・消化率</h2><p class="muted">2人分の現地計画予算と、この端末に記録した全支出を比較します。航空券・宿泊費は計画予算の対象外です。</p>'+
@@ -1256,17 +1254,64 @@ function openChineseShow(zh,pinyin,ja){
 const pageThemes={home:['朱红','旅程总览'],schedule:['青瓷','每日行程'],packing:['竹青','出发准备'],food:['暖橙','上海美食'],more:['绛紫','上海手信'],budget:['金砂','旅行预算'],phrase:['湖蓝','实用中文'],knowledge:['靛蓝','中国旅行指南'],bookings:['金砂','行程预订'],safety:['朱红','紧急帮助'],expenses:['金砂','旅行支出'],manage:['湖蓝','旅行管理']};
 
 function installHelpPanel(){return panel('<h2>📲 Android｜ホーム画面にアプリを追加する方法</h2><p class="muted">AndroidスマホではGoogle Chromeを使います。Chromeでこの上海旅手帖を開いた状態から操作してください。</p><div class="card"><strong>① Chromeで上海旅手帖を開く</strong><p>下の「アプリURLをコピー」を使ってChromeのアドレス欄に貼り付けてもOKです。</p><button type="button" class="ghost" data-copyval="https://koshien0517.github.io/shanghai-tabi-techo/">📋 アプリURLをコピー</button></div><div class="card"><strong>② Chromeのメニュー「︙」をタップ</strong><p>画面右上の縦3点メニューを開きます。端末によって表示位置や項目名が異なることがあります。</p></div><div class="card"><strong>③ 「アプリをインストール」または「ホーム画面に追加」を選ぶ</strong><p>メニューに「アプリをインストール」があればそれをタップします。「ホーム画面に追加」と表示される場合はそちらを選択します。</p></div><div class="card"><strong>④ 確認画面で「インストール」または「追加」を押す</strong><p>ホーム画面（またはアプリ一覧）に「上海旅手帖」のアイコンが追加されます。アイコンをタップして起動してください。</p></div><p class="tiny-hint">メニューが表示されない場合：Chromeで直接URLを開いているか確認し、ページを再読み込みしてください。すでにインストール済みなら追加項目が表示されない場合があります。</p><p class="muted">iPhoneの場合はSafariの共有メニュー →「ホーム画面に追加」を使用します。オフライン閲覧には事前にオンラインでアプリを一度開いてください。地図など外部サービスには通信が必要です。</p><p class="tiny-hint">個人用メモやお気に入りは端末内保存です。ホーム画面版とChrome版で保存データが共有されない場合があります。</p>')}
+
+/* Travel assistant: progress, visits, cash planning and boarding preparations. All personal state remains on-device. */
+function tripProgress(){const x=get('trip-progress');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}
+function progressKey(i,j){return i+'-'+j}
+function statusLabel(v){return v==='done'?'完了':v==='skip'?'スキップ':'未完了'}
+function progressSummary(i){const es=yuyuanEvents(i),state=tripProgress(),values=es.map((e,j)=>state[progressKey(i,j)]||'todo');return {total:es.length,done:values.filter(v=>v==='done').length,skip:values.filter(v=>v==='skip').length}}
+function itineraryProgressPanel(i){
+ const sum=progressSummary(i),es=yuyuanEvents(i),state=tripProgress();
+ const nowDate=localTripDate(currentTrip()),clock=eventTime(localTripTime(currentTrip()));
+ const isToday=nowDate===itineraryDates(currentTrip())[i];
+ let next=es.findIndex((e,j)=>state[progressKey(i,j)]!=='done'&&state[progressKey(i,j)]!=='skip');
+ let advisory='';
+ if(isToday&&next>=0){const start=eventTime(es[next][0]);if(start!==null&&clock-start>20)advisory='<p class="hint">予定開始から'+(clock-start)+'分経過。残りの行程を確認してください。無錫では三鳳橋を先に省略、12/30の豫園は入園時刻に注意してください。時刻は中国時間の端末時計に基づく目安です。</p>';}
+ if(isToday&&i===0&&yuyuanPlanMode==='normal'&&clock>=15*60+45&&state[progressKey(0,3)]!=='done')advisory+='<p class="hint">豫園入園が厳しい場合は、上の「予備：1/1入園」で切り替えられます。実際の開園・入場状況を優先してください。</p>';
+ return panel('<h2>✅ 旅程の進行管理</h2><p>完了 '+sum.done+' / '+sum.total+' 件・スキップ '+sum.skip+' 件。記録はこの端末だけに保存されます。</p>'+advisory+es.map((e,j)=>'<div class="card"><span class="time">'+esc(e[0])+'</span><strong>'+esc(e[1])+'</strong><div class="segment"><button type="button" data-step="'+i+'-'+j+'" data-status="todo" class="'+(!(state[progressKey(i,j)]==='done'||state[progressKey(i,j)]==='skip')?'active':'')+'">未完了</button><button type="button" data-step="'+i+'-'+j+'" data-status="done" class="'+(state[progressKey(i,j)]==='done'?'active':'')+'">完了</button><button type="button" data-step="'+i+'-'+j+'" data-status="skip" class="'+(state[progressKey(i,j)]==='skip'?'active':'')+'">スキップ</button></div></div>').join(''));
+}
+function visitLog(){const x=get('visit-log');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}
+function visitPanel(i){
+ const es=yuyuanEvents(i),spots=es.map((e,j)=>({name:e[1],location:e[3],index:j})).filter(e=>e.location&&!/ホテル →|駅で保安|航空|空港|へ移動|→ ホテル|出発準備|鉄道|高鉄|散歩・ホテルへ|タクシー|乗車待ち/.test(e.name));
+ const saved=visitLog();
+ return panel('<h2>📍 観光地の訪問記録</h2><p class="muted">チェックインは手動です。GPSによる自動判定は行いません。メモと訪問済み状態は端末内に保存。</p>'+spots.map(s=>{const key=i+'-'+s.index,v=saved[key]||{};return '<div class="card"><strong>'+esc(s.name)+'</strong><p class="muted">'+esc(s.location)+'</p><button type="button" class="ghost" data-visit="'+key+'">'+(v.done?'✓ 訪問済み（解除）':'訪問済みにする')+'</button><label class="wide">訪問メモ<input type="text" maxlength="160" data-visit-note="'+key+'" value="'+esc(v.note||'')+'" placeholder="例：景色がきれい、入園待ち20分"></label>'+(v.at?'<p class="muted">記録日時：'+esc(v.at)+'</p>':'')+'</div>'}).join(''));
+}
+function plannedBudget(){
+ const base=budget.reduce((s,row)=>s+row[1],0),booking=get('rail-booking');
+ const fare=(booking&&booking.status==='予約済み'&&Number(booking.price)>0&&Number.isFinite(Number(booking.price)))?Number(booking.price):null;
+ const rail=fare===null?[150,250]:[fare,fare];
+ const omit=(get('wuxi-options').skipSanfengqiao===true);
+ const taxi=omit?[35,65]:[50,90];
+ return {base,rail,taxi,station:[25,45],low:base+rail[0]+25+taxi[0],high:base+rail[1]+45+taxi[1],fare,omit};
+}
+function budgetAssistantPanel(){
+ const b=plannedBudget();
+ return panel('<h2>🔄 旅程と連動する予算</h2><label class="checkrow"><input type="checkbox" id="skipSanfengqiao" '+(b.omit?'checked':'')+'><span>12/31の三鳳橋を省略して移動費を再試算</span></label><p class="muted">高鉄運賃：'+(b.fare===null?'未予約・往復150〜250元／人の仮置き':esc(b.fare)+'元／人（端末の予約メモ）')+'。無錫タクシー：'+b.taxi[0]+'〜'+b.taxi[1]+'元／人。施設入園料・飲食・土産の基本予算は既存どおりで、削除はしません。</p><p><strong>旅行全体：1人 '+b.low+'〜'+b.high+'元 ／ 2人 '+(b.low*2)+'〜'+(b.high*2)+'元</strong></p><p class="tiny-hint">三鳳橋省略時のタクシー減額は推計値です。実際の経路・購入額とは異なります。支出実績は「支出」ページから入力してください。</p>');
+}
+function offlineTravelCard(){
+ const memo=get('rail-booking');const lines=[['宿泊先',hotel.zh+' ｜ '+hotel.address],['12/30 往路','JL891 関空10:15 → 浦東12:05'],['1/2 復路','JL894 浦東13:25 → 関空16:45'],['12/31 高鉄',memo.status==='予約済み'?(String(memo.outNum||'往路')+' '+String(memo.outDep||'時刻未入力')+'／'+String(memo.backNum||'復路')+' '+String(memo.backDep||'時刻未入力')):'一等座希望・未予約（12306で確認）'],['緊急','警察110／救急120／消防119（中国）']];
+ return panel('<h2>📴 オフライン旅行カード</h2><p class="muted">ホテル名・便名・中国語住所を1画面で確認。画面本体のキャッシュ保存後は通信なしで閲覧できます。外部リンクや地図はオンラインが必要です。</p>'+lines.map(([name,value])=>'<div class="card"><span class="time">'+esc(name)+'</span><strong>'+esc(value)+'</strong><button class="ghost" data-copyval="'+esc(value)+'">📋 コピー</button></div>').join('')+'<p class="tiny-hint">予約番号やパスポート番号など個人情報はアプリの公開ソースには記載しないでください。</p>');
+}
+function boardingAssistant(){
+ const rail=get('rail-booking'),targets=[{label:'12/30 往路航空便（関空）',date:'2026-12-30',time:'10:15',offset:180},{label:'1/2 復路航空便（上海浦東）',date:'2027-01-02',time:'13:25',offset:180}];
+ if(rail.status==='予約済み'&&rail.date==='2026-12-31'){
+  for(const [k,l] of [['out','12/31 上海→無錫'],['back','12/31 無錫→上海']])if(/^\d\d:\d\d$/.test(rail[k+'Dep']||''))targets.push({label:l+' '+(rail[k+'Num']||''),date:rail.date,time:rail[k+'Dep'],offset:45});
+ }
+ function minus(time,mins){const parts=time.split(':').map(Number);let t=(parts[0]*60+parts[1]-mins+1440)%1440;return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}
+ return panel('<h2>🚄✈️ 乗車・搭乗準備アシスト</h2><p class="muted">航空便は空港へ出発3時間前を目安、高鉄は45分前の駅到着を目安として表示。航空便の3時間前は空港への到着目安で、ホテル出発時刻ではありません。保安検査・運行情報を自動取得するものではありません。</p>'+targets.map(t=>'<div class="card"><strong>'+esc(t.label)+'</strong><p>出発 '+esc(t.time)+' ／ 到着目安 '+minus(t.time,t.offset)+'</p><p class="muted">出発まで '+esc(countdownText(t.date+'T'+t.time+':00'+(t.label.includes('関空')?'+09:00':'+08:00')))+'</p></div>').join('')+(targets.length===2?'<p class="hint">高速鉄道は未予約です。予約メモに往復の発車時刻を入力すると表示されます。</p>':''));
+}
+
 function render(){document.body.className='page-'+page;const nav=document.getElementById('nav');const previousScroll=nav.scrollLeft;nav.classList.add('nav-6');nav.setAttribute('aria-label','旅行メニュー');nav.innerHTML=navItems.map(([id,emoji,title])=>`<button type="button" aria-label="${title}" ${page===id?'aria-current="page"':''} class="${page===id?'active':''}" data-page="${id}"><span aria-hidden="true">${emoji}</span>${title}</button>`).join('');nav.scrollLeft=previousScroll;const activeTab=nav.querySelector('[aria-current="page"]');if(activeTab){const target=activeTab.offsetLeft+activeTab.offsetWidth/2-nav.clientWidth/2;nav.scrollLeft=Math.max(0,target)}document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>jump(n.dataset.page));let html='';
 if(page==='home'&&selectedTrip()!==MAIN_TRIP){html=installHelpPanel()+panel('<h2>✈️ '+esc(currentTrip().title)+'</h2><p>'+esc(currentTrip().start)+'〜'+esc(currentTrip().end)+'</p><p class="muted">この旅行は端末内に保存されます。上海旅行への切替は「管理」から行えます。</p>')+todayPanel()+panel('<button class="ghost" id="customHomeSchedule">旅行の日程を見る</button>');}
 if(page==='home'&&selectedTrip()===MAIN_TRIP){html=panel('<span class="tag">友人との上海旅行</span><h2 style="margin-top:12px">旅のしおり</h2><p class="intro">豫園の路地、上海の近代史、外灘の夜景。4日間の旅程と準備をこのページにまとめました。</p><p><strong>往路：</strong>12/30 JL891 関空 10:15 → 上海浦東 12:05（現地時刻）</p><p><strong>復路：</strong>1/2 JL894 上海浦東 13:25 → 関空 16:45（日本時刻）</p>')+hotelPanel()+installHelpPanel()+panel('<h2>4日間の見どころ</h2>'+days.map((d,i)=>`<div class="card"><span class="time">DAY ${i+1} · ${d.date}</span><strong>${yuyuanDayName(i)}</strong></div>`).join('')+'<button class="ghost" onclick="jump(\'schedule\')">詳しい旅程を見る →</button>')+panel('<h2>旅の準備・予算</h2><p class="intro">旅行準備の持ち物と、12月31日無錫日帰り・帰国日朝食も含めた現地予算を確認できます。</p><button class="ghost" onclick="jump(\'packing\')">持ち物チェックリストへ →</button>　<button class="ghost" onclick="jump(\'budget\')">現地予算を見る →</button><p style="margin-top:15px"><button class="ghost" onclick="jump(\'knowledge\')">🛂 入国カードの書き方・中国旅行ガイド →</button></p>');}
 if(page==='schedule'&&selectedTrip()!==MAIN_TRIP){html=customSchedulePanel();}
-if(page==='schedule'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>日別スケジュール</h2><div class="segment">'+days.map((d,i)=>`<button class="${i===day?'active':''}" data-day="${i}">${d.date}</button>`).join('')+'</div>'+(day===0||day===2?yuyuanPlanSelector():'')+'<h3>'+yuyuanDayName(day)+'</h3>'+yuyuanEvents(day).map(e=>`<div class="card"><span class="time">${esc(e[0])}</span><strong>${esc(e[1])}</strong>${e[2]?`<p class="muted">${esc(e[2])}</p>`:''}${e[3]?`${mapPickButton(e[3],'地図アプリを選ぶ')}`:''}</div>`).join(''))+(day===0?hotelPanel()+transitPanel():day===1?wuxiDayGuidePanel()+railBookingPanel():day===3?returnPanel():'')+panel('<div class="hint">年末年始の施設開館・予約・入場制限、12/31の外灘の通行規制は直前に確認してください。記載時刻は計画であり予約確定ではありません。</div>');}
+if(page==='schedule'&&selectedTrip()===MAIN_TRIP){html=itineraryProgressPanel(day)+visitPanel(day)+panel('<h2>日別スケジュール</h2><div class="segment">'+days.map((d,i)=>`<button class="${i===day?'active':''}" data-day="${i}">${d.date}</button>`).join('')+'</div>'+(day===0||day===2?yuyuanPlanSelector():'')+'<h3>'+yuyuanDayName(day)+'</h3>'+yuyuanEvents(day).map(e=>`<div class="card"><span class="time">${esc(e[0])}</span><strong>${esc(e[1])}</strong>${e[2]?`<p class="muted">${esc(e[2])}</p>`:''}${e[3]?`${mapPickButton(e[3],'地図アプリを選ぶ')}`:''}</div>`).join(''))+(day===0?hotelPanel()+transitPanel():day===1?wuxiDayGuidePanel()+railBookingPanel():day===3?returnPanel():'')+panel('<div class="hint">年末年始の施設開館・予約・入場制限、12/31の外灘の通行規制は直前に確認してください。記載時刻は計画であり予約確定ではありません。</div>');}
 if(page==='packing'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>✅ 持ち物</h2><p>この旅行の持ち物チェックは旅行管理機能の次段階で追加します。上海版のチェックリストは保持されています。</p>');}
 if(page==='packing'&&selectedTrip()===MAIN_TRIP){let state=get('packing');let total=categories.flatMap(x=>x[1]).length;let done=categories.flatMap(x=>x[1]).filter(x=>state[x]).length;html=panel(`<div class="groupHead"><h2>持ち物チェック</h2><span class="tag">${done} / ${total} 準備済み</span></div><div class="progress" role="progressbar" aria-valuenow="${done}" aria-valuemax="${total}"><div class="fill" style="width:${done/total*100}%"></div></div><p class="muted">準備率 ${Math.round(done/total*100)}%</p><p class="muted">チェックはこの端末のブラウザ内に保存されます。友人のチェックとは連動しません。</p>`)+categories.map(([title,items])=>panel(`<div class="groupHead"><h2>${title}</h2><span class="muted">${items.filter(x=>state[x]).length}/${items.length}</span></div>`+items.map(x=>`<label class="checkrow"><input type="checkbox" data-pack="${esc(x)}" ${state[x]?'checked':''}><span class="${state[x]?'checked':''}">${esc(x)}</span></label>`).join(''))).join('')+panel('<button class="ghost" id="resetPacking">すべてのチェックを解除</button>');}
 if(page==='food'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🥟 グルメ</h2><p>上海旅行向けのグルメガイドです。上海に切り替えると確認できます。</p>');}
 if(page==='food'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🥟 上海グルメガイド</h2><p class="muted">料理・チェーン店・日本食・ファストフードを種類別に掲載。出店場所と価格は参考です。</p>')+panel('<div class="hint">辛さを控えたいとき：请不要放辣椒（Qǐng bú yào fàng làjiāo）＝唐辛子を入れないでください。記載価格は概算で店舗によって異なります。</div>')+foodCatalogPanel();}
 if(page==='budget'&&selectedTrip()!==MAIN_TRIP){html=spendingOverview();}
-if(page==='budget'&&selectedTrip()===MAIN_TRIP){html=spendingOverview()+budgetPanel();}
+if(page==='budget'&&selectedTrip()===MAIN_TRIP){html=budgetAssistantPanel()+spendingOverview()+budgetPanel();}
 if(page==='phrase'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🗣️ 中国語フレーズ</h2><p>上海旅行専用のフレーズです。上海旅行に切り替えてください。</p>');}
 if(page==='phrase'&&selectedTrip()===MAIN_TRIP){html=translatePanel()+phrasebookPanel();}
 if(page==='knowledge'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>📚 中国旅行ガイド</h2><p>上海旅行専用の内容です。</p>');}
@@ -1277,7 +1322,7 @@ if(page==='bookings')html=countdownPanel()+bookingsPanel();
 if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=spendingOverview()+expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();
-if(page==='home'&&selectedTrip()===MAIN_TRIP)html=countdownPanel()+todayPanel()+html+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
+if(page==='home'&&selectedTrip()===MAIN_TRIP)html=offlineTravelCard()+boardingAssistant()+countdownPanel()+todayPanel()+html+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
 document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设'}[page])+'</span></span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
@@ -1375,7 +1420,7 @@ const expBtn=document.getElementById('backupExport');if(expBtn)expBtn.onclick=()
 const impBtn=document.getElementById('backupImport');if(impBtn)impBtn.onclick=async()=>{const f=document.getElementById('backupFile').files[0];const msg=document.getElementById('backupStatus');try{const ok=await importBackup(f);msg.textContent=ok?'復元しました。画面を再読み込みします。':'復元を取り消しました。';if(ok)render()}catch(err){msg.textContent='復元できません：'+err.message}};
 const ver=document.getElementById('appUpdateCheck');if(ver)ver.onclick=checkAppVersion;
 
-document.querySelectorAll('[data-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.day;render()});document.querySelectorAll('[data-yuyuan-mode]').forEach(n=>n.onclick=()=>{yuyuanPlanMode=n.dataset.yuyuanMode;set('yuyuan-plan',{mode:yuyuanPlanMode});render()});document.querySelectorAll('[data-pack],[data-food],[data-gifts]').forEach(n=>n.onchange=()=>{let type=n.dataset.pack?'packing':n.dataset.food?'food':'gifts',key=n.dataset.pack||n.dataset.food||n.dataset.gifts,s=get(type);s[key]=n.checked;set(type,s);render()});let reset=document.getElementById('resetPacking');if(reset)reset.onclick=()=>{if(confirm('持ち物のチェックをすべて解除しますか？')){set('packing',{});render()}};let share=document.getElementById('share');if(share)share.onclick=async()=>{if(navigator.share)try{await navigator.share({title:'上海旅手帖',url:location.href});return}catch{}try{await navigator.clipboard.writeText(location.href);alert('URLをコピーしました')}catch{prompt('このURLをコピーしてください',location.href)}};}
+document.querySelectorAll('[data-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.day;render()});document.querySelectorAll('[data-step]').forEach(n=>n.onclick=()=>{const state=tripProgress();state[n.dataset.step]=n.dataset.status;set('trip-progress',state);render()});document.querySelectorAll('[data-visit]').forEach(n=>n.onclick=()=>{const state=visitLog(),old=state[n.dataset.visit]||{};state[n.dataset.visit]={...old,done:!old.done,at:!old.done?new Date().toISOString():''};set('visit-log',state);render()});document.querySelectorAll('[data-visit-note]').forEach(n=>n.onchange=()=>{const state=visitLog(),old=state[n.dataset.visitNote]||{};state[n.dataset.visitNote]={...old,note:n.value.slice(0,160)};set('visit-log',state)});const skipSanfengqiao=document.getElementById('skipSanfengqiao');if(skipSanfengqiao)skipSanfengqiao.onchange=()=>{set('wuxi-options',{skipSanfengqiao:skipSanfengqiao.checked});render()};document.querySelectorAll('[data-yuyuan-mode]').forEach(n=>n.onclick=()=>{yuyuanPlanMode=n.dataset.yuyuanMode;set('yuyuan-plan',{mode:yuyuanPlanMode});render()});document.querySelectorAll('[data-pack],[data-food],[data-gifts]').forEach(n=>n.onchange=()=>{let type=n.dataset.pack?'packing':n.dataset.food?'food':'gifts',key=n.dataset.pack||n.dataset.food||n.dataset.gifts,s=get(type);s[key]=n.checked;set(type,s);render()});let reset=document.getElementById('resetPacking');if(reset)reset.onclick=()=>{if(confirm('持ち物のチェックをすべて解除しますか？')){set('packing',{});render()}};let share=document.getElementById('share');if(share)share.onclick=async()=>{if(navigator.share)try{await navigator.share({title:'上海旅手帖',url:location.href});return}catch{}try{await navigator.clipboard.writeText(location.href);alert('URLをコピーしました')}catch{prompt('このURLをコピーしてください',location.href)}};}
 try{const restore=sessionStorage.getItem('shanghai-update-page');if(restore&&navItems.some(x=>x[0]===restore)){page=restore;day=Number(sessionStorage.getItem('shanghai-update-day'))||0}sessionStorage.removeItem('shanghai-update-page');sessionStorage.removeItem('shanghai-update-day')}catch{}
 render();
 setInterval(()=>{if(!document.hidden)refreshCountdownNodes()},30000);
