@@ -13,7 +13,7 @@ function directShortcuts(items){
 function homeShortcutPanel(){
  return panel('<h2>よく使う機能</h2><p class="muted">必要な機能へ直接移動できます。</p>'+directShortcuts([
  ['持ち物','packing','','🧳'],['入国・旅行情報','knowledge','','🇨🇳'],['天気予報','tools','天気予報','🌦️'],['乗車準備','bookings','','🚄'],
- ['旅程PDF','tools','旅程PDF','📄'],['予約確認','bookings','','🎫'],['支出記録','budget','支出','🧾'],['タクシー','tools','タクシー','🚕']
+ ['旅程PDF','tools','旅程PDF','📄'],['予約確認','bookings','','🎫'],['支出記録','budget','支出','🧾'],['タクシー','tools','タクシー','🚕'],['検索・全機能','menu','','🔎']
  ]));
 }
 function scheduleShortcutPanel(){
@@ -108,7 +108,7 @@ function compactEnhance(){
    if(page==='home'&&i<3)return;
    if((page==='food'||page==='more'||page==='knowledge')&&i===0)return;
    if(page==='schedule'&&(heading==='日別スケジュール'||heading.includes('関連する機能')))return;
-   if(page==='budget'&&i<2)return;
+   if(page==='budget'&&i<3)return;
    if(page==='phrase'&&i===0)return;
    const details=document.createElement('details');details.className='compact-accordion panel';
    const summary=document.createElement('summary');summary.textContent=heading;details.appendChild(summary);
