@@ -553,6 +553,31 @@ body:not(.page-home) .hero{display:none!important}
  #content .money-table th,#content .money-table td{padding:8px 3px}
  #content .rate-grid,#content .data-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* v2.10: visual polish without changing the 13-section navigation or itinerary data */
+:root{--touch-ring:#b96058}
+#content{min-width:0}
+#content .panel{box-shadow:0 3px 12px rgba(102,67,48,.06);border-radius:16px}
+#content .panel h2{letter-spacing:.01em;line-height:1.45}
+#content .card{border-radius:12px}
+#content .compact-accordion.panel{border-radius:14px}
+#content .compact-accordion summary{min-height:48px;gap:12px;line-height:1.45;align-items:center;touch-action:manipulation}
+#content .compact-accordion summary::after{flex:none}
+#content .compact-accordion[open] summary{background:linear-gradient(90deg,rgba(233,208,169,.14),transparent)}
+#content .segment{scrollbar-width:thin;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
+#content .segment button,#content .pill-control,#content .ghost,#content .copy-btn,#content [data-yuyuan-mode]{min-height:44px;touch-action:manipulation}
+#content button[aria-pressed="true"]{box-shadow:inset 0 0 0 1px currentColor}
+#content input:not([type=checkbox]):not([type=radio]),#content select,#content textarea{min-height:42px;font-size:16px}
+#content .vertical-compact-item{transition:background .15s,border-color .15s}
+#content .vertical-compact-item.expanded{background:#fffbf7;border-color:#d3a57b}
+#nav.bottom{scroll-snap-type:x proximity;box-shadow:0 -4px 18px rgba(51,30,25,.08);border-top:1px solid #e8d4bd}
+#nav.bottom button{scroll-snap-align:center;min-height:54px!important;position:relative;touch-action:manipulation}
+#nav.bottom button.active{background:#f9e5df!important;color:#8d373e!important}
+#nav.bottom button.active::after{content:"";position:absolute;left:23%;right:23%;bottom:3px;height:3px;border-radius:99px;background:#ba574b}
+#nav.bottom button:focus-visible,#content button:focus-visible,#content summary:focus-visible,#content .vertical-compact-item:focus-visible{outline:3px solid var(--touch-ring);outline-offset:2px}
+#content .responsive-table-scroll{max-width:100%}
+@media(max-width:420px){#content .panel{padding:14px}#content .panel h2{font-size:17px}#content .compact-accordion.panel{padding:0}#content .compact-accordion summary{padding:12px 14px}#content .data-box{padding:10px}#content .rate-grid{gap:7px}}
+@media(prefers-reduced-motion:reduce){#content .vertical-compact-item{transition:none}}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -1025,7 +1050,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.9.2';const APP_RELEASE='2026-11-24';
+const APP_VERSION='2.10.0';const APP_RELEASE='2026-11-24';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1406,7 +1431,8 @@ function boardingAssistant(){
  return panel('<h2>🚄✈️ 乗車・搭乗準備アシスト</h2><p class="muted">航空便は空港へ出発3時間前を目安、高鉄は45分前の駅到着を目安として表示。航空便の3時間前は空港への到着目安で、ホテル出発時刻ではありません。保安検査・運行情報を自動取得するものではありません。</p>'+targets.map(t=>'<div class="card"><strong>'+esc(t.label)+'</strong><p>出発 '+esc(t.time)+' ／ 到着目安 '+minus(t.time,t.offset)+'</p><p class="muted">出発まで '+esc(countdownText(t.date+'T'+t.time+':00'+(t.label.includes('関空')?'+09:00':'+08:00')))+'</p></div>').join('')+(targets.length===2?'<p class="hint">高速鉄道は未予約です。予約メモに往復の発車時刻を入力すると表示されます。</p>':''));
 }
 
-function render(){document.body.className='page-'+page;const nav=document.getElementById('nav');const previousScroll=nav.scrollLeft;nav.classList.remove('nav-6');nav.classList.add('nav-horizontal');nav.setAttribute('aria-label','旅行メニュー');nav.innerHTML=navItems.map(([id,emoji,title])=>`<button type="button" aria-label="${title}" ${page===id?'aria-current="page"':''} class="${page===id?'active':''}" data-page="${id}"><span aria-hidden="true">${emoji}</span>${title}</button>`).join('');nav.scrollLeft=previousScroll;const activeTab=nav.querySelector('[aria-current="page"]');if(activeTab){const target=activeTab.offsetLeft+activeTab.offsetWidth/2-nav.clientWidth/2;nav.scrollLeft=Math.max(0,target)}document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>jump(n.dataset.page));let html='';
+const expandedSectionState=Object.create(null); // Preserve expanded panels during in-page updates without changing saved trip data.
+function render(){document.body.className='page-'+page;const nav=document.getElementById('nav');const previousScroll=nav.scrollLeft;nav.classList.remove('nav-6');nav.classList.add('nav-horizontal');nav.setAttribute('aria-label','旅行メニュー');nav.innerHTML=navItems.map(([id,emoji,title])=>`<button type="button" aria-label="${title}" ${page===id?'aria-current="page"':''} class="${page===id?'active':''}" data-page="${id}"><span aria-hidden="true">${emoji}</span>${title}</button>`).join('');nav.scrollLeft=previousScroll;const activeTab=nav.querySelector('[aria-current="page"]');if(activeTab){const left=activeTab.offsetLeft,right=left+activeTab.offsetWidth;const start=nav.scrollLeft,end=start+nav.clientWidth;if(left<start+6)nav.scrollLeft=Math.max(0,left-12);else if(right>end-6)nav.scrollLeft=right-nav.clientWidth+12;}document.querySelectorAll('[data-page]').forEach(n=>n.onclick=()=>jump(n.dataset.page));let html='';
 if(page==='home'&&selectedTrip()!==MAIN_TRIP){html=installHelpPanel()+panel('<h2>✈️ '+esc(currentTrip().title)+'</h2><p>'+esc(currentTrip().start)+'〜'+esc(currentTrip().end)+'</p><p class="muted">この旅行は端末内に保存されます。上海旅行への切替は「管理」から行えます。</p>')+todayPanel()+panel('<button class="ghost" id="customHomeSchedule">旅行の日程を見る</button>');}
 if(page==='home'&&selectedTrip()===MAIN_TRIP){html=panel('<span class="tag">友人との上海旅行</span><h2 style="margin-top:12px">旅のしおり</h2><p class="intro">豫園の路地、上海の近代史、外灘の夜景。4日間の旅程と準備をこのページにまとめました。</p><p><strong>往路：</strong>12/30 JL891 関空 10:15 → 上海浦東 12:05（現地時刻）</p><p><strong>復路：</strong>1/2 JL894 上海浦東 13:25 → 関空 16:45（日本時刻）</p>')+hotelPanel()+installHelpPanel()+panel('<h2>4日間の見どころ</h2>'+days.map((d,i)=>`<div class="card"><span class="time">DAY ${i+1} · ${d.date}</span><strong>${yuyuanDayName(i)}</strong></div>`).join('')+'<button class="ghost" onclick="jump(\'schedule\')">詳しい旅程を見る →</button>')+panel('<h2>旅の準備・予算</h2><p class="intro">旅行準備の持ち物と、12月31日無錫日帰り・帰国日朝食も含めた現地予算を確認できます。</p><button class="ghost" onclick="jump(\'packing\')">持ち物チェックリストへ →</button>　<button class="ghost" onclick="jump(\'budget\')">現地予算を見る →</button><p style="margin-top:15px"><button class="ghost" onclick="jump(\'knowledge\')">🛂 入国カードの書き方・中国旅行ガイド →</button></p>');}
 if(page==='schedule'&&selectedTrip()!==MAIN_TRIP){html=customSchedulePanel();}
@@ -1646,7 +1672,10 @@ function compactEnhance(){
       (page==='packing'&&i===0)||(page==='bookings'&&i===0);
    if(keep)return;
    const details=document.createElement('details');details.className='compact-accordion panel';
-   const summary=document.createElement('summary');summary.textContent=heading;details.appendChild(summary);
+   const stateKey=page+':'+(page==='schedule'?day+':':'')+i+':'+heading;
+   if(expandedSectionState[stateKey]===true)details.open=true;
+   details.addEventListener('toggle',()=>{expandedSectionState[stateKey]=details.open});
+   const summary=document.createElement('summary');summary.textContent=heading;summary.setAttribute('aria-label',heading+'（タップして開閉）');details.appendChild(summary);
    head.remove();while(section.firstChild)details.appendChild(section.firstChild);
    section.replaceWith(details);
   });
