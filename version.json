@@ -1,5 +1,5 @@
 {
-  "version": "2.10.0",
+  "version": "2.10.1",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -92,6 +92,8 @@
     "improve-mobile-tap-targets",
     "subtle-nav-active-indicator",
     "keep-13-tab-horizontal-navigation",
-    "responsive-spacing-polish"
+    "responsive-spacing-polish",
+    "taxi-location-accordion-default-closed",
+    "chinese-tab-destination-addresses"
   ]
 }
