@@ -1,5 +1,5 @@
 {
-  "version": "2.9.2",
+  "version": "2.10.0",
   "releasedAt": "2026-11-24",
   "features": [
     "update-check",
@@ -87,6 +87,11 @@
     "responsive-table-overflow-fix",
     "accordion-table-wrapper",
     "mobile-amount-columns-audit",
-    "yen-conversion-inplace-no-accordion-close"
+    "yen-conversion-inplace-no-accordion-close",
+    "preserve-accordion-state-in-session",
+    "improve-mobile-tap-targets",
+    "subtle-nav-active-indicator",
+    "keep-13-tab-horizontal-navigation",
+    "responsive-spacing-polish"
   ]
 }
