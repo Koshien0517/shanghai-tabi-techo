@@ -669,6 +669,28 @@ html{scroll-padding-top:14px}
  #content .panel>h2{font-size:16px}
 }
 @media(prefers-reduced-motion:reduce){#content .card,#nav button{transition:none!important}}
+
+/* v2.12.1: one-thumb expense entry, existing categories and settlement schema */
+#content .quick-expense-form{display:grid;gap:10px;min-width:0}
+#content .quick-expense-intro{margin:0 0 10px}
+#content .quick-expense-kinds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+#content .quick-expense-kind{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:65px;border-radius:12px;border:1px solid #dfc9b0;background:#fffaf2;color:#7b4d44;font-weight:700;font-size:12px;padding:7px 3px;touch-action:manipulation}
+#content .quick-expense-kind span{font-size:23px;line-height:1.3}
+#content .quick-expense-kind.is-selected{background:#933f43;color:white;border-color:#933f43;box-shadow:0 2px 9px #943e4526}
+#content .quick-expense-amount-label{font-size:14px;font-weight:750;color:#66443b}
+#content .quick-expense-input-row{display:grid;grid-template-columns:minmax(0,1fr) 94px;gap:9px;align-items:stretch}
+#content #quickExpenseAmount{width:100%;height:51px;border:1px solid #cfae94;border-radius:11px;background:#fff;color:#392b26;font-size:22px!important;padding:9px 12px;font-variant-numeric:tabular-nums}
+#content .quick-expense-save{background:#943e45;color:white;border:0;border-radius:11px;font-size:17px;font-weight:800;min-height:51px;touch-action:manipulation}
+#content .quick-expense-save:disabled{opacity:.5}
+#content .quick-expense-options{border-top:1px solid #e8d8c4;padding-top:8px}
+#content .quick-expense-options>summary{cursor:pointer;min-height:42px;display:flex;align-items:center;color:#794c42;font-size:13px;font-weight:650}
+#content .quick-expense-options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:4px 0}
+#content .quick-expense-options-grid label{display:grid;gap:5px;min-width:0;font-size:12px}
+#content .quick-expense-options-grid label:last-child{grid-column:1/-1}
+#content .quick-expense-options-grid input,#content .quick-expense-options-grid select{width:100%;padding:9px;border:1px solid #decaba;border-radius:8px;background:white}
+#content .quick-expense-message{margin:0;color:#345a43;font-size:13px;min-height:0}
+#content .quick-expense-message:empty{display:none}
+@media(max-width:370px){#content .quick-expense-kinds{gap:4px}#content .quick-expense-kind{font-size:11px;min-height:59px}#content .quick-expense-input-row{grid-template-columns:minmax(0,1fr) 80px}}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -1141,7 +1163,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.12.0';const APP_RELEASE='2026-11-25';
+const APP_VERSION='2.12.1';const APP_RELEASE='2026-11-25';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1251,6 +1273,68 @@ function todayPanel(){
  return panel(head+'<div class="hint"><strong>今日：</strong>'+esc(ds[idx].name||ds[idx].date||ymd)+'</div>'+(next?'<div class="card"><span class="time">次の予定 '+esc(next[0])+'</span><strong>'+esc(next[1])+'</strong><p class="muted">'+esc(next[2]||'')+'</p>'+(next[3]?mapPickButton(next[3],'目的地を地図で開く'):'')+'</div>':'<p>今日の登録済み行程は終了、または開始時刻のない予定のみです。</p>')+(move?'<div class="card"><span class="time">次の移動 '+esc(move[0])+'</span><strong>'+esc(move[1])+'</strong><p class="muted">'+esc(move[2]||'')+'</p>'+(move[3]?mapPickButton(move[3],'移動先を地図で開く'):'')+'</div>':'')+'<button class="ghost" data-today-day="'+idx+'">今日の詳細を見る</button>');}
  const future=dates.findIndex(d=>d>=ymd);const i=future>=0?future:ds.length-1;return panel(head+'<p class="muted">'+(future>=0?'次の予定日：':'旅行期間外です。最終日：')+esc(dates[i]||'')+'</p><div class="card"><strong>'+esc(ds[i].name||t.title)+'</strong><p class="muted">'+(ds[i].events||[]).length+'件の行程を登録済み</p></div><button class="ghost" data-today-day="'+i+'">日程を見る</button>');
 }
+
+/* Fast expense entry: uses exactly the same saved records as the full form. */
+const QUICK_EXPENSE_KINDS=[
+ ['食費','🍜','食事'],
+ ['交通','🚕','交通'],
+ ['観光','🎫','観光'],
+ ['買い物','🛍️','買い物']
+];
+let quickExpenseCategory='食費';
+function quickExpenseDefaultDate(t){
+ const today=localTripDate(t);
+ return today<t.start?t.start:today>t.end?t.end:today;
+}
+function quickExpensePanel(){
+ const trip=currentTrip(),cur=trip.currency||'CNY',date=quickExpenseDefaultDate(trip);
+ const kinds=QUICK_EXPENSE_KINDS.map(([cat,icon,name])=>'<button type="button" class="quick-expense-kind'+(cat===quickExpenseCategory?' is-selected':'')+'" data-quick-cat="'+esc(cat)+'" aria-pressed="'+String(cat===quickExpenseCategory)+'"><span aria-hidden="true">'+icon+'</span>'+name+'</button>').join('');
+ return panel('<h2>⚡ かんたん支出入力</h2><p class="muted quick-expense-intro">カテゴリを選んで金額を入力するだけ。通常の支出・予算・2人の精算に反映します。</p>'+
+ '<form id="quickExpenseForm" class="quick-expense-form"><div class="quick-expense-kinds" role="group" aria-label="支出カテゴリ">'+kinds+'</div>'+
+ '<label class="quick-expense-amount-label" for="quickExpenseAmount">金額（'+esc(cur)+'）</label>'+
+ '<div class="quick-expense-input-row"><input id="quickExpenseAmount" type="number" name="amount" inputmode="decimal" min="0.01" max="99999999" step="0.01" required placeholder="0.00" autocomplete="off"><button type="submit" id="quickExpenseSave" class="quick-expense-save">登録</button></div>'+
+ '<details class="quick-expense-options"><summary>日付・支払者・負担割合を変更</summary>'+
+ '<div class="quick-expense-options-grid"><label>日付<input type="date" name="date" required value="'+esc(date)+'" min="'+esc(trip.start)+'" max="'+esc(trip.end)+'"></label>'+
+ '<label>支払者<select name="payer"><option value="自分">自分</option><option value="友人">友人</option></select></label>'+
+ '<label>負担の分け方<select name="split"><option value="half">半分ずつ（50:50）</option><option value="self">自分が全額負担</option><option value="friend">友人が全額負担</option></select></label></div>'+
+ '</details><p class="tiny-hint">初期設定：自分が支払い、2人で半分ずつ負担。登録日：'+esc(date)+'。必要なら変更できます。</p>'+
+ '<p id="quickExpenseMessage" class="quick-expense-message" role="status" aria-live="polite"></p></form>');
+}
+function quickExpenseRecord(data,trip){
+ const amount=Number(data.amount),date=String(data.date||''),
+ category=String(data.category||''),
+ payer=String(data.payer||''),split=String(data.split||'');
+ if(!Number.isFinite(amount)||amount<=0||amount>99999999)throw new Error('金額は0.01〜99,999,999で入力してください。');
+ if(!validYmd(date)||date<trip.start||date>trip.end)throw new Error('旅行期間内の日付を選択してください。');
+ if(!QUICK_EXPENSE_KINDS.some(item=>item[0]===category))throw new Error('カテゴリを選択してください。');
+ if(!['自分','友人'].includes(payer)||!['half','self','friend'].includes(split))throw new Error('支払者と負担割合を確認してください。');
+ return {id:'expense-'+Date.now()+'-'+Math.random().toString(36).slice(2,9),date,category,label:category,amount:Math.round(amount*100)/100,payer,split,note:''};
+}
+function quickExpenseBind(){
+ const form=document.getElementById('quickExpenseForm');if(!form)return;
+ const msg=document.getElementById('quickExpenseMessage'),btn=document.getElementById('quickExpenseSave');
+ document.querySelectorAll('[data-quick-cat]').forEach(button=>button.onclick=()=>{
+  quickExpenseCategory=button.dataset.quickCat;
+  document.querySelectorAll('[data-quick-cat]').forEach(b=>{
+   const selected=b.dataset.quickCat===quickExpenseCategory;b.classList.toggle('is-selected',selected);b.setAttribute('aria-pressed',String(selected));
+  });
+ });
+ form.onsubmit=e=>{
+  e.preventDefault();if(btn.disabled)return;
+  try{
+   const data=Object.fromEntries(new FormData(form).entries());
+   data.category=quickExpenseCategory;
+   const trip=currentTrip(),record=quickExpenseRecord(data,trip);
+   btn.disabled=true;
+   const records=tripExpenses();records.push(record);
+   set('expenses-'+selectedTrip(),records);
+   render();
+   const result=document.getElementById('quickExpenseMessage');
+   if(result)result.textContent='✓ '+record.amount.toLocaleString('ja-JP')+' '+(trip.currency||'CNY')+'（'+record.label+'）を登録しました。';
+  }catch(err){msg.textContent='登録できません：'+err.message;btn.disabled=false}
+ };
+}
+
 function expensePanel(){
  const t=currentTrip(),es=tripExpenses(),cur=t.currency||'CNY',total=es.reduce((n,e)=>n+Number(e.amount||0),0);
  const categories=['食費','交通','観光','買い物','宿泊','その他'];
@@ -1559,7 +1643,7 @@ if(page==='more'&&selectedTrip()!==MAIN_TRIP){html=panel('<h2>🎁 お土産</h2
 if(page==='more'&&selectedTrip()===MAIN_TRIP){html=panel('<h2>🎁 上海のお土産ガイド</h2><p class="muted">お菓子・雑貨・中国茶などの候補を分類し、購入場所の目安も掲載。店舗の取扱商品・在庫は現地で確認してください。</p>')+supermarketSouvenirPanel()+giftCatalogPanel()+panel('<h2>共有のしかた</h2><p class="intro">同じURLで旅程を友人と共有できます。チェック状態は端末ごとに保存されます。</p><button class="ghost" id="share">このページのURLを共有</button>');}
 if(page==='bookings')html=(typeof bookingVaultPanel==='function'?bookingVaultPanel():'')+countdownPanel()+bookingsPanel();
 if(page==='safety')html=safetyPanel();
-if(page==='expenses')html=spendingOverview()+expensePanel()+splitPanel();
+if(page==='expenses')html=spendingOverview()+quickExpensePanel()+expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();if(page==='tools')html=travelToolsPanel();if(page==='menu')html=typeof compactMenuPanel==='function'?compactMenuPanel():panel('<h2>メニュー</h2><p>更新後に再度お試しください。</p>');if(page==='map')html=typeof compactMapPanel==='function'?compactMapPanel():panel('<h2>地図</h2><p>更新後に再度お試しください。</p>');
 if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+html+countdownPanel()+offlineTravelCard()+boardingAssistant()+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
 document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理',tools:'便利',map:'地図',menu:'メニュー'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设',tools:'便',map:'图',menu:'目'}[page])+'</span></span></div>'+html;
@@ -1653,6 +1737,7 @@ const edit=document.getElementById('tripEditForm');if(edit)edit.onsubmit=e=>{e.p
 const del=document.getElementById('tripDelete');if(del)del.onclick=()=>{const t=currentTrip();if(t.id===MAIN_TRIP)return;if(confirm('「'+t.title+'」とこの旅行の支出記録を削除しますか？')){set('trips',allTrips().filter(x=>x.id!==t.id));localStorage.removeItem('shanghai-free-expenses-'+t.id);set('current-trip',MAIN_TRIP);render()}};
 const eventForm=document.getElementById('tripEventForm');if(eventForm)eventForm.onsubmit=e=>{e.preventDefault();const d=Object.fromEntries(new FormData(eventForm).entries());let trips=allTrips(),t=trips.find(x=>x.id===selectedTrip());if(!t||d.date<t.start||d.date>t.end){alert('旅行期間内の日付を選んでください');return}let day=t.days.find(x=>x.date===d.date);if(!day){day={date:d.date,name:d.date,events:[]};t.days.push(day)}day.events.push([d.time,d.label,d.details||'',d.place||'']);day.events.sort((a,b)=>String(a[0]).localeCompare(String(b[0])));t.days.sort((a,b)=>a.date.localeCompare(b.date));set('trips',trips);render()};
 document.querySelectorAll('[data-remove-event]').forEach(n=>n.onclick=()=>{const val=n.dataset.removeEvent;if(!confirm('この予定を削除しますか？'))return;let trips=allTrips(),t=trips.find(x=>x.id===selectedTrip());if(!t)return;const d=t.days.find(x=>val.startsWith(x.date+'_'));if(!d)return;const ix=d.events.findIndex(e=>d.date+'_'+e[0]+'_'+e[1]===val);if(ix>=0)d.events.splice(ix,1);t.days=t.days.filter(x=>x.events.length);set('trips',trips);render()});
+quickExpenseBind();
 const expense=document.getElementById('expenseForm');if(expense)expense.onsubmit=e=>{e.preventDefault();const d=Object.fromEntries(new FormData(expense).entries()),amount=Number(d.amount);if(!Number.isFinite(amount)||amount<=0||amount>99999999||!validYmd(d.date))return;const arr=tripExpenses();arr.push({...d,id:'expense-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),amount:Math.round(amount*100)/100});set('expenses-'+selectedTrip(),arr);render()};
 document.querySelectorAll('[data-expense-delete]').forEach(n=>n.onclick=()=>{if(confirm('支出を削除しますか？')){set('expenses-'+selectedTrip(),tripExpenses().filter(e=>e.id!==n.dataset.expenseDelete));render()}});
 const expBtn=document.getElementById('backupExport');if(expBtn)expBtn.onclick=()=>{try{exportBackup()}catch(err){document.getElementById('backupStatus').textContent='出力に失敗しました：'+err.message}};
@@ -1777,7 +1862,7 @@ function compactEnhance(){
    const keep=(page==='home'&&i<=1)||(page==='schedule'&&heading==='日別スケジュール')||
       (page==='budget'&&i===0)||(page==='phrase'&&i===0)||
       ((page==='food'||page==='more'||page==='knowledge')&&i===0)||
-      (page==='expenses'&&i===0)||
+      (page==='expenses'&&(i===0||heading==='⚡ かんたん支出入力'))||
       (page==='packing'&&i===0)||(page==='bookings'&&i===0);
    if(keep)return;
    const details=document.createElement('details');details.className='compact-accordion panel';
