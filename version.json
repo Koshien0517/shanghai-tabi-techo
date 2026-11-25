@@ -1,5 +1,5 @@
 {
-  "version": "2.12.0",
+  "version": "2.12.1",
   "releasedAt": "2026-11-25",
   "features": [
     "update-check",
@@ -113,6 +113,9 @@
     "stable-inpage-scroll-on-rerender",
     "keyboard-expandable-itinerary",
     "unified-tap-targets",
-    "refined-existing-chinese-palette"
+    "refined-existing-chinese-palette",
+    "one-thumb-quick-expense-entry",
+    "quick-expense-four-categories",
+    "quick-expense-same-budget-and-settlement-records"
   ]
 }
