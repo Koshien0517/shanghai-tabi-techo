@@ -1,5 +1,5 @@
 {
-  "version": "2.11.3",
+  "version": "2.12.0",
   "releasedAt": "2026-11-25",
   "features": [
     "update-check",
@@ -108,6 +108,11 @@
     "force-plain-update-button-label",
     "network-fresh-pwa-navigation",
     "service-worker-no-cached-update-check",
-    "nonoverlapping-update-and-back-to-top-controls"
+    "nonoverlapping-update-and-back-to-top-controls",
+    "responsive-typography-and-spacing",
+    "stable-inpage-scroll-on-rerender",
+    "keyboard-expandable-itinerary",
+    "unified-tap-targets",
+    "refined-existing-chinese-palette"
   ]
 }
