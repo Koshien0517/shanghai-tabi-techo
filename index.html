@@ -1170,7 +1170,7 @@ function yuyuanDayName(i){return yuyuanPlanMode==='backup'&&i===0?'豫園商城�
 function yuyuanPlanSelector(){
  return panel('<h2>🏯 豫園庭園｜訪問日の切り替え</h2><p class="muted">12/30の入園が厳しい場合のみ、1/1振替を選択。両日とも庭園に入る旅程ではありません。選択はこの端末に保存します。</p><div class="segment"><button type="button" data-yuyuan-mode="normal" class="'+(yuyuanPlanMode==='normal'?'active':'')+'">通常：12/30入園</button><button type="button" data-yuyuan-mode="backup" class="'+(yuyuanPlanMode==='backup'?'active':'')+'">予備：1/1入園</button></div><p class="hint">'+(yuyuanPlanMode==='normal'?'12/30は庭園を先に見学し、1/1は従来の市内観光です。':'12/30は商城のみ。1/1の午後に庭園へ行き、武康路・スターバックス・張園・呉江路を省略します。')+'<br>通常開園9:00〜16:30／最終入園16:00・冬季大人30元。年末年始の特別営業は公式発表を確認してください。</p><a class="arrival-official" href="https://www.yugarden.com.cn/page/articleview/message.html" target="_blank" rel="noopener noreferrer">豫園公式｜営業時間・チケットを確認 ↗</a>');
 }
-function panel(s){return `<section class="panel">${s}</section>`}function jump(p){page=p;render();window.scrollTo({top:0,behavior:'instant'})}
+function panel(s){return `<section class="panel">${s}</section>`}function jump(p){lastRenderedPage=null;page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
 function transitPanel(){return panel('<h2>🚄 12/30 空港→ホテル【確定ルート】</h2><p class="hint"><strong>リニア＋地下鉄を利用。</strong> 航空便JL891の浦東12:05着後、入国・荷物受取を済ませて13:30頃に出発する想定です。</p><div class="card"><strong>① リニア（磁浮列车）</strong><p>浦東空港 → 龍陽路：約8分・通常50元／人。当日航空券提示で40元の割引対象となる場合あり。ホーム移動・待機10〜20分を見込む。</p></div><div class="card"><strong>② 地下鉄2号線→10号線</strong><p>龍陽路 → 南京東路（2号線）→ 豫園（10号線）→ ホテル徒歩約3〜6分。地下鉄乗換・徒歩込み約40〜55分、約5元／人。</p></div><div class="breakdown">合計：<strong>約55〜80分、通常55元／人</strong>（割引適用時45元／人）。予算は通常運賃55元で計算。</div><p class="muted">リニア・地下鉄の実際の運行と割引条件は出発前に確認。ホテルは14:00以降チェックイン。</p>')}
 function returnPanel(){return visitJapanPanel()+panel('<h2>🥟 1/2 上海の朝食→帰国</h2><p class="hint">朝食はホテル至近。<strong>第一候補：小杨生煎（上海外滩NEO店）</strong>、人民路399号。ホテル人民路388号から徒歩約2〜5分。生煎包＋スープで20〜40元／人を仮置き。朝の開店時刻は未確認のため出発前に確認。</p><div class="card"><strong>予備① 永和豆浆大王（豫园店）</strong><p>人民路463〜465号。徒歩約5〜8分想定。豆浆・油条・粢饭など15〜30元／人（品揃え・営業時間は未確認）。</p></div><div class="card"><strong>予備② 南翔馒头店（豫园店）</strong><p>豫园老街85〜87号。徒歩約10〜15分、約30〜60元／人。8時頃の営業情報がありますが、1/2の営業と行列を要確認。</p></div><div class="data-grid"><div class="data-box"><small>ホテルチェックアウト</small><b>08:45まで</b></div><div class="data-box"><small>ホテル出発</small><b>09:00</b></div></div><p>上海浦東空港へタクシー直行：約45〜75分、160〜250元／台（2人折半で80〜125元／人）。09:45〜10:15に空港到着想定。</p><p class="muted">復路：JL894 13:25上海浦東発 → 16:45関西着（日本時間）。</p>')}
@@ -1827,10 +1827,12 @@ function compactEnhance(){
     el.classList.add('compact-event');
     const key='schedule:'+day+':'+idx;
     if(expandedItineraryCards[key])el.classList.add('expanded');
-    el.tabIndex=0;
-    el.setAttribute('role','button');
-    el.setAttribute('aria-label','旅程の詳細を切り替える：'+(el.querySelector('strong')?.textContent||'予定'));
-    el.setAttribute('aria-expanded',String(el.classList.contains('expanded')));
+    if(current==='compact'){
+     el.tabIndex=0;
+     el.setAttribute('role','button');
+     el.setAttribute('aria-label','旅程の詳細を切り替える：'+(el.querySelector('strong')?.textContent||'予定'));
+     el.setAttribute('aria-expanded',String(el.classList.contains('expanded')));
+    }
     const toggle=()=>{
      if(!host.classList.contains('itinerary-compact'))return;
      const isOpen=el.classList.toggle('expanded');
