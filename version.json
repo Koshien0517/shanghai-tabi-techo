@@ -1,6 +1,6 @@
 {
-  "version": "2.12.1",
-  "releasedAt": "2026-11-25",
+  "version": "2.12.2",
+  "releasedAt": "2026-11-27",
   "features": [
     "update-check",
     "today-and-next",
@@ -116,6 +116,7 @@
     "refined-existing-chinese-palette",
     "one-thumb-quick-expense-entry",
     "quick-expense-four-categories",
-    "quick-expense-same-budget-and-settlement-records"
+    "quick-expense-same-budget-and-settlement-records",
+    "streamlined-app-copy"
   ]
 }
