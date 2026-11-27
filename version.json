@@ -1,5 +1,5 @@
 {
-  "version": "2.12.2",
+  "version": "2.13.0",
   "releasedAt": "2026-11-27",
   "features": [
     "update-check",
@@ -117,6 +117,9 @@
     "one-thumb-quick-expense-entry",
     "quick-expense-four-categories",
     "quick-expense-same-budget-and-settlement-records",
-    "streamlined-app-copy"
+    "streamlined-app-copy",
+    "unified-shanghai-visual-design-system",
+    "home-quick-actions-four-destinations",
+    "unified-visual-heading-card-button-hierarchy"
   ]
 }
