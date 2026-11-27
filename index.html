@@ -1163,7 +1163,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.12.1';const APP_RELEASE='2026-11-25';
+const APP_VERSION='2.12.2';const APP_RELEASE='2026-11-27';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1190,7 +1190,7 @@ const yuyuanAlternateDays={
 function yuyuanEvents(i){return yuyuanPlanMode==='backup'&&Object.hasOwn(yuyuanAlternateDays,i)?yuyuanAlternateDays[i]:days[i].events}
 function yuyuanDayName(i){return yuyuanPlanMode==='backup'&&i===0?'豫園商城・書城・北外灘（庭園は翌日）':yuyuanPlanMode==='backup'&&i===2?'豫園庭園・近代史・上海タワー':days[i].name}
 function yuyuanPlanSelector(){
- return panel('<h2>🏯 豫園庭園｜訪問日の切り替え</h2><p class="muted">12/30の入園が厳しい場合のみ、1/1振替を選択。両日とも庭園に入る旅程ではありません。選択はこの端末に保存します。</p><div class="segment"><button type="button" data-yuyuan-mode="normal" class="'+(yuyuanPlanMode==='normal'?'active':'')+'">通常：12/30入園</button><button type="button" data-yuyuan-mode="backup" class="'+(yuyuanPlanMode==='backup'?'active':'')+'">予備：1/1入園</button></div><p class="hint">'+(yuyuanPlanMode==='normal'?'12/30は庭園を先に見学し、1/1は従来の市内観光です。':'12/30は商城のみ。1/1の午後に庭園へ行き、武康路・スターバックス・張園・呉江路を省略します。')+'<br>通常開園9:00〜16:30／最終入園16:00・冬季大人30元。年末年始の特別営業は公式発表を確認してください。</p><a class="arrival-official" href="https://www.yugarden.com.cn/page/articleview/message.html" target="_blank" rel="noopener noreferrer">豫園公式｜営業時間・チケットを確認 ↗</a>');
+ return panel('<h2>🏯 豫園庭園｜訪問日</h2><p class="muted">12/30に入園できない場合は1/1へ振替（入園は1回）。</p><div class="segment"><button type="button" data-yuyuan-mode="normal" class="'+(yuyuanPlanMode==='normal'?'active':'')+'">通常：12/30入園</button><button type="button" data-yuyuan-mode="backup" class="'+(yuyuanPlanMode==='backup'?'active':'')+'">予備：1/1入園</button></div><p class="hint">'+(yuyuanPlanMode==='normal'?'12/30は庭園を先に見学し、1/1は従来の市内観光です。':'12/30は商城のみ。1/1の午後に庭園へ行き、武康路・スターバックス・張園・呉江路を省略します。')+'<br>通常開園9:00〜16:30／最終入園16:00・冬季大人30元。年末年始の特別営業は公式発表を確認してください。</p><a class="arrival-official" href="https://www.yugarden.com.cn/page/articleview/message.html" target="_blank" rel="noopener noreferrer">豫園公式｜営業時間・チケットを確認 ↗</a>');
 }
 function panel(s){return `<section class="panel">${s}</section>`}function jump(p){lastRenderedPage=null;page=p;render();window.scrollTo({top:0,behavior:'instant'})}
 function hotelPanel(){return panel(`<h2>🏨 宿泊ホテル</h2><div class="hotel-title">${esc(hotel.name)}</div><p>${esc(hotel.zh)}</p><p class="address"><strong>所在地：</strong>${esc(hotel.address)}<br><span class="muted">${esc(hotel.en)}</span></p><div class="copy-list"><button type="button" data-copyval="${esc(hotel.zh)}">📋 中国語ホテル名</button><button type="button" data-copyval="${esc(hotel.address)}">📋 中国語住所</button><button type="button" data-copyval="${esc(hotel.name)}">📋 英語ホテル名</button><button type="button" data-copyval="${esc(hotel.en)}">📋 英語住所</button><button id="copyAddress" type="button" class="copy-btn">📋 中国語名＋住所</button></div> ${mapPickButton(hotel.zh+' '+hotel.address,'ホテルの地図を開く')}<div class="data-grid" style="margin-top:14px"><div class="data-box"><small>チェックイン</small><b>12/30 14:00以降</b></div><div class="data-box"><small>チェックアウト</small><b>1/2 12:00まで</b></div></div><p class="muted">3泊／予約先：Trip.com／空港送迎なし</p>`)}
@@ -1289,15 +1289,15 @@ function quickExpenseDefaultDate(t){
 function quickExpensePanel(){
  const trip=currentTrip(),cur=trip.currency||'CNY',date=quickExpenseDefaultDate(trip);
  const kinds=QUICK_EXPENSE_KINDS.map(([cat,icon,name])=>'<button type="button" class="quick-expense-kind'+(cat===quickExpenseCategory?' is-selected':'')+'" data-quick-cat="'+esc(cat)+'" aria-pressed="'+String(cat===quickExpenseCategory)+'"><span aria-hidden="true">'+icon+'</span>'+name+'</button>').join('');
- return panel('<h2>⚡ かんたん支出入力</h2><p class="muted quick-expense-intro">カテゴリを選んで金額を入力するだけ。通常の支出・予算・2人の精算に反映します。</p>'+
+ return panel('<h2>⚡ かんたん支出入力</h2>'+
  '<form id="quickExpenseForm" class="quick-expense-form"><div class="quick-expense-kinds" role="group" aria-label="支出カテゴリ">'+kinds+'</div>'+
  '<label class="quick-expense-amount-label" for="quickExpenseAmount">金額（'+esc(cur)+'）</label>'+
  '<div class="quick-expense-input-row"><input id="quickExpenseAmount" type="number" name="amount" inputmode="decimal" min="0.01" max="99999999" step="0.01" required placeholder="0.00" autocomplete="off"><button type="submit" id="quickExpenseSave" class="quick-expense-save">登録</button></div>'+
- '<details class="quick-expense-options"><summary>日付・支払者・負担割合を変更</summary>'+
+ '<details class="quick-expense-options"><summary>日付・支払者・負担</summary>'+
  '<div class="quick-expense-options-grid"><label>日付<input type="date" name="date" required value="'+esc(date)+'" min="'+esc(trip.start)+'" max="'+esc(trip.end)+'"></label>'+
  '<label>支払者<select name="payer"><option value="自分">自分</option><option value="友人">友人</option></select></label>'+
  '<label>負担の分け方<select name="split"><option value="half">半分ずつ（50:50）</option><option value="self">自分が全額負担</option><option value="friend">友人が全額負担</option></select></label></div>'+
- '</details><p class="tiny-hint">初期設定：自分が支払い、2人で半分ずつ負担。登録日：'+esc(date)+'。必要なら変更できます。</p>'+
+ '</details>'+
  '<p id="quickExpenseMessage" class="quick-expense-message" role="status" aria-live="polite"></p></form>');
 }
 function quickExpenseRecord(data,trip){
@@ -1340,7 +1340,7 @@ function expensePanel(){
  const categories=['食費','交通','観光','買い物','宿泊','その他'];
  const byCat=categories.map(c=>[c,es.filter(e=>e.category===c).reduce((a,e)=>a+Number(e.amount||0),0)]).filter(x=>x[1]);
  const rows=es.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(e=>'<div class="card"><div class="groupHead"><span class="time">'+esc(e.date)+' · '+esc(e.category)+'</span><button class="ghost" data-expense-delete="'+esc(e.id)+'">削除</button></div><strong>'+esc(e.label)+' — '+esc(e.amount)+' '+esc(cur)+'</strong><p class="muted">'+esc(e.payer||'支払者未入力')+(e.note?' ／ '+esc(e.note):'')+'</p></div>').join('');
- return panel('<h2>💳 '+esc(t.title)+' の支出記録</h2><p class="muted">この端末に保存。実績は旅行ごとに分かれ、既存の上海旅行の計画予算は変更しません。</p><div class="budget-total"><small>支出実績の合計</small><strong>'+total.toLocaleString('ja-JP')+' '+esc(cur)+'</strong><small>'+es.length+'件</small></div>'+(byCat.length?'<p class="muted">内訳：'+byCat.map(([c,n])=>esc(c)+' '+n.toLocaleString('ja-JP')).join(' ／ ')+'</p>':'')+
+ return panel('<h2>💳 支出の詳細入力</h2><div class="budget-total"><small>支出実績の合計</small><strong>'+total.toLocaleString('ja-JP')+' '+esc(cur)+'</strong><small>'+es.length+'件</small></div>'+(byCat.length?'<p class="muted">内訳：'+byCat.map(([c,n])=>esc(c)+' '+n.toLocaleString('ja-JP')).join(' ／ ')+'</p>':'')+
  '<form id="expenseForm" class="rail-form"><label>日付<input required type="date" name="date" value="'+esc(localTripDate(t))+'"></label><label>カテゴリ<select name="category">'+categories.map(c=>'<option>'+c+'</option>').join('')+'</select></label><label class="wide">内容<input required maxlength="120" name="label" placeholder="例：生煎包の朝食"></label><label>金額（'+esc(cur)+'）<input required min="0.01" max="99999999" step=".01" type="number" name="amount"></label><label>支払者<select name="payer" required><option value="自分">自分</option><option value="友人">友人</option></select></label><label class="wide">負担の分け方<select name="split"><option value="half">半分ずつ（50:50）</option><option value="self">自分が全額負担</option><option value="friend">友人が全額負担</option></select></label><label class="wide">メモ（任意）<input maxlength="200" name="note"></label><div class="wide"><button type="submit" class="ghost">＋ 支出を保存</button></div><p id="expenseMessage" class="wide muted" role="status"></p></form>')+panel('<h2>支出履歴</h2>'+(rows||'<p class="muted">支出はまだありません。</p>')+'<p class="tiny-hint">精算は支出画面下の「割り勘・精算」で自動計算します。友人の端末とは同期しません。</p>');
 }
 function managePanel(){
@@ -1431,11 +1431,11 @@ function splitPanel(){
  const t=currentTrip(),cur=t.currency||'CNY',s=settleExpenses(tripExpenses());
  const fmt=n=>n.toLocaleString('ja-JP',{maximumFractionDigits:2});
  const dir=s.balance>0?'友人 → 自分':s.balance<0?'自分 → 友人':'精算不要';
- return panel('<h2>🤝 2人の割り勘・精算</h2><p class="muted">この端末の支出明細から計算。友人の端末とは自動共有されません。</p>'+
+ return panel('<h2>🤝 2人の割り勘・精算</h2>'+
  '<div class="data-grid"><div class="data-box"><small>自分の立替</small><b>'+fmt(s.selfPaid)+' '+esc(cur)+'</b></div><div class="data-box"><small>友人の立替</small><b>'+fmt(s.friendPaid)+' '+esc(cur)+'</b></div><div class="data-box"><small>自分の負担額</small><b>'+fmt(s.selfShare)+' '+esc(cur)+'</b></div><div class="data-box"><small>友人の負担額</small><b>'+fmt(s.friendShare)+' '+esc(cur)+'</b></div></div>'+
  '<div class="settle-summary"><small>精算方向</small><strong>'+esc(dir)+'</strong><strong>'+fmt(Math.abs(s.balance))+' '+esc(cur)+'</strong></div>'+
  (s.unknown?'<p class="hint">支払者が未記録などの '+s.unknown+' 件を精算から除外しています。元の明細は保持します。</p>':'')+
- '<p class="tiny-hint">「半分ずつ」「自分全額」「友人全額」で計算。通貨換算や送金は行いません。</p>');
+ '<p class="tiny-hint">自動共有・通貨換算・送金には非対応です。</p>');
 }
 const safetyTexts=[
  ['パスポートを紛失','我的护照丢了。','Wǒ de hùzhào diū le.','パスポートをなくしました。','警察に届け出て、日本国総領事館に連絡。受理書類を保管してください。'],
@@ -1463,17 +1463,17 @@ function bookingsPanel(){
  const flight1=line('✈️ JL891　12/30 関空 → 上海浦東','10:15（日本）発 → 12:05（中国）着','旅程登録済み。ターミナルと運航状況は直前に確認');
  const flight2=line('✈️ JL894　1/2 上海浦東 → 関空','13:25（中国）発 → 16:45（日本）着','旅程登録済み。ターミナルと運航状況は直前に確認');
  const train=(name,v)=>line(name+'　'+sharedRailMemo.date,v.from+' → '+v.to+' ／ '+v.departure+' → '+v.arrival,sharedRailMemo.status+' ／ '+v.train);
- return panel('<h2>🎫 航空便・高鉄の予約情報</h2><p class="hint">共有旅程の要約です。予約・発券状況の自動照会は行っていません。高鉄は未予約として表示します。</p>'+
+ return panel('<h2>🎫 航空便・高鉄の予約情報</h2><p class="hint">予約状況の自動照会なし。高鉄は未予約。</p>'+
  flight1+flight2+train('🚄 往路：上海 → 無錫',sharedRailMemo.outbound)+train('🚄 復路：無錫 → 上海',sharedRailMemo.inbound))+
- panel('<h2>✅ 個人用の予約確認チェック</h2><p class="muted">この端末だけに保存。友人の画面や共有旅程は変更されません。</p>'+
+ panel('<h2>✅ 予約確認チェック</h2>'+
  [['outFlight','往路航空便の予約情報'],['backFlight','復路航空便の予約情報'],['outRail','高鉄・往路の予約情報'],['backRail','高鉄・復路の予約情報'],['terminal','ターミナル／駅を確認'],['documents','予約資料を安全に準備']].map(([k,title])=>'<label class="checkrow"><input type="checkbox" data-booking-check="'+k+'" '+(flags[k]?'checked':'')+'><span>'+title+'</span></label>').join('')+
  '<p class="tiny-hint">氏名・パスポート番号・予約番号・QRコードは公開サイトの情報に入れないでください。</p><button type="button" class="ghost" id="openRailMemo">12/31 高速鉄道の詳細メモへ →</button>');
 }
 function offlinePanel(){
- return panel('<h2>📴 オフラインの準備・確認</h2><p class="muted">出発前にオンラインで基本画面・アイコンを端末へ保存。日程・中国語フレーズ・ホテル住所・緊急案内は同じHTMLから表示できます。</p>'+
+ return panel('<h2>📴 オフラインの準備</h2>'+
  '<button type="button" class="ghost" id="offlineSave">📥 オフライン用に保存</button> <button type="button" class="ghost" id="offlineInspect">保存状態を確認</button>'+
- '<p id="offlineResult" role="status" class="rail-note">未確認です。Wi-Fiにつないで保存してください。</p>'+
- '<p class="tiny-hint">地図や外部サイト、運航状況などには通信が必要です。ストレージ削除・アプリ削除でキャッシュは失われます。</p>');
+ '<p id="offlineResult" role="status" class="rail-note">未確認</p>'+
+ '<p class="tiny-hint">地図・外部サイトの利用には通信が必要です。データ消去でオフライン保存は失われます。</p>');
 }
 async function checkOffline(saveNow){
  const out=document.getElementById('offlineResult');if(!out)return;
@@ -1535,12 +1535,12 @@ function spendingOverview(){
  const liveBudget=plannedBudget();const low=liveBudget.low*2,high=liveBudget.high*2;
  const pct=low>0?spent/low*100:0,remainingLow=low-spent,remainingHigh=high-spent;
  const progress=Math.min(100,Math.max(0,pct));
- return panel('<h2>📊 予算残高・消化率</h2><p class="muted">2人分の現地計画予算と、この端末に記録した全支出を比較します。航空券・宿泊費は計画予算の対象外です。</p>'+
+ return panel('<h2>📊 予算残高・消化率</h2><p class="muted">現地予算（2人分・航空券／宿泊費を除く）との比較</p>'+
  '<div class="spend-stats"><div><small>記録済みの支出</small><strong>'+fmtAmount(spent)+' 元</strong></div><div><small>2人分の計画予算</small><strong>'+fmtAmount(low)+'〜'+fmtAmount(high)+' 元</strong></div><div><small>予算残高（参考）</small><strong>'+fmtAmount(remainingLow)+'〜'+fmtAmount(remainingHigh)+' 元</strong></div></div>'+
  '<div class="spend-bar-label"><span>消化率（計画下限 '+fmtAmount(low)+' 元に対して）</span><strong>'+pct.toFixed(1)+'%</strong></div>'+
  '<div class="spend-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.round(progress)+'" aria-label="予算消化率"><span style="width:'+progress.toFixed(1)+'%"></span></div>'+
  (pct>100?'<p class="hint">記録済み支出が予算下限を超えています。</p>':'')+
- '<p class="tiny-hint">未入力の支出は含みません。2人で同じ支出を重複入力すると実績は過大になります。支出した合計金額を1件として登録してください。記録済みの支出に航空券・宿泊費が含まれる場合は比較対象が異なります。</p>');
+ '<p class="tiny-hint">同じ支出の二重登録に注意。航空券・宿泊費を登録した場合は計画予算との比較に含まれます。</p>');
 }
 function openChineseShow(zh,pinyin,ja){
  const existing=document.getElementById('chineseShowOverlay');if(existing)existing.remove();
