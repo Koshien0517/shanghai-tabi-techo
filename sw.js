@@ -1,4 +1,4 @@
-const CACHE_NAME='shanghai-tabi-techo-pwa-v52';
+const CACHE_NAME='shanghai-tabi-techo-pwa-v53';
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./version.json','./travel-tools.js?v=2.10.2','./booking-vault.js?v=2.11.0','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('shanghai-tabi-techo-')&&key!==CACHE_NAME).map(key=>caches.delete(key)))),self.clients.claim()])));
