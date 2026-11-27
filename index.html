@@ -691,6 +691,115 @@ html{scroll-padding-top:14px}
 #content .quick-expense-message{margin:0;color:#345a43;font-size:13px;min-height:0}
 #content .quick-expense-message:empty{display:none}
 @media(max-width:370px){#content .quick-expense-kinds{gap:4px}#content .quick-expense-kind{font-size:11px;min-height:59px}#content .quick-expense-input-row{grid-template-columns:minmax(0,1fr) 80px}}
+
+/* v2.13: Shanghai visual design system - retain all panels, data and 13 tabs */
+:root{
+ --visual-paper:#fffdf8;
+ --visual-canvas:#f8f3ec;
+ --visual-border:#e8dbc8;
+ --visual-ink:#352c2b;
+ --visual-muted:#766861;
+ --visual-red:#903e45;
+ --visual-gold:#bd8d53;
+}
+body{color:var(--visual-ink);background-color:var(--visual-canvas)}
+#content{min-width:0}
+#content>.page-intro{margin:3px 0 15px;gap:8px}
+#content>.page-intro .page-intro-ja{font-weight:800;letter-spacing:.02em}
+#content>section.panel{
+ background:var(--visual-paper);
+ border:1px solid var(--visual-border);
+ box-shadow:0 3px 12px rgba(67,44,32,.045);
+ border-radius:16px;
+ margin-block:11px;
+ padding:15px 16px;
+}
+#content>section.panel>h2{
+ display:flex;align-items:center;
+ border:0;border-bottom:1px solid #eee1d0;
+ padding:0 0 10px;
+ margin:0 0 12px;
+ line-height:1.42;
+ font-size:clamp(16px,4.1vw,19px);
+ color:var(--visual-ink);
+ font-weight:800;
+}
+#content .panel p.muted,#content .panel .muted{color:var(--visual-muted)}
+#content .panel .card{
+ border:1px solid #eee1d2;
+ background:#fffdf9;
+ box-shadow:none;
+ border-radius:12px;
+ padding:12px 13px;
+ margin-block:8px;
+}
+#content .panel .card>.time,#content .panel .card .time{color:#925043;font-weight:750}
+#content .panel .card strong{font-weight:750}
+#content .panel .budget-total strong,#content .panel .data-box b{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+#content .panel .budget-total{border-radius:14px}
+#content button,#content .ghost,#content .copy-btn{
+ border-radius:10px;
+ font-weight:700;
+ transition:background-color .12s ease,border-color .12s ease;
+}
+#content button:disabled{opacity:.5}
+#content .segment>button.active,#content button[aria-pressed="true"],#content .quick-expense-kind.is-selected{
+ background:var(--visual-red);
+ color:white;
+ border-color:var(--visual-red);
+}
+#content .panel .hint{line-height:1.55}
+#content .compact-accordion.panel{
+ padding:0!important;
+ overflow:hidden;
+ border:1px solid var(--visual-border);
+ border-radius:14px;
+ background:var(--visual-paper);
+ box-shadow:0 2px 9px rgba(67,44,32,.035);
+}
+#content .compact-accordion>summary{
+ font-weight:750;
+ color:var(--visual-ink);
+ background:var(--visual-paper);
+ padding:13px 15px!important;
+ min-height:48px;
+}
+#content .compact-accordion[open]>summary{
+ background:#faf3e9;
+ border-bottom:1px solid var(--visual-border);
+}
+#content .quick-expense-kinds .quick-expense-kind{border-radius:12px}
+#content input:not([type="checkbox"]):not([type="radio"]),#content select,#content textarea{background-color:#fff;border-radius:9px}
+#content .responsive-table-scroll{border-radius:10px}
+body.page-home #content>section.panel:first-of-type{
+ background:linear-gradient(135deg,#fffaf0 0%,#fffdfa 78%);
+ border-color:#e3cba7;
+ box-shadow:0 5px 18px rgba(97,57,29,.065);
+}
+body.page-home #content>section.panel:first-of-type>h2{color:#833c3a;border-bottom-color:#e9d2b0}
+body.page-home #content>section.panel:first-of-type .card{background:#fff;border-color:#eddcc1}
+body.page-home #content>section.panel:first-of-type .card>.time{font-weight:800;color:#a4543a}
+#content .home-quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+#content .home-quick-button{
+ display:flex;flex-direction:column;justify-content:center;align-items:center;
+ min-width:0;min-height:78px;gap:5px;padding:10px 4px;
+ color:#663d39;background:#fbf4e9;border:1px solid #e5d3b9;border-radius:12px;
+ text-align:center;touch-action:manipulation;
+}
+#content .home-quick-button>span{font-size:25px;line-height:1.2}
+#content .home-quick-button>strong{font-size:12px}
+#content .home-quick-button:active{background:#efddc7}
+#nav.bottom button.active{font-weight:800}
+#nav.bottom button:focus-visible,#content .home-quick-button:focus-visible{outline:3px solid #af755d;outline-offset:2px}
+@media(max-width:390px){
+ #content>section.panel{padding:13px 12px;margin-block:9px;border-radius:13px}
+ #content>section.panel>h2{margin-bottom:10px;padding-bottom:8px}
+ #content .home-quick-grid{gap:6px}
+ #content .home-quick-button{min-height:70px;padding:7px 2px}
+ #content .home-quick-button>span{font-size:23px}
+ #content .home-quick-button>strong{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){#content button{transition:none}}
 </style></head><body><div class="shell"><header class="hero hero-imperial">
 <div class="hero-gold-frame" aria-hidden="true"></div>
 <div class="update-toolbar"><span class="over">上海旅行 · SHANGHAI TRAVEL NOTEBOOK</span><span class="hero-edition" aria-hidden="true">沪 · 2026</span></div>
@@ -1163,7 +1272,7 @@ function knowledgePanel(){return arrivalCardPanel()+panel('<h2>📚 中国・上
 const navItems=[['home','🏮','ホーム'],['schedule','🧭','日程'],['food','🥟','グルメ'],['more','🪭','お土産'],['packing','🧳','持ち物'],['budget','🧧','予算'],['expenses','🧾','支出'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['knowledge','🇨🇳','中国豆知識'],['safety','🆘','緊急'],['tools','🧰','便利'],['manage','⚙️','管理']];let page='home',day=0,budgetMode='maglev';
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function get(k){try{return JSON.parse(localStorage.getItem('shanghai-free-'+k)||'{}')}catch{return {}}}function set(k,o){localStorage.setItem('shanghai-free-'+k,JSON.stringify(o))}
-const APP_VERSION='2.12.2';const APP_RELEASE='2026-11-27';
+const APP_VERSION='2.13.0';const APP_RELEASE='2026-11-27';
 
 /* 12/30 Yuyuan Garden fallback: two mutually exclusive routes, selected locally per device. */
 let yuyuanPlanMode=get('yuyuan-plan').mode==='backup'?'backup':'normal';
@@ -1272,6 +1381,12 @@ function todayPanel(){
  if(idx>=0){const es=ds[idx].events||[],now=eventTime(hm);let upcoming=es.find(e=>eventTime(e[0])!==null&&eventTime(e[0])>=now);let next=upcoming||null;const move=es.find(e=>eventTime(e[0])!==null&&eventTime(e[0])>=now&&(/→|移動|駅へ|空港へ|タクシー|地下鉄|列車|高速鉄道|乗車/.test(e[1]+' '+(e[2]||''))));
  return panel(head+'<div class="hint"><strong>今日：</strong>'+esc(ds[idx].name||ds[idx].date||ymd)+'</div>'+(next?'<div class="card"><span class="time">次の予定 '+esc(next[0])+'</span><strong>'+esc(next[1])+'</strong><p class="muted">'+esc(next[2]||'')+'</p>'+(next[3]?mapPickButton(next[3],'目的地を地図で開く'):'')+'</div>':'<p>今日の登録済み行程は終了、または開始時刻のない予定のみです。</p>')+(move?'<div class="card"><span class="time">次の移動 '+esc(move[0])+'</span><strong>'+esc(move[1])+'</strong><p class="muted">'+esc(move[2]||'')+'</p>'+(move[3]?mapPickButton(move[3],'移動先を地図で開く'):'')+'</div>':'')+'<button class="ghost" data-today-day="'+idx+'">今日の詳細を見る</button>');}
  const future=dates.findIndex(d=>d>=ymd);const i=future>=0?future:ds.length-1;return panel(head+'<p class="muted">'+(future>=0?'次の予定日：':'旅行期間外です。最終日：')+esc(dates[i]||'')+'</p><div class="card"><strong>'+esc(ds[i].name||t.title)+'</strong><p class="muted">'+(ds[i].events||[]).length+'件の行程を登録済み</p></div><button class="ghost" data-today-day="'+i+'">日程を見る</button>');
+}
+
+
+function homeQuickActions(){
+ const actions=[['schedule','🧭','日程'],['bookings','🎫','予約'],['phrase','🀄','中国語'],['expenses','🧾','支出']];
+ return panel('<h2>すぐ使う</h2><div class="home-quick-grid">'+actions.map(([id,icon,label])=>'<button type="button" class="home-quick-button" data-direct-page="'+id+'"><span aria-hidden="true">'+icon+'</span><strong>'+label+'</strong></button>').join('')+'</div>');
 }
 
 /* Fast expense entry: uses exactly the same saved records as the full form. */
@@ -1645,7 +1760,7 @@ if(page==='bookings')html=(typeof bookingVaultPanel==='function'?bookingVaultPan
 if(page==='safety')html=safetyPanel();
 if(page==='expenses')html=spendingOverview()+quickExpensePanel()+expensePanel()+splitPanel();
 if(page==='manage')html=offlinePanel()+managePanel();if(page==='tools')html=travelToolsPanel();if(page==='menu')html=typeof compactMenuPanel==='function'?compactMenuPanel():panel('<h2>メニュー</h2><p>更新後に再度お試しください。</p>');if(page==='map')html=typeof compactMapPanel==='function'?compactMapPanel():panel('<h2>地図</h2><p>更新後に再度お試しください。</p>');
-if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+html+countdownPanel()+offlineTravelCard()+boardingAssistant()+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
+if(page==='home'&&selectedTrip()===MAIN_TRIP)html=todayPanel()+homeQuickActions()+html+countdownPanel()+offlineTravelCard()+boardingAssistant()+visitJapanPanel()+panel('<h2>🆘 緊急時はこちら</h2><p class="muted">通報先・総領事館・中国語での助けの求め方をオフラインでも確認できます。</p><button class="ghost" id="homeEmergency">緊急時・トラブル対応を開く →</button>');
 document.getElementById('content').innerHTML='<div class="page-intro"><span class="page-intro-name"><span class="page-intro-kicker">上海旅手帖 <span aria-hidden="true">·</span> 旅行手账</span><span class="page-intro-cn">'+pageThemes[page][1]+'</span></span><span class="page-intro-right"><span class="page-intro-ja">'+({home:'ホーム',schedule:'日程',packing:'持ち物',food:'グルメ',more:'お土産',budget:'予算',phrase:'中国語',knowledge:'中国豆知識',bookings:'予約',safety:'緊急',expenses:'支出',manage:'管理',tools:'便利',map:'地図',menu:'メニュー'}[page])+'</span><span class="page-intro-seal" aria-hidden="true">'+({home:'沪',schedule:'行',food:'食',more:'礼',packing:'備',budget:'财',expenses:'账',bookings:'票',phrase:'语',knowledge:'知',safety:'安',manage:'设',tools:'便',map:'图',menu:'目'}[page])+'</span></span></div>'+html;
 document.querySelectorAll('[data-today-day]').forEach(n=>n.onclick=()=>{day=+n.dataset.todayDay;jump('schedule')});
 const customSchedule=document.getElementById('customHomeSchedule');if(customSchedule)customSchedule.onclick=()=>jump('schedule');
